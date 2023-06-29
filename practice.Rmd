@@ -1,0 +1,6 @@
+---
+title: "I wrote a new page"
+output: html_document
+---
+
+Very intersting information goes here !
