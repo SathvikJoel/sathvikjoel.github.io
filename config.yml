@@ -123,26 +123,30 @@ taxonomies:
           series: series
 menu:
   main:
+    - identifier: Posts
+      name: Posts
+      url: /
+      weight: 1
     - identifier: Search
       name: Search
       url: /search/
-      weight: 5
+      weight: 2
     - identifier: categories
       name: Categories
       url: /categories/
-      weight: 10
+      weight: 6
     - identifier: tags
       name: Tags
       url: /tags/
-      weight: 20
+      weight: 5
     - identifier: Series
       name: Series
       url: /series/
-      weight: 20
+      weight: 4
     - identifier: Archives
       name: Archives
       url: /archives/
-      weight: 10  
+      weight: 3  
 
     # - identifier: example
     #   name: example.org

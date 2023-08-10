@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Tags on JoeLogs</title>
+    <link>https://joelogs.com/tags/</link>
+    <description>Recent content in Tags on JoeLogs</description>
+    <image>
+      <title>JoeLogs</title>
+      <url>https://joelogs.com/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://joelogs.com/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 28 Jul 2023 18:00:45 -0700</lastBuildDate><atom:link href="https://joelogs.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>css</title>
+      <link>https://joelogs.com/tags/css/</link>
+      <pubDate>Fri, 28 Jul 2023 18:00:45 -0700</pubDate>
+      
+      <guid>https://joelogs.com/tags/css/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>html</title>
+      <link>https://joelogs.com/tags/html/</link>
+      <pubDate>Fri, 28 Jul 2023 18:00:45 -0700</pubDate>
+      
+      <guid>https://joelogs.com/tags/html/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>markdown</title>
+      <link>https://joelogs.com/tags/markdown/</link>
+      <pubDate>Fri, 28 Jul 2023 18:00:45 -0700</pubDate>
+      
+      <guid>https://joelogs.com/tags/markdown/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>themes</title>
+      <link>https://joelogs.com/tags/themes/</link>
+      <pubDate>Fri, 28 Jul 2023 18:00:45 -0700</pubDate>
+      
+      <guid>https://joelogs.com/tags/themes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>first</title>
+      <link>https://joelogs.com/tags/first/</link>
+      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
+      
+      <guid>https://joelogs.com/tags/first/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
