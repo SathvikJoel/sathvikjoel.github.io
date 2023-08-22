@@ -2,10 +2,9 @@
 title: "Markdown Syntax"
 author: "Hugo Authors"
 date: 2023-07-28T18:00:45-07:00
-draft: false
-description: "Sample article showcasing basic Markdown syntax and formatting for HTML elements."
+draft: true
+# description: "Sample article showcasing basic Markdown syntax and formatting for HTML elements."
 tags: ["markdown", "css", "html", "themes"]
-categories: ["themes", "syntax"]
 series: ["Themes Guide"]
 aliases: ["migrate-from-jekyl"]
 ShowToc: true

@@ -8,7 +8,7 @@ author: "Joel"
 # author: ["Me", "You"] # multiple authors
 showToc: true
 TocOpen: false
-draft: false
+draft: true
 hidemeta: false
 comments: false
 description: "A post about using Latex in Markdown"
@@ -19,8 +19,6 @@ disableHLJS: false
 hideSummary: false
 searchHidden: true
 ShowReadingTime: true
-ShowBreadCrumbs: true
-ShowPostNavLinks: true
 # ShowWordCount: true
 ShowRssButtonInSectionTermList: true
 UseHugoToc: true
@@ -37,14 +35,15 @@ cover:
 #     appendFilePath: true # to append file path to Edit link
 ---
 
-This article offers as basic introduction to using Latex in Hugo, since Latex equations are a very important part of any technical blog
+This article offers as basic introduction to using Latex in Hugo, since Latex equations are a very important part of any technical blog $\sum_{i=0}^n i^2 = \frac{(n^2+n)(2n+1)}{6}$ 
 
-
-
-$$ \phi $$
-
-$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$
 
 $$
-\text{score}(u) = \sum_{v \in \{v \mid (u, v) \in E, v\in \mathcal{U}\}} s(v)\quad\text{where }s(v)=\rho^{- \vert \{\ell \in \mathcal{L} \vert (v, \ell)\in E \}\vert},\quad\rho > 1
+D_h = \\{(x, y_i , r_i , z_i)\\}_{i=1}^n
 $$
+
+```python
+from pytorch import torch
+x = "Hello World"
+if 
+```
