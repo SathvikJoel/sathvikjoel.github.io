@@ -10,25 +10,6 @@
       <link>https://joelogs.com/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Fri, 28 Jul 2023 18:00:45 -0700</lastBuildDate><atom:link href="https://joelogs.com/categories/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>syntax</title>
-      <link>https://joelogs.com/categories/syntax/</link>
-      <pubDate>Fri, 28 Jul 2023 18:00:45 -0700</pubDate>
-      
-      <guid>https://joelogs.com/categories/syntax/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>themes</title>
-      <link>https://joelogs.com/categories/themes/</link>
-      <pubDate>Fri, 28 Jul 2023 18:00:45 -0700</pubDate>
-      
-      <guid>https://joelogs.com/categories/themes/</guid>
-      <description></description>
-    </item>
-    
+    <language>en</language><atom:link href="https://joelogs.com/categories/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

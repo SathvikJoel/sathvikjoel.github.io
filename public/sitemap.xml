@@ -2,52 +2,36 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://joelogs.com/categories/</loc>
-    <lastmod>2023-07-28T18:00:45-07:00</lastmod>
-  </url><url>
-    <loc>https://joelogs.com/tags/css/</loc>
-    <lastmod>2023-07-28T18:00:45-07:00</lastmod>
-  </url><url>
-    <loc>https://joelogs.com/tags/html/</loc>
-    <lastmod>2023-07-28T18:00:45-07:00</lastmod>
+    <loc>https://joelogs.com/tags/experience/</loc>
+    <lastmod>2023-08-22T11:30:03+00:00</lastmod>
   </url><url>
     <loc>https://joelogs.com/</loc>
-    <lastmod>2023-07-28T18:00:45-07:00</lastmod>
+    <lastmod>2023-08-22T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/tags/markdown/</loc>
-    <lastmod>2023-07-28T18:00:45-07:00</lastmod>
+    <loc>https://joelogs.com/tags/mitacs/</loc>
+    <lastmod>2023-08-22T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/posts/markdown-syntax/</loc>
-    <lastmod>2023-07-28T18:00:45-07:00</lastmod>
+    <loc>https://joelogs.com/series/mitacs-experience/</loc>
+    <lastmod>2023-08-22T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://joelogs.com/posts/22082023_mitacs/</loc>
+    <lastmod>2023-08-22T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://joelogs.com/posts/22082023_mitacs_2/</loc>
+    <lastmod>2023-08-22T11:30:03+00:00</lastmod>
   </url><url>
     <loc>https://joelogs.com/posts/</loc>
-    <lastmod>2023-07-28T18:00:45-07:00</lastmod>
+    <lastmod>2023-08-22T11:30:03+00:00</lastmod>
   </url><url>
     <loc>https://joelogs.com/series/</loc>
-    <lastmod>2023-07-28T18:00:45-07:00</lastmod>
-  </url><url>
-    <loc>https://joelogs.com/categories/syntax/</loc>
-    <lastmod>2023-07-28T18:00:45-07:00</lastmod>
+    <lastmod>2023-08-22T11:30:03+00:00</lastmod>
   </url><url>
     <loc>https://joelogs.com/tags/</loc>
-    <lastmod>2023-07-28T18:00:45-07:00</lastmod>
-  </url><url>
-    <loc>https://joelogs.com/tags/themes/</loc>
-    <lastmod>2023-07-28T18:00:45-07:00</lastmod>
-  </url><url>
-    <loc>https://joelogs.com/categories/themes/</loc>
-    <lastmod>2023-07-28T18:00:45-07:00</lastmod>
-  </url><url>
-    <loc>https://joelogs.com/series/themes-guide/</loc>
-    <lastmod>2023-07-28T18:00:45-07:00</lastmod>
-  </url><url>
-    <loc>https://joelogs.com/tags/first/</loc>
-    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
-  </url><url>
-    <loc>https://joelogs.com/posts/latex-syntax/</loc>
-    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
+    <lastmod>2023-08-22T11:30:03+00:00</lastmod>
   </url><url>
     <loc>https://joelogs.com/archives/</loc>
+  </url><url>
+    <loc>https://joelogs.com/categories/</loc>
   </url><url>
     <loc>https://joelogs.com/search/</loc>
   </url>
