@@ -16,8 +16,8 @@ minify:
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
-  title: ExampleSite
-  description: "ExampleSite description"
+  title: JoeLogs
+  description: "Hi, this is Joel. I am documenting my learning notes in these blogs. I am a tech enthusiast, learning new things excites me :)"
   keywords: [Blog, Portfolio, PaperMod]
   author: Sathvik Joel
   # author: ["Me", "You"] # multiple authors
