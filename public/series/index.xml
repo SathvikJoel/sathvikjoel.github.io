@@ -11,13 +11,31 @@
     </image>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 22 Aug 2023 11:30:03 +0000</lastBuildDate><atom:link href="https://joelogs.com/series/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 03 Sep 2023 11:30:03 +0000</lastBuildDate><atom:link href="https://joelogs.com/series/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Math in DL</title>
+      <link>https://joelogs.com/series/math-in-dl/</link>
+      <pubDate>Sun, 03 Sep 2023 11:30:03 +0000</pubDate>
+      
+      <guid>https://joelogs.com/series/math-in-dl/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Mitacs Experience</title>
       <link>https://joelogs.com/series/mitacs-experience/</link>
       <pubDate>Tue, 22 Aug 2023 11:30:03 +0000</pubDate>
       
       <guid>https://joelogs.com/series/mitacs-experience/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TOEFL Prep</title>
+      <link>https://joelogs.com/series/toefl-prep/</link>
+      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
+      
+      <guid>https://joelogs.com/series/toefl-prep/</guid>
       <description></description>
     </item>
     

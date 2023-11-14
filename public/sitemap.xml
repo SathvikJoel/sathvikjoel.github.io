@@ -2,10 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://joelogs.com/tags/experience/</loc>
-    <lastmod>2023-08-22T11:30:03+00:00</lastmod>
-  </url><url>
     <loc>https://joelogs.com/</loc>
+    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://joelogs.com/tags/llm/</loc>
+    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://joelogs.com/tags/math/</loc>
+    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://joelogs.com/series/math-in-dl/</loc>
+    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://joelogs.com/posts/</loc>
+    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://joelogs.com/posts/03092023_mlresources/</loc>
+    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://joelogs.com/series/</loc>
+    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://joelogs.com/tags/</loc>
+    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://joelogs.com/posts/31082023_subtlemathindl/</loc>
+    <lastmod>2023-08-30T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>https://joelogs.com/tags/experience/</loc>
     <lastmod>2023-08-22T11:30:03+00:00</lastmod>
   </url><url>
     <loc>https://joelogs.com/tags/mitacs/</loc>
@@ -20,14 +44,14 @@
     <loc>https://joelogs.com/posts/22082023_mitacs_2/</loc>
     <lastmod>2023-08-22T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/posts/</loc>
-    <lastmod>2023-08-22T11:30:03+00:00</lastmod>
+    <loc>https://joelogs.com/posts/14112023_toefl/</loc>
+    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/series/</loc>
-    <lastmod>2023-08-22T11:30:03+00:00</lastmod>
+    <loc>https://joelogs.com/tags/toefl/</loc>
+    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/tags/</loc>
-    <lastmod>2023-08-22T11:30:03+00:00</lastmod>
+    <loc>https://joelogs.com/series/toefl-prep/</loc>
+    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
   </url><url>
     <loc>https://joelogs.com/archives/</loc>
   </url><url>

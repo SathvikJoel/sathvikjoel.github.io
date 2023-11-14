@@ -208,4 +208,3 @@ For those intrigued by delving deeper into GPU technology, a highly recommended 
 ## References
 
 1. Dao et al. [FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness](https://arxiv.org/abs/2205.14135) NeurIPS 2022 
-2. 

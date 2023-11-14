@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>math on JoeLogs</title>
+    <link>https://joelogs.com/tags/math/</link>
+    <description>Recent content in math on JoeLogs</description>
+    <image>
+      <title>JoeLogs</title>
+      <url>https://joelogs.com/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://joelogs.com/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 03 Sep 2023 11:30:03 +0000</lastBuildDate><atom:link href="https://joelogs.com/tags/math/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Resource Library: My Curated Collection of Useful Materials</title>
+      <link>https://joelogs.com/posts/03092023_mlresources/</link>
+      <pubDate>Sun, 03 Sep 2023 11:30:03 +0000</pubDate>
+      
+      <guid>https://joelogs.com/posts/03092023_mlresources/</guid>
+      <description>In this blog post, I&amp;rsquo;m compiling a valuable list of resources that I&amp;rsquo;ve discovered throughout my academic journey. I&amp;rsquo;ll continually update this list as I encounter new materials. I aim to include a variety of resource types, such as blogs, videos, and books, and provide brief summaries for each to ensure their usefulness.</description>
+    </item>
+    
+    <item>
+      <title>Mathematical Musings:  Unraveling LLM Subtleties</title>
+      <link>https://joelogs.com/posts/31082023_subtlemathindl/</link>
+      <pubDate>Wed, 30 Aug 2023 11:30:03 +0000</pubDate>
+      
+      <guid>https://joelogs.com/posts/31082023_subtlemathindl/</guid>
+      <description>In this blog I delve into the intricate mathematical subtilities that abound in a few LLM research papers I recently came across. The primary aim is to unravel these mathematical complexities, offering readers a key to unlocking a deeper comprehension of the complete papers. The focus of this blog remains exclusively on the mathematical nuances, tailored to resonate with those who possess a keen mathematical acumen.
+Flash Attention Transformers rely on a core operation called Attention Calculation.</description>
+    </item>
+    
+  </channel>
+</rss>
