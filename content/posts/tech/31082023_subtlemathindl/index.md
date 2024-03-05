@@ -1,5 +1,5 @@
 ---
-title: "Mathematical Musings:  Unraveling LLM Subtleties"
+title: "FlashAttention: Before flash"
 date: 2023-08-30T11:30:03+00:00
 # weight: 1
 # aliases: ["/first"]
@@ -35,7 +35,7 @@ cover:
 #     appendFilePath: true # to append file path to Edit link
 ---
 
-In this blog I delve into the intricate mathematical subtilities that abound in a few LLM research papers I recently came across. The primary aim is to unravel these mathematical complexities, offering readers a key to unlocking a deeper comprehension of the complete papers. The focus of this blog remains exclusively on the mathematical nuances, tailored to resonate with those who possess a keen mathematical acumen. 
+In this blog I delve into the intricate mathematical subtilities that abound in Flash Attention I recently came across. The primary aim is to unravel these mathematical complexities, offering readers a key to unlocking a deeper comprehension of the complete paper. The focus of this blog remains exclusively on the mathematical nuances, tailored to resonate with those who possess a keen mathematical acumen. 
 
 ## Flash Attention
 

@@ -34,3 +34,7 @@ cover:
 #     Text: "Suggest Changes" # edit text
 #     appendFilePath: true # to append file path to Edit link
 ---
+
+https://www.appsloveworld.com/go/7/how-to-insert-an-image-in-my-post-on-hugo
+
+used option 2 from the above link with figure shortcode to make the images work
