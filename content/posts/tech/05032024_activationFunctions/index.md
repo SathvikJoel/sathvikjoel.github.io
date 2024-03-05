@@ -91,7 +91,7 @@ print(output)
     tensor([0.0000, 1.0340, 0.0000, 0.0000, 0.6419, 0.0000, 1.4339, 1.5654, 0.7124,
             0.0000])
     
-{{< figure src="ReLU.png" caption="ReLU activation function, picture taken from pytorch documentaion of ReLU.">}}
+{{< figure src="images/ReLU.jpg" caption="ReLU activation function, picture taken from pytorch documentaion of ReLU.">}}
 
 ### CReLU
 
@@ -133,7 +133,7 @@ print(output)
     tensor([-0.0828,  1.0340, -0.0436, -0.0476,  0.6419, -0.0116,  1.4339,  1.5654,
              0.7124, -0.0567])
     
-{{< figure src="LeakyReLU.png" caption="Leaky ReLU activation function, picture taken from pytorch documentaion of LeakyReLU.">}}    
+{{< figure src="images/LeakyReLU.jpg" caption="Leaky ReLU activation function, picture taken from pytorch documentaion of LeakyReLU.">}}    
 
 ## GELU
 
@@ -186,7 +186,7 @@ print(output)
              0.5428, -0.1618])
     
 
-{{< figure src="graph.png" caption="GELU, SiLU graphs from [here](https://kikaben.com/swiglu-2020/)">}}
+{{< figure src="images/graph.jpg" caption="GELU, SiLU graphs from [here](https://kikaben.com/swiglu-2020/)">}}
 
 
 ### SiLU / Swish
@@ -296,13 +296,13 @@ Here are a few practical implementations from LLM models
 
 ### GPT-2
 
-{{< figure src="gelu.png" caption="GELU implementaiton from [GPT-2 model definition](https://github.com/openai/gpt-2/blob/9b63575ef42771a015060c964af2c3da4cf7c8ab/src/model.py#L25).">}}
+{{< figure src="images/gelu.jpg" caption="GELU implementaiton from [GPT-2 model definition](https://github.com/openai/gpt-2/blob/9b63575ef42771a015060c964af2c3da4cf7c8ab/src/model.py#L25).">}}
 
 GPT-2 uses an approximate version of GELU.
 
 ### LLaMA
 
-{{< figure src="llama.png" caption="SwiGLU implementaiton from [LLaMA model definition](https://github.com/facebookresearch/llama/blob/a0a4da8b497c566403941ceec47c2512ecf9dd20/llama/model.py#L348).">}}
+{{< figure src="images/llama.jpg" caption="SwiGLU implementaiton from [LLaMA model definition](https://github.com/facebookresearch/llama/blob/a0a4da8b497c566403941ceec47c2512ecf9dd20/llama/model.py#L348).">}}
 
 The python code
 
@@ -314,7 +314,7 @@ is the SwiGLU implementation, the whole function is for the FFN ( MLP layer ) in
 
 ### Gemma
 
-{{< figure src="Gemma.png" caption="GeGLU implementaiton from [Gemma model definition](https://github.com/google/gemma_pytorch/blob/324cb185aa3fe60f43dad4b7ce5096ffdd513cb1/gemma/model.py#L195).">}}
+{{< figure src="images/Gemma.jpg" caption="GeGLU implementaiton from [Gemma model definition](https://github.com/google/gemma_pytorch/blob/324cb185aa3fe60f43dad4b7ce5096ffdd513cb1/gemma/model.py#L195).">}}
 
 
 The GEGLU is a little more hidden in this function, the screenshot shows the whole FFN ( MLP layer ) function, but if you carefully observe you can make out the GEGLU implementation. (Hint look at the `fuse` variable)
