@@ -38,3 +38,14 @@ cover:
 https://www.appsloveworld.com/go/7/how-to-insert-an-image-in-my-post-on-hugo
 
 used option 2 from the above link with figure shortcode to make the images work
+
+
+https://kyxie.github.io/en/blog/tech/papermod/#modify-code-font
+
+Use this to modify the fonts only change is that the extend head is not in themes folder it is in latouts/pratials/ and the blank.css is in assets/css/extended 
+
+If you want line numbers in code blocks, use
+
+```python linenos
+import torch
+```

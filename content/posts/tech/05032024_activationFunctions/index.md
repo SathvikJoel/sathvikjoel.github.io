@@ -1,6 +1,6 @@
 ---
-title: "Pytorch Activation Functions and their Details"
-date: 2023-09-03T11:30:03+00:00
+title: "Transformer Activation Functions and their Details"
+date: 2024-03-05T11:30:03+00:00
 # weight: 1
 # aliases: ["/first"]
 tags: ["llm", "math"]
@@ -8,7 +8,7 @@ tags: ["llm", "math"]
 author: "Sathvik Joel"
 # author: ["Me", "You"] # multiple authors
 showToc: true
-TocOpen: false
+TocOpen: true
 draft: false
 hidemeta: false
 comments: false
@@ -37,7 +37,7 @@ cover:
 
 Here are a few observations:
 
-GPT-2, developed by Ope.nAI, opts for the GELU (Gaussian Error Linear Unit) activation function
+GPT-2, developed by OpenAI, opts for the GELU (Gaussian Error Linear Unit) activation function
 
 On the other hand, LLaMA, a creation of Facebook Research, embraces SwiGLU activation function.
 
@@ -161,9 +161,7 @@ The motivation mentioned in the [paper](https://arxiv.org/abs/1606.08415) is bas
 
 1. ReLU determinstaically multiplies by 0 or 1
 2. Dropout ( A regularization Technique ) also multiplies by 0 or 1, but stochastically
-3. It is possible to multiple with the 0-1 mask stochastically while also depending on the input in the following way ( this is similar to Adaptive Dropout, zoneout )
-
-the mask is given by $m \sim Bernoulli(\Phi(x))$
+3. It is possible to multiple with the 0-1 mask stochastically while also depending on the input in the following way ( this is similar to Adaptive Dropout, zoneout ) the mask is given by $m \sim Bernoulli(\Phi(x))$
 
 Since $x\sim N(0, 1)$ after the batch normaliztion anyway, this means that inputs have high probablity of getting dropped when $x$ decreases. 
 
@@ -318,3 +316,9 @@ is the SwiGLU implementation, the whole function is for the FFN ( MLP layer ) in
 
 
 The GEGLU is a little more hidden in this function, the screenshot shows the whole FFN ( MLP layer ) function, but if you carefully observe you can make out the GEGLU implementation. (Hint look at the `fuse` variable)
+
+
+
+
+
+

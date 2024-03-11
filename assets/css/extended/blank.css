@@ -1,3 +1,4 @@
+/* https://kyxie.github.io/en/blog/tech/papermod/#modify-code-font */
 :root {
     --nav-width: 1380px;
     --article-width: 650px;
@@ -75,6 +76,41 @@
     color: var(--secondary);
 }
 
+/***********************************************************************/
+
+.josefin-sans {
+    font-family: "Josefin Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+  }
+  
+  body {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 1.15rem;
+      line-height: 1.5;
+      margin: 0;
+  }
+
+/* Change teh font for the code blocks */
+
+.fira-code {
+  font-family: "Fira Code", monospace;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.post-content pre, code {
+    font-family: 'Ubuntu Mono', monospace;
+    max-height: 50rem;
+    font-size: 1.3rem;
+}
+
+/***********************************************************************/
+
+
+
 /* # Markdown 风格 */
 /* 标题、正文、行内代码 - 颜色 */
 :root {
@@ -85,7 +121,7 @@
 .dark {
     --code-bg: rgba(175, 184, 193, 0.2); /* rgb(55, 56, 62); */
 }
-/* 链接样式 */
+/* 链接样式  */
 .post-content a {
     color: #0969da;
     box-shadow: none;
@@ -107,12 +143,12 @@
     margin: auto;
 }
 /* 行文风格 */
-body {
+/* body {
     font-family: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir, "Nimbus Sans L", Roboto, Noto, "Segoe UI", Arial, Helvetica, "Helvetica Neue", sans-serif;
     font-size: 1rem;
     line-height: 1.5;
     margin: 0;
-}
+} */
 .post-content {
     padding-top: 1rem;
 }
@@ -183,3 +219,4 @@ body {
 .post-content table td {
     border: 1px solid #979da3 !important;
 }
+
