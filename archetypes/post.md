@@ -49,3 +49,15 @@ If you want line numbers in code blocks, use
 ```python linenos
 import torch
 ```
+
+
+{{< codecaption lang="html" title="Code caption shortcode" >}}
+<figure class="code">
+  <figcaption>
+    <span>{{ .Get "title" }}</span>
+  </figcaption>
+  <div class="codewrapper">
+    {{ highlight .Inner (.Get "lang") "linenos=true" }}
+  </div>
+</figure>
+{{< /codecaption >}}
