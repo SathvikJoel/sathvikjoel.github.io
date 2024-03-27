@@ -91,16 +91,17 @@ print(output)
     tensor([0.0000, 1.0340, 0.0000, 0.0000, 0.6419, 0.0000, 1.4339, 1.5654, 0.7124,
             0.0000])
     
-{{< figure src="images/ReLU.jpg" caption="ReLU activation function, picture taken from pytorch documentaion of ReLU.">}}
 
 ### CReLU
 
 Concatenated ReLU
 
 $$
-f(x) = [ReLU(x), ReLU(-x)]
+f(x) = [\text{ReLU}(x), \text{ReLU}(-x)]
 $$
 
+
+Observe that the dimension of the output tensor is twice the input tensor. 
 
 ```python
 crelu_output = torch.cat((relu(tensor), relu(-tensor)))
@@ -133,9 +134,30 @@ print(output)
     tensor([-0.0828,  1.0340, -0.0436, -0.0476,  0.6419, -0.0116,  1.4339,  1.5654,
              0.7124, -0.0567])
     
-{{< figure src="images/LeakyReLU.jpg" caption="Leaky ReLU activation function, picture taken from pytorch documentaion of LeakyReLU.">}}    
+### ReLU6
 
-## GELU
+$$
+f(x) =  \begin{cases}
+    0, & \text{if } x \leq 0\\\
+    6, & \text{if } x \geq 6\\\
+    x, & \text{otherwise}
+  \end{cases}
+$$
+
+```python
+relu6 = nn.ReLU6()
+output = relu6(tensor)
+print(output)
+```
+
+    tensor([0.0000, 0.8944, 0.0000, 0.6875, 0.0526, 0.0000, 0.0000, 0.0000, 1.1088,
+        0.0000])
+
+{{< figure src="images/relu_variants2.jpg" caption="(Left) Leaky ReLU, (Middle) ReLU, (Right)ReLU6; taken from pytorch documentation">}}
+
+## Other Linear Unit Variants
+
+### GELU
 
 Gaussian Error Linear Unit
 
@@ -157,6 +179,11 @@ $$
 GELU(x) = x \times \sigma(1.702 \times x)
 $$
 
+
+
+{{< excursion anchor="motivation_gelu" title="Motivation for GELU 💡" >}}
+
+
 The motivation mentioned in the [paper](https://arxiv.org/abs/1606.08415) is based on the following observations:
 
 1. ReLU determinstaically multiplies by 0 or 1
@@ -173,6 +200,7 @@ $$
 
 > I dont fully understand the motivation myself, but I guess having a partial idea is better than having no idea. They somehow want to take idea from dropout and activation functions and combine them to get a better activation function.
 
+{{< /excursion >}}
 
 ```python
 gelu = nn.GELU(approximate=False) # using the accurate version of GELU
@@ -184,7 +212,6 @@ print(output)
              0.5428, -0.1618])
     
 
-{{< figure src="images/graph.jpg" caption="GELU, SiLU graphs from [here](https://kikaben.com/swiglu-2020/)">}}
 
 
 ### SiLU / Swish
@@ -217,7 +244,27 @@ print(output)
     tensor([-0.2518,  0.7628, -0.1713, -0.1825,  0.4206, -0.0544,  1.1579,  1.2948,
              0.4780, -0.2051])
     
+### HardSwish
 
+Introduced in [Searching for MobileNetV3](https://arxiv.org/abs/1905.02244)
+
+$$
+f(x) = \frac{x \times \text{ReLU6}(x + 3)}{6}
+$$
+
+It is actually implemented piecewise as follows:
+
+$$
+f(x) = \begin{cases}
+    0, & \text{if } x \leq -3\\\
+    x, & \text{if } x \geq +3\\\
+    \frac{x.(x+3)}{6}, & \text{otherwise}
+  \end{cases}
+$$
+
+
+
+{{< figure src="images/linear_variants.jpg" caption="(Left)GELU, SiLU graphs from [here](https://kikaben.com/swiglu-2020/) ; (Right)Hard Swish from pytorch Documentation"  >}}
 
 ## GLU and variants 
 
@@ -228,7 +275,7 @@ This section is **heavily** based on the paper [GLU Variants improve Transfomers
 **Gated Linear Unit (GLU)** : A neural network layer defined by component-wise product of two linear transformations of the input
 
 $$
-GLU(x, W, V, b, c) = \sigma (Wx + b) \odot (Vx + c)
+\text{GLU}(x, W, V, b, c) = \sigma (Wx + b) \odot (Vx + c)
 $$
 
 They also suggest omitting the activation, whih they call a bilnear layer
@@ -244,17 +291,16 @@ Note: The `bias` term is often omitted
 Any activation function could be used in place of $\sigma$ in the GLU equation, giving rise to a family of GLU variants.
 
 $$
-ReGLU(x, W, V, b, c) = ReLU(Wx + b) \odot (Vx + c)
+\text{ReGLU}(x, W, V, b, c) = \text{ReLU}(Wx + b) \odot (Vx + c)
 $$
 $$
-SiGLU(x, W, V, b, c) = SiLU(Wx + b) \odot (Vx + c)\\\
+\text{SiGLU}(x, W, V, b, c) = \text{SiLU(Wx + b)} \odot (Vx + c)\\\
 $$
 $$
-GeGLU(x, W, V, b, c) = GELU(Wx + b) \odot (Vx + c)\\\
+\text{GeGLU}(x, W, V, b, c) = \text{GELU}(Wx + b) \odot (Vx + c)\\\
 $$
 
-
-> LLaMA model uses SwiGLU as the activation function in the FFN layer. [See in the model definition](https://github.com/facebookresearch/llama/blob/a0a4da8b497c566403941ceec47c2512ecf9dd20/llama/model.py#L348)
+### Example Practical Implementation
 
 
 ```python
