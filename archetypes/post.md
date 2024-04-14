@@ -61,3 +61,20 @@ import torch
   </div>
 </figure>
 {{< /codecaption >}}
+
+
+
+{{< rawhtml >}}
+<a href="https://colab.research.google.com/github/GoogleCloudPlatform/vertex-ai-samples/blob/main/notebooks/official/model_monitoring/model_monitoring.ipynb" target="_blank">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab" style="display: inline-block; margin-right: 10px;">
+</a>
+{{< /rawhtml >}}
+from https://anaulin.org/blog/hugo-raw-html-shortcode/
+
+
+{{< rawhtml >}}
+<a href="https://github.com" target="_blank">
+  <img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+</a>
+
+{{< /rawhtml >}}
