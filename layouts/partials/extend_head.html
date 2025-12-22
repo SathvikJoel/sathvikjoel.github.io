@@ -32,11 +32,6 @@ src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   
 {{ end }}
 
-{{- if .Params.canonicalURL -}}
-    <link rel="canonical" href="{{ .Params.canonicalURL }}">
-{{- else -}}
-    <link rel="canonical" href="{{ .Permalink }}">
-{{- end -}}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
