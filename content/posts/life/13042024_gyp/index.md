@@ -13,7 +13,7 @@ draft: false
 hidemeta: false
 comments: false
 description: "Sharing my enriching experience as a POSCO GYP Scholor at POSTECH, South Korea"
-canonicalURL: "https://canonical.url/to/page"
+# canonicalURL: "https://canonical.url/to/page"
 disableHLJS: true # to disable highlightjs
 disableHLJS: false
 hideSummary: false

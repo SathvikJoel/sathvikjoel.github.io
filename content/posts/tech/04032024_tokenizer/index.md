@@ -13,7 +13,7 @@ draft: false
 hidemeta: false
 comments: false
 description: "Decoding details from Andrejs video on Tokenizer"
-canonicalURL: "https://canonical.url/to/page"
+# canonicalURL: "https://canonical.url/to/page"
 disableHLJS: true # to disable highlightjs
 disableHLJS: false
 hideSummary: false

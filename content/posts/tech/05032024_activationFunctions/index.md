@@ -13,7 +13,7 @@ draft: false
 hidemeta: false
 comments: false
 description: "Revisiting Activation Functions in Pytorch and their details"
-canonicalURL: "https://canonical.url/to/page"
+# canonicalURL: "https://canonical.url/to/page"
 disableHLJS: true # to disable highlightjs
 disableHLJS: false
 hideSummary: false
