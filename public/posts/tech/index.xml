@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Tech👨‍💻 on JoeLogs</title>
+    <link>http://localhost:1313/posts/tech/</link>
+    <description>Recent content in Tech👨‍💻 on JoeLogs</description>
+    <image>
+      <title>JoeLogs</title>
+      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 10 Apr 2024 11:30:03 +0000</lastBuildDate><atom:link href="http://localhost:1313/posts/tech/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Microsoft Python Programming Interview Question</title>
+      <link>http://localhost:1313/posts/tech/12042024_msft_interview/</link>
+      <pubDate>Wed, 10 Apr 2024 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/tech/12042024_msft_interview/</guid>
+      <description>I want to discuss an interview question that was asked in an interview at Microsoft during my interview for the poistion of a Research Fellow( RF ). The question primary deals with python programming knowledge and it requires understanding of generators. In this post I will discuss the programming topics that are required to solve the question and finally give a solutioin to the question. The question is pretty open ended and I was asked to write the code in a google doc.</description>
+    </item>
+    
+    <item>
+      <title>Forest in Latex</title>
+      <link>http://localhost:1313/posts/tech/12032024_forest/</link>
+      <pubDate>Tue, 12 Mar 2024 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/tech/12032024_forest/</guid>
+      <description>Found a cool way to draw trees in latex</description>
+    </item>
+    
+    <item>
+      <title>Transformer Activation Functions and their Details</title>
+      <link>http://localhost:1313/posts/tech/05032024_activationfunctions/</link>
+      <pubDate>Tue, 05 Mar 2024 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/tech/05032024_activationfunctions/</guid>
+      <description>Revisiting Activation Functions in Pytorch and their details</description>
+    </item>
+    
+    <item>
+      <title>Understanding Andrejs Tokenizer Video</title>
+      <link>http://localhost:1313/posts/tech/04032024_tokenizer/</link>
+      <pubDate>Mon, 04 Mar 2024 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/tech/04032024_tokenizer/</guid>
+      <description>Decoding details from Andrejs video on Tokenizer</description>
+    </item>
+    
+    <item>
+      <title>FlashAttention: Before flash</title>
+      <link>http://localhost:1313/posts/tech/31082023_subtlemathindl/</link>
+      <pubDate>Wed, 30 Aug 2023 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/tech/31082023_subtlemathindl/</guid>
+      <description>In this blog I delve into the intricate mathematical subtilities that abound in Flash Attention I recently came across. The primary aim is to unravel these mathematical complexities, offering readers a key to unlocking a deeper comprehension of the complete paper. The focus of this blog remains exclusively on the mathematical nuances, tailored to resonate with those who possess a keen mathematical acumen.
+Flash Attention Transformers rely on a core operation called Attention Calculation.</description>
+    </item>
+    
+  </channel>
+</rss>

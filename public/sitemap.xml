@@ -2,61 +2,82 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://joelogs.com/</loc>
-    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+    <loc>http://localhost:1313/posts/life/13042024_gyp/</loc>
+    <lastmod>2024-04-11T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/tags/llm/</loc>
-    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+    <loc>http://localhost:1313/tags/gyp/</loc>
+    <lastmod>2024-04-11T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/tags/math/</loc>
-    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2024-04-11T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/series/math-in-dl/</loc>
-    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+    <loc>http://localhost:1313/posts/life/</loc>
+    <lastmod>2024-04-11T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/posts/</loc>
-    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2024-04-11T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/posts/03092023_mlresources/</loc>
-    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2024-04-11T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/series/</loc>
-    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+    <loc>http://localhost:1313/posts/tech/12042024_msft_interview/</loc>
+    <lastmod>2024-04-10T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/tags/</loc>
-    <lastmod>2023-09-03T11:30:03+00:00</lastmod>
+    <loc>http://localhost:1313/tags/python/</loc>
+    <lastmod>2024-04-10T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/posts/31082023_subtlemathindl/</loc>
+    <loc>http://localhost:1313/posts/tech/</loc>
+    <lastmod>2024-04-10T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/tech/12032024_forest/</loc>
+    <lastmod>2024-03-12T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/latex/</loc>
+    <lastmod>2024-03-12T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/llm/</loc>
+    <lastmod>2024-03-05T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/math/</loc>
+    <lastmod>2024-03-05T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/tech/05032024_activationfunctions/</loc>
+    <lastmod>2024-03-05T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/tech/04032024_tokenizer/</loc>
+    <lastmod>2024-03-04T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/life/14112023_toefl/</loc>
+    <lastmod>2023-11-11T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/toefl/</loc>
+    <lastmod>2023-11-11T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/tech/31082023_subtlemathindl/</loc>
     <lastmod>2023-08-30T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/tags/experience/</loc>
+    <loc>http://localhost:1313/tags/experience/</loc>
     <lastmod>2023-08-22T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/tags/mitacs/</loc>
+    <loc>http://localhost:1313/tags/mitacs/</loc>
     <lastmod>2023-08-22T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/series/mitacs-experience/</loc>
+    <loc>http://localhost:1313/posts/life/22082023_mitacs/</loc>
     <lastmod>2023-08-22T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/posts/22082023_mitacs/</loc>
+    <loc>http://localhost:1313/posts/life/22082023_mitacs_2/</loc>
     <lastmod>2023-08-22T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>https://joelogs.com/posts/22082023_mitacs_2/</loc>
-    <lastmod>2023-08-22T11:30:03+00:00</lastmod>
+    <loc>http://localhost:1313/posts/life/12222025_kora/</loc>
   </url><url>
-    <loc>https://joelogs.com/posts/14112023_toefl/</loc>
-    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
+    <loc>http://localhost:1313/archives/</loc>
   </url><url>
-    <loc>https://joelogs.com/tags/toefl/</loc>
-    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
+    <loc>http://localhost:1313/categories/</loc>
   </url><url>
-    <loc>https://joelogs.com/series/toefl-prep/</loc>
-    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
+    <loc>http://localhost:1313/tags/clubbing/</loc>
   </url><url>
-    <loc>https://joelogs.com/archives/</loc>
+    <loc>http://localhost:1313/search/</loc>
   </url><url>
-    <loc>https://joelogs.com/categories/</loc>
-  </url><url>
-    <loc>https://joelogs.com/search/</loc>
+    <loc>http://localhost:1313/series/</loc>
   </url>
 </urlset>

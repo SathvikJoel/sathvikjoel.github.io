@@ -2,60 +2,105 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>JoeLogs</title>
-    <link>https://joelogs.com/</link>
+    <link>http://localhost:1313/</link>
     <description>Recent content on JoeLogs</description>
     <image>
       <title>JoeLogs</title>
-      <url>https://joelogs.com/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>https://joelogs.com/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 03 Sep 2023 11:30:03 +0000</lastBuildDate><atom:link href="https://joelogs.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 11 Apr 2024 11:30:03 +0000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Resource Library: My Curated Collection of Useful Materials</title>
-      <link>https://joelogs.com/posts/03092023_mlresources/</link>
-      <pubDate>Sun, 03 Sep 2023 11:30:03 +0000</pubDate>
+      <title>Best 10 months, POSCO GYP Program</title>
+      <link>http://localhost:1313/posts/life/13042024_gyp/</link>
+      <pubDate>Thu, 11 Apr 2024 11:30:03 +0000</pubDate>
       
-      <guid>https://joelogs.com/posts/03092023_mlresources/</guid>
-      <description>In this blog post, I&amp;rsquo;m compiling a valuable list of resources that I&amp;rsquo;ve discovered throughout my academic journey. I&amp;rsquo;ll continually update this list as I encounter new materials. I aim to include a variety of resource types, such as blogs, videos, and books, and provide brief summaries for each to ensure their usefulness.</description>
+      <guid>http://localhost:1313/posts/life/13042024_gyp/</guid>
+      <description>Sharing my enriching experience as a POSCO GYP Scholor at POSTECH, South Korea</description>
     </item>
     
     <item>
-      <title>Mathematical Musings:  Unraveling LLM Subtleties</title>
-      <link>https://joelogs.com/posts/31082023_subtlemathindl/</link>
+      <title>Microsoft Python Programming Interview Question</title>
+      <link>http://localhost:1313/posts/tech/12042024_msft_interview/</link>
+      <pubDate>Wed, 10 Apr 2024 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/tech/12042024_msft_interview/</guid>
+      <description>I want to discuss an interview question that was asked in an interview at Microsoft during my interview for the poistion of a Research Fellow( RF ). The question primary deals with python programming knowledge and it requires understanding of generators. In this post I will discuss the programming topics that are required to solve the question and finally give a solutioin to the question. The question is pretty open ended and I was asked to write the code in a google doc.</description>
+    </item>
+    
+    <item>
+      <title>Forest in Latex</title>
+      <link>http://localhost:1313/posts/tech/12032024_forest/</link>
+      <pubDate>Tue, 12 Mar 2024 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/tech/12032024_forest/</guid>
+      <description>Found a cool way to draw trees in latex</description>
+    </item>
+    
+    <item>
+      <title>Transformer Activation Functions and their Details</title>
+      <link>http://localhost:1313/posts/tech/05032024_activationfunctions/</link>
+      <pubDate>Tue, 05 Mar 2024 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/tech/05032024_activationfunctions/</guid>
+      <description>Revisiting Activation Functions in Pytorch and their details</description>
+    </item>
+    
+    <item>
+      <title>Understanding Andrejs Tokenizer Video</title>
+      <link>http://localhost:1313/posts/tech/04032024_tokenizer/</link>
+      <pubDate>Mon, 04 Mar 2024 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/tech/04032024_tokenizer/</guid>
+      <description>Decoding details from Andrejs video on Tokenizer</description>
+    </item>
+    
+    <item>
+      <title>My TOEFL preperation Notes</title>
+      <link>http://localhost:1313/posts/life/14112023_toefl/</link>
+      <pubDate>Sat, 11 Nov 2023 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/life/14112023_toefl/</guid>
+      <description>My personal notes, tips and tricks for TOEFL iBT</description>
+    </item>
+    
+    <item>
+      <title>FlashAttention: Before flash</title>
+      <link>http://localhost:1313/posts/tech/31082023_subtlemathindl/</link>
       <pubDate>Wed, 30 Aug 2023 11:30:03 +0000</pubDate>
       
-      <guid>https://joelogs.com/posts/31082023_subtlemathindl/</guid>
-      <description>In this blog I delve into the intricate mathematical subtilities that abound in a few LLM research papers I recently came across. The primary aim is to unravel these mathematical complexities, offering readers a key to unlocking a deeper comprehension of the complete papers. The focus of this blog remains exclusively on the mathematical nuances, tailored to resonate with those who possess a keen mathematical acumen.
+      <guid>http://localhost:1313/posts/tech/31082023_subtlemathindl/</guid>
+      <description>In this blog I delve into the intricate mathematical subtilities that abound in Flash Attention I recently came across. The primary aim is to unravel these mathematical complexities, offering readers a key to unlocking a deeper comprehension of the complete paper. The focus of this blog remains exclusively on the mathematical nuances, tailored to resonate with those who possess a keen mathematical acumen.
 Flash Attention Transformers rely on a core operation called Attention Calculation.</description>
     </item>
     
     <item>
       <title>My Mitacs Experience : Part 1</title>
-      <link>https://joelogs.com/posts/22082023_mitacs/</link>
+      <link>http://localhost:1313/posts/life/22082023_mitacs/</link>
       <pubDate>Tue, 22 Aug 2023 11:30:03 +0000</pubDate>
       
-      <guid>https://joelogs.com/posts/22082023_mitacs/</guid>
+      <guid>http://localhost:1313/posts/life/22082023_mitacs/</guid>
       <description>Welcome to my blog where I delve into my enriching experience as a Mitacs intern at the University of British Columbia, Canada. As an undergraduate scholar hailing from the esteemed Indian Institute of Technology Madras (IITM), my journey reflects not only personal growth but also the profound academic exchange facilitated by Mitacs. In this initial segment, the first of a two-part series, is dedicated to an in-depth exposition of the meticulous application process.</description>
     </item>
     
     <item>
       <title>My Mitacs Experience : Part 2</title>
-      <link>https://joelogs.com/posts/22082023_mitacs_2/</link>
+      <link>http://localhost:1313/posts/life/22082023_mitacs_2/</link>
       <pubDate>Tue, 22 Aug 2023 11:30:03 +0000</pubDate>
       
-      <guid>https://joelogs.com/posts/22082023_mitacs_2/</guid>
+      <guid>http://localhost:1313/posts/life/22082023_mitacs_2/</guid>
       <description>I extend a warm welcome to the second segment of my two-part series recounting the transformative journey of my MITACS internship at UBC, Canada. For those who may have missed the initial part, I invite you to peruse it as this post seamlessly continues the narrative. In this installment, I delve further into the intricacies of my personal expedition, encapsulating a comprehensive account of my encounters. From offering insights into the contours of my project, to painting a vivid picture of the city that played host to my internship, and to sharing the challenges I encountered and surmounted, this narrative unveils the multi-dimensional facets of my journey.</description>
     </item>
     
     <item>
-      <title>My TOEFL preperation Notes</title>
-      <link>https://joelogs.com/posts/14112023_toefl/</link>
-      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
+      <title>A Definitive Guide to Clubbing in Kora</title>
+      <link>http://localhost:1313/posts/life/12222025_kora/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://joelogs.com/posts/14112023_toefl/</guid>
-      <description>Desc Text.</description>
+      <guid>http://localhost:1313/posts/life/12222025_kora/</guid>
+      <description>kora clubbing guide</description>
     </item>
     
     

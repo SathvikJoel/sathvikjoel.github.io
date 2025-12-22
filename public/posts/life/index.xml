@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Life🌱 on JoeLogs</title>
+    <link>http://localhost:1313/posts/life/</link>
+    <description>Recent content in Life🌱 on JoeLogs</description>
+    <image>
+      <title>JoeLogs</title>
+      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 11 Apr 2024 11:30:03 +0000</lastBuildDate><atom:link href="http://localhost:1313/posts/life/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Best 10 months, POSCO GYP Program</title>
+      <link>http://localhost:1313/posts/life/13042024_gyp/</link>
+      <pubDate>Thu, 11 Apr 2024 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/life/13042024_gyp/</guid>
+      <description>Sharing my enriching experience as a POSCO GYP Scholor at POSTECH, South Korea</description>
+    </item>
+    
+    <item>
+      <title>My TOEFL preperation Notes</title>
+      <link>http://localhost:1313/posts/life/14112023_toefl/</link>
+      <pubDate>Sat, 11 Nov 2023 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/life/14112023_toefl/</guid>
+      <description>My personal notes, tips and tricks for TOEFL iBT</description>
+    </item>
+    
+    <item>
+      <title>My Mitacs Experience : Part 1</title>
+      <link>http://localhost:1313/posts/life/22082023_mitacs/</link>
+      <pubDate>Tue, 22 Aug 2023 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/life/22082023_mitacs/</guid>
+      <description>Welcome to my blog where I delve into my enriching experience as a Mitacs intern at the University of British Columbia, Canada. As an undergraduate scholar hailing from the esteemed Indian Institute of Technology Madras (IITM), my journey reflects not only personal growth but also the profound academic exchange facilitated by Mitacs. In this initial segment, the first of a two-part series, is dedicated to an in-depth exposition of the meticulous application process.</description>
+    </item>
+    
+    <item>
+      <title>My Mitacs Experience : Part 2</title>
+      <link>http://localhost:1313/posts/life/22082023_mitacs_2/</link>
+      <pubDate>Tue, 22 Aug 2023 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/life/22082023_mitacs_2/</guid>
+      <description>I extend a warm welcome to the second segment of my two-part series recounting the transformative journey of my MITACS internship at UBC, Canada. For those who may have missed the initial part, I invite you to peruse it as this post seamlessly continues the narrative. In this installment, I delve further into the intricacies of my personal expedition, encapsulating a comprehensive account of my encounters. From offering insights into the contours of my project, to painting a vivid picture of the city that played host to my internship, and to sharing the challenges I encountered and surmounted, this narrative unveils the multi-dimensional facets of my journey.</description>
+    </item>
+    
+    <item>
+      <title>A Definitive Guide to Clubbing in Kora</title>
+      <link>http://localhost:1313/posts/life/12222025_kora/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/life/12222025_kora/</guid>
+      <description>kora clubbing guide</description>
+    </item>
+    
+  </channel>
+</rss>
