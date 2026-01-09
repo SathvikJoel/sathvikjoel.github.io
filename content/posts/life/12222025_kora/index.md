@@ -1,6 +1,6 @@
 ---
 title: "A Definitive Guide to Clubbing in Kora"
-date: 2025-12-22T01:30:03+00:00
+date: 2025-12-22T09:30:03+00:00
 # weight: 1
 # aliases: ["/first"]
 tags: ["clubbing"]
