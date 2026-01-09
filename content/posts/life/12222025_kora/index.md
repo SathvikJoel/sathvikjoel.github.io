@@ -1,6 +1,6 @@
 ---
 title: "A Definitive Guide to Clubbing in Kora"
-date: 2025-22-12T11:30:03+00:00
+date: 2025-12-22T01:30:03+00:00
 # weight: 1
 # aliases: ["/first"]
 tags: ["clubbing"]
@@ -55,7 +55,10 @@ Tips:
 ## Dance Floor 💃🕺
 As I have said earlier most of them have dance floors, but not all of them allow everyone to dance on the dance floor, haha, yes. Some clubs (Tipsy Bull for example) only allow couples to dance on the floor, so please ask that at the counter before you make the payment.
 
-Tip: If you are a couple you probably would want to go to a club that only allows couples on dance floor this makes it easy for you to enjou your night.
+Tips:
+1. If you are a couple you probably would want to go to a club that only allows couples on dance floor this makes it easy for you to enjoy your night.
+2. Ask at the counter if the dance floor is open to stags or not.
+
 
 ## Overpriced Alcohol 🍺
 The alcohol inside the club is overpriced (duh!). One way to optimise on this is to pre-booze. You could go to your nearest MRP and pre booze before you start from your place. This saves some money and gives you almost the same experience.
@@ -68,10 +71,10 @@ I almost always hated the food in clubs. The food tastes awful (as if you will j
 Tip: Truffles in Kora is one of the best food places I know in Bangalore. My usual ritual is to first have food there before I start clubbing in Kora. It is said that it's a ritual to have food in Kora if you are in Bangalore, might as well finish that ritual when you are in Kora. ✨
 
 ## Reaching There and Pricing 🚗💸
-Kora is not strictly accessible by metro, this is one of my complaints, because come on. Most of my Kora nights have averaged around 3K, including the food at Truffles, my travel and ofc alcohol. I feel that's a reasonable price for a night to kill my neurons in my hippocampus.
+Kora is not strictly accessible by metro, this is one of my complaints, because come on. The nearest metro station is Central Silk Board on the Yellow Line, from there you get an auto for about 100 Rs. Most of my Kora nights have averaged around 3K, including the food at Truffles (~300Rs), my travel~(400Rs) and ofc alcohol (~2200Rs). I feel that's a reasonable price for a night to kill my neurons in my hippocampus.
 
 ## Other things in Kora 🎭
-Kora is more than clubs ofc. The other activity I have done in Kora is to attend stand up shows. There are some good ones like "The Underground Comedy Club" and "Ministry of Comedy". They usually have some good line-ups over weekends, check BookMyShow. 😂
+Kora is more than clubs ofc. The other activity I have done in Kora is to attend stand up shows. There are some good ones like "The Underground Comedy Club" and "Ministry of Comedy". They usually have some good line-ups over weekends, check BookMyShow. 😂 There are also a lot of cafes if you are into that sort of thing.
 
 ## More tips 💡
 Usually if it's a good weekend, chances are you would choose a club based on your gut and it's pretty nice. But in case you do go to a club and you feel that the vibe is not good enough, you just dance there for a while and then quit quietly from there. Most important thing here is to not spend your own money just exhaust the cover charge only. Then you can go to a different club and then again exhaust the cover charge there. The point being you will spend 2x normal cover charge per night anyway. Why not spend it in two clubs and get the vibe of two clubs? 🎯

@@ -37,6 +37,8 @@ cover:
 
 ## The Debate That's Tearing Humanity Apart
 
+{{< figure src="whatisthis.jpg" caption="What do you call this ?">}}
+
 Me and my friend have found ourselves in the middle of one of mankind's oldest, most contentious debates. No, not "which came first, the chicken or the egg?" or "is a hot dog a sandwich?" We're tackling something far more serious: **What do you call a dish that's just rice and vegetables? Pulav or Biryani?**
 
 My stance is clear, unwavering, and will remain so until I draw my last breath: **It's Pulav**. There is absolutely NO WAY this can be called Biryani. Growing up, Biryani was an emotion for me. It was the dish you waited for on special occasions. It HAD to contain chicken (or some form of non-veg). The fragrance, the layers, the succulent pieces of meat  that's Biryani.
