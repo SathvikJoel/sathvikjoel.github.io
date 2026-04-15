@@ -17,7 +17,7 @@ comments: false
 disableHLJS: true # to disable highlightjs
 disableHLJS: false
 hideSummary: false
-searchHidden: true
+searchHidden: false
 ShowReadingTime: true
 ShowPostNavLinks: true
 ShowRssButtonInSectionTermList: true

@@ -17,7 +17,7 @@ description: "Sharing my enriching experience as a POSCO GYP Scholor at POSTECH,
 disableHLJS: true # to disable highlightjs
 disableHLJS: false
 hideSummary: false
-searchHidden: true
+searchHidden: false
 ShowReadingTime: true
 ShowPostNavLinks: true
 ShowRssButtonInSectionTermList: true

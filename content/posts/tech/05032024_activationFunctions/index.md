@@ -17,7 +17,7 @@ description: "Revisiting Activation Functions in Pytorch and their details"
 disableHLJS: true # to disable highlightjs
 disableHLJS: false
 hideSummary: false
-searchHidden: true
+searchHidden: false
 ShowReadingTime: true
 ShowPostNavLinks: true
 ShowRssButtonInSectionTermList: true

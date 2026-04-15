@@ -17,7 +17,7 @@ description: "My personal notes, tips and tricks for TOEFL iBT"
 disableHLJS: true # to disable highlightjs
 disableHLJS: false
 hideSummary: false
-searchHidden: true
+searchHidden: false
 ShowReadingTime: true
 ShowPostNavLinks: true
 ShowRssButtonInSectionTermList: true

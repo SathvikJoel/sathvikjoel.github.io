@@ -11,7 +11,7 @@ comments: false
 description: "A simple criterion for distinguishing good people from bad people — and why the 'why' doesn't matter."
 disableHLJS: false
 hideSummary: false
-searchHidden: true
+searchHidden: false
 ShowReadingTime: true
 ShowPostNavLinks: true
 ShowRssButtonInSectionTermList: true
