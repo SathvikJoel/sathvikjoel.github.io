@@ -70,6 +70,8 @@ params:
         url: posts/tech
       - name: Life🌱
         url: posts/life
+      - name: Philosophy🧠
+        url: posts/philosophy
 
   # home-info mode
   homeInfoParams:
@@ -136,6 +138,9 @@ menu:
     - identifier: Tech👨‍💻
       name: Tech👨‍💻
       url: /posts/tech
+    - identifier: Philosophy🧠
+      name: Philosophy🧠
+      url: /posts/philosophy
     # - identifier: categories
     #   name: Categories
     #   url: /categories/
