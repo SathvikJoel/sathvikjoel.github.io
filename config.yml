@@ -72,6 +72,8 @@ params:
         url: posts/life
       - name: Philosophy🧠
         url: posts/philosophy
+      - name: Resume📄
+        url: /resume.pdf
 
   # home-info mode
   homeInfoParams:
@@ -157,6 +159,10 @@ menu:
       name: Archives⏱️
       url: /archives/
       weight: 3
+    - identifier: Resume
+      name: Resume📄
+      url: /resume.pdf
+      weight: 6
 
     # - identifier: example
     #   name: example.org
