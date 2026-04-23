@@ -43,3 +43,31 @@ Deployment is handled by `.github/workflows/gh-pages.yml`, which:
 3. Deploys the output to GitHub Pages
 
 To trigger a manual deploy, use the **workflow_dispatch** event from the Actions tab.
+
+---
+
+## Summary Section Styling (Dagger + EB Garamond)
+
+All `## Summary` sections in any blog post automatically render with a **† dagger prefix** and **EB Garamond** font. No per-post changes are needed — just use `## Summary` as the heading.
+
+### How it works
+
+Three files were changed to achieve this:
+
+1. **`layouts/partials/extend_head.html`** — EB Garamond is loaded from Google Fonts:
+   ```html
+   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Fira+Code:wght@300..700&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+   ```
+
+2. **`assets/css/extended/style.css`** — CSS targets `h2#summary` (Hugo auto-generates this ID from `## Summary`):
+   ```css
+   .post-content h2#summary::before { content: "† "; font-family: 'EB Garamond', Georgia, serif; }
+   .post-content h2#summary { font-family: 'EB Garamond', Georgia, serif; }
+   .post-content h2#summary + ol { font-family: 'EB Garamond', Georgia, serif; font-size: 1.1em; line-height: 1.9; }
+   ```
+
+3. **Blog post front matter** — no special flags needed; the heading `## Summary` is sufficient.
+
+### To change the font in future
+
+Replace `EB Garamond` in both files above with any Google Font. Update the `@import` URL in `extend_head.html` and the `font-family` values in `style.css`.
