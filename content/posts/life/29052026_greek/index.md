@@ -62,6 +62,7 @@ Characters:
 - **Apollo:** The Greek god of light, music, and poetry (shown standing on the left/top, leaning forward).
 - **Daphne:** A beautiful nymph who swore a vow of eternal chastity (center).
 - **Peneus:** The river god and Daphne's father, depicted lounging at the bottom wearing a crown of reeds and holding a cornucopia (horn of plenty).
+- **Eros** The 
 
 
 Right before this story begins, Apollo was feeling incredibly arrogant. He had just slain the monstrous Python with his bow and arrows. Flush with victory, he ran into Eros, who was also carrying a bow. Apollo mocked the smaller god, essentially saying, *"Leave the archery to real men, boy. Your little arrows can't do anything compared to mine."*
@@ -71,6 +72,9 @@ Eros, furious at being insulted, decided to teach Apollo a lesson in humility. H
 - **The Gold Arrow:** Tipped with a sharp, gleaming golden point. Anyone struck by this arrow would be consumed by an instant, uncontrollable, and relentless love for the first person they saw.
 - **The Lead Arrow:** Tipped with a blunt, heavy lead point. Anyone struck by this arrow would instantly feel a deep, visceral revulsion and hatred toward any romantic advances.
 
+Eros shot Apollo with the golden arrow, causing him to instantly fall madly, obsessively in love with Daphne.
+
+At the exact same time, he shot Daphne with the lead arrow, ensuring that she would find the very idea of Apollo’s love absolutely repulsive.
 
 After the god Apollo fell relentlessly in love with Daphne, she rejected his advances and fled. He pursued her in a frantic chase. Just as Apollo was about to catch her, Daphne cried out to her father, Peneus, for help. Peneus answered her prayer by transforming her into a laurel tree. If you look closely at the mosaic, you can see her feet and lower legs transforming into tree roots and bark.
 
