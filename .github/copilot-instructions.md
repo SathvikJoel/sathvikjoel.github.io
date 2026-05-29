@@ -44,6 +44,20 @@ Deployment is handled by `.github/workflows/gh-pages.yml`, which:
 
 To trigger a manual deploy, use the **workflow_dispatch** event from the Actions tab.
 
+### Gotcha: post dates and future-dated posts
+
+The workflow runs `hugo` **without** the `--buildFuture` flag, so any post whose front matter `date` is later than the build moment (in UTC) is silently dropped from the rendered site — it will be missing from the homepage, the section index, and the RSS feed, and the post URL will return 404.
+
+The author works from India (IST, `+05:30`). If you write `date: 2026-05-29T14:15:03+00:00` and push at 14:30 IST, the date is `14:15 UTC` but the CI build happens at `09:00 UTC` — five hours in the "future" — and Hugo skips the post.
+
+**Rule:** always use the IST offset in post front matter so the timestamp matches the local clock used to write it:
+
+```yaml
+date: 2026-05-29T14:15:03+05:30
+```
+
+Older posts in this repo use `+00:00` and still work because they were committed hours-to-days before the build; do not rely on that for posts you publish the same day.
+
 ---
 
 ## Summary Section Styling (Dagger + EB Garamond)
