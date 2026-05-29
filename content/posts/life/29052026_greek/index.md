@@ -1,6 +1,6 @@
 ---
 title: "Five Greek Myths from a Paphos Mosaic Floor"
-date: 2026-05-29T14:15:03+00:00
+date: 2026-05-29T14:15:03+05:30
 # weight: 1
 # aliases: ["/first"]
 tags: ["mythology", "greek", "travel", "cyprus"]
