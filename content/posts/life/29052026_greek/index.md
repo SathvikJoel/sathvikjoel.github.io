@@ -61,8 +61,8 @@ This blog is a collection of 5 Greek myths for you to read in your free time. I 
 Characters:
 - **Apollo:** The Greek god of light, music, and poetry (shown standing on the left/top, leaning forward).
 - **Daphne:** A beautiful nymph who swore a vow of eternal chastity (center).
-- **Peneus:** The river god and Daphne's father, depicted lounging at the bottom wearing a crown of reeds and holding a cornucopia (horn of plenty).
-- **Eros** The 
+- **Peneus:** The river god and Daphne's father, depicted lounging at the bottom wearing a crown of reeds and holding a cornucopia (horn of plen).
+- **Eros** also known as Cupid in Roman myths. He has small arrows with him.
 
 
 Right before this story begins, Apollo was feeling incredibly arrogant. He had just slain the monstrous Python with his bow and arrows. Flush with victory, he ran into Eros, who was also carrying a bow. Apollo mocked the smaller god, essentially saying, *"Leave the archery to real men, boy. Your little arrows can't do anything compared to mine."*
