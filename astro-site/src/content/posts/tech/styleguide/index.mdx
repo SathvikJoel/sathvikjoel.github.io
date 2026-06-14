@@ -27,18 +27,49 @@ I started this blog back in <Y y={2023} />, and first learned to code around <Y 
 back in <Y y={2023} />
 ```
 
-## Two-column image gallery
+## Wide image
 
-<Gallery cols={2} caption="Two images side by side — collapses to one column on mobile.">
-  <img src="/posts/tech/04032024_tokenizer/images/patches.jpg" alt="patches" />
-  <img src="/posts/tech/04032024_tokenizer/images/vocabsize.jpg" alt="vocab size" />
-</Gallery>
+A headline image can break out wider than the text column for impact. Make a collage PNG yourself and drop it in:
+
+<WideImage src="/posts/tech/04032024_tokenizer/images/patches.jpg" alt="patches" caption="A wide breakout image — extends past the reading column." />
 
 ```mdx
-<Gallery cols={2} caption="...">
-  <img src="/a.jpg" alt="" />
-  <img src="/b.jpg" alt="" />
-</Gallery>
+<WideImage src="/collage.png" alt="" caption="..." />
+```
+
+## Reference callout
+
+Cite an external article, paper, or link as a prominent card:
+
+<Reference
+  href="https://example.com"
+  title="Revealed: How the UK tech secretary uses ChatGPT for policy advice"
+  author="The Guardian"
+  source="archive.is"
+/>
+
+```mdx
+<Reference href="https://…" title="Headline" author="Author" source="Site" />
+```
+
+## Pull quote
+
+<Pullquote cite="Christopher Alexander">
+  Some computer scientist called me and said they had a group of people willing to pay $3,000 to have dinner with me… and I thought "What the hell is this?"
+</Pullquote>
+
+```mdx
+<Pullquote cite="Author">A big, emphasised quote.</Pullquote>
+```
+
+## Coming soon
+
+Mark an unfinished post so readers know it's still growing:
+
+<ComingSoon />
+
+```mdx
+<ComingSoon note="Optional custom message." />
 ```
 
 ## List with an image per item

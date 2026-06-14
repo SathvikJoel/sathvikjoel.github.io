@@ -1,0 +1,28 @@
+---
+// A "still growing" placeholder for unfinished posts.
+interface Props {
+  note?: string
+}
+const { note = "This one's still growing — check back soon." } = Astro.props
+---
+
+<div class="coming-soon not-prose">
+  <span class="coming-soon-icon">🌱</span>
+  <h3 class="coming-soon-title">Coming Soon</h3>
+  <p class="coming-soon-note">{note}</p>
+</div>
+
+<style>
+  .coming-soon {
+    @apply my-12 py-10 px-6 text-center rounded-xl border border-dashed border-sage/40 dark:border-sage-dark/40 bg-sage/[0.04] dark:bg-sage-dark/[0.06];
+  }
+  .coming-soon-icon {
+    @apply block text-3xl mb-2;
+  }
+  .coming-soon-title {
+    @apply font-display text-2xl font-light text-ink-light dark:text-ink-dark m-0;
+  }
+  .coming-soon-note {
+    @apply font-sans text-sm text-ink-light/60 dark:text-ink-dark/55 mt-2 mb-0;
+  }
+</style>

@@ -1,0 +1,41 @@
+---
+// A reference / link callout card — for citing an external article, paper, or source.
+interface Props {
+  href: string
+  title: string
+  author?: string
+  source?: string
+}
+const { href, title, author, source } = Astro.props
+---
+
+<a href={href} target="_blank" rel="noopener noreferrer" class="reference-card not-prose group">
+  <h4 class="reference-title">
+    {title}
+    <svg class="reference-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+    </svg>
+  </h4>
+  {(author || source) && (
+    <p class="reference-byline">
+      {author && <span>{author}</span>}
+      {author && source && <span class="opacity-40">·</span>}
+      {source && <span>{source}</span>}
+    </p>
+  )}
+</a>
+
+<style>
+  .reference-card {
+    @apply block my-8 p-5 rounded-xl border border-crimson/25 bg-crimson/[0.04] dark:border-crimson-dark/25 dark:bg-crimson-dark/[0.06] transition-all duration-300 hover:border-crimson/50 hover:-translate-y-0.5 no-underline;
+  }
+  .reference-title {
+    @apply font-display text-xl leading-snug text-ink-light dark:text-ink-dark m-0 flex items-start gap-2 group-hover:text-crimson dark:group-hover:text-crimson-dark transition-colors;
+  }
+  .reference-arrow {
+    @apply flex-shrink-0 mt-1 opacity-50 group-hover:opacity-100 transition-opacity;
+  }
+  .reference-byline {
+    @apply font-sans text-sm text-ink-light/60 dark:text-ink-dark/55 mt-2 mb-0 flex items-center gap-2;
+  }
+</style>

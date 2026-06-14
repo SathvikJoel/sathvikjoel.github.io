@@ -1,0 +1,26 @@
+---
+// A large, prominent pull-quote for emphasis.
+interface Props {
+  cite?: string
+}
+const { cite } = Astro.props
+---
+
+<figure class="pullquote not-prose">
+  <blockquote>
+    <slot />
+  </blockquote>
+  {cite && <figcaption class="pullquote-cite">— {cite}</figcaption>}
+</figure>
+
+<style>
+  .pullquote {
+    @apply my-10 pl-6 border-l-4 border-crimson/40 dark:border-crimson-dark/40;
+  }
+  .pullquote blockquote {
+    @apply font-display text-2xl sm:text-3xl font-light italic leading-snug text-ink-light dark:text-ink-dark m-0;
+  }
+  .pullquote-cite {
+    @apply font-sans not-italic text-sm text-ink-light/55 dark:text-ink-dark/55 mt-4;
+  }
+</style>

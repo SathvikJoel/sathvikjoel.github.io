@@ -1,0 +1,31 @@
+---
+// A breakout image that extends wider than the text column for visual impact.
+interface Props {
+  src: string
+  alt?: string
+  caption?: string
+}
+const { src, alt = "", caption } = Astro.props
+---
+
+<figure class="wide-image not-prose">
+  <img src={src} alt={alt} loading="lazy" decoding="async" />
+  {caption && (
+    <figcaption class="mt-3 text-center font-sans text-sm leading-snug text-ink-light/60 dark:text-ink-dark/55">
+      {caption}
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  .wide-image {
+    width: min(92vw, 1080px);
+    margin-left: 50%;
+    transform: translateX(-50%);
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .wide-image :global(img) {
+    @apply w-full rounded-xl m-0;
+  }
+</style>
