@@ -6,42 +6,30 @@
   --copy-btn-margin: 10px;
 }
 
-@layer base {
-  @font-face {
-    font-family: "Atkinson";
-    src: url("/fonts/atkinson-regular.woff") format("woff");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Atkinson";
-    src: url("/fonts/atkinson-bold.woff") format("woff");
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-  }
+:root {
+  --copy-btn-margin: 10px;
 }
 
 html {
   overflow-y: scroll;
   color-scheme: light;
-  background-color: white;
-  font-family: "Atkinson", sans-serif;
-
+  background-color: theme(colors.paper.light);
+  font-family: theme(fontFamily.sans);
+  font-size: 18px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
 }
 
 html.dark {
   color-scheme: dark;
-  background-color: black;
+  background-color: theme(colors.paper.dark);
 }
 
 html,
 body {
   @apply h-full w-full antialiased;
-  @apply bg-white dark:bg-black;
-  @apply text-black/75 dark:text-white/75;
+  @apply bg-paper-light dark:bg-paper-dark;
+  @apply text-ink-light/90 dark:text-ink-dark/85;
 }
 
 body {
@@ -49,7 +37,21 @@ body {
 }
 
 main {
-  @apply flex flex-col flex-1 bg-white dark:bg-black;
+  @apply flex flex-col flex-1;
+  @apply bg-paper-light dark:bg-paper-dark;
+}
+
+h1, h2, h3, h4, h5, h6, .page-heading {
+  @apply font-display;
+  font-optical-sizing: auto;
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background-color: theme(colors.sage.light / 25%);
+}
+.dark ::selection {
+  background-color: theme(colors.sage.dark / 30%);
 }
 
 header {
@@ -69,6 +71,38 @@ header.scrolled {
 
 article {
   @apply prose dark:prose-invert max-w-full pb-12;
+  --tw-prose-body: theme(colors.ink.light / 90%);
+  --tw-prose-headings: theme(colors.ink.light);
+  --tw-prose-links: theme(colors.sage.light);
+  --tw-prose-bold: theme(colors.ink.light);
+  --tw-prose-quotes: theme(colors.ink.light / 80%);
+  --tw-prose-quote-borders: theme(colors.sage.light / 40%);
+  --tw-prose-code: theme(colors.clay.light);
+  font-size: 1.05rem;
+}
+
+.dark article {
+  --tw-prose-body: theme(colors.ink.dark / 85%);
+  --tw-prose-headings: theme(colors.ink.dark);
+  --tw-prose-links: theme(colors.sage.dark);
+  --tw-prose-bold: theme(colors.ink.dark);
+  --tw-prose-quotes: theme(colors.ink.dark / 80%);
+  --tw-prose-quote-borders: theme(colors.sage.dark / 40%);
+  --tw-prose-code: theme(colors.clay.dark);
+}
+
+article :is(h1, h2, h3, h4) {
+  @apply font-display;
+  letter-spacing: -0.015em;
+}
+
+article a {
+  text-decoration-color: theme(colors.sage.light / 40%);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+}
+article a:hover {
+  text-decoration-color: theme(colors.sage.light);
 }
 
 .page-heading {
