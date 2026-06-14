@@ -15,8 +15,7 @@ const all = (await getCollection("posts"))
     <header class="animate max-w-2xl mx-auto text-center mb-12">
       <p class="font-sans text-sm uppercase tracking-[0.2em] text-sage dark:text-sage-dark">The garden of Sathvik Joel</p>
       <h1 class="font-display text-4xl sm:text-5xl font-light leading-[1.1] text-ink-light dark:text-ink-dark mt-3">
-        Essays &amp; field notes, growing over time.
-        <span class="count-badge align-middle" title={`${all.length} posts`}>{all.length}</span>
+        <span class="count-badge" title={`${all.length} posts`}>{all.length}</span>Essays &amp; field notes, growing over time.
       </h1>
       <p class="font-serif text-xl leading-snug text-ink-light/70 dark:text-ink-dark/70 mt-4">
         I document what I'm learning across <span class="text-sage dark:text-sage-dark">tech</span>,
@@ -31,6 +30,9 @@ const all = (await getCollection("posts"))
 
 <style>
   .count-badge {
-    @apply inline-block font-sans text-base font-medium px-2.5 py-0.5 rounded-full bg-crimson/10 text-crimson dark:bg-crimson-dark/15 dark:text-crimson-dark;
+    @apply font-sans text-sm sm:text-base font-semibold text-crimson dark:text-crimson-dark;
+    vertical-align: super;
+    margin-right: 0.3em;
+    line-height: 1;
   }
 </style>

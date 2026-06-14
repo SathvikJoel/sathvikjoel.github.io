@@ -22,10 +22,9 @@ const wrap = isFeed ? "max-w-2xl" : "max-w-[1420px]"
   <div class:list={["mx-auto px-5 sm:px-8 pt-28 pb-24", wrap]}>
     <header class="animate mb-12">
       <a href="/" class="font-sans text-sm text-ink-light/60 dark:text-ink-dark/60 hover:text-crimson dark:hover:text-crimson-dark transition-colors">← All writing</a>
-      <div class="flex items-baseline gap-3 mt-4">
-        <h1 class="font-display text-4xl sm:text-5xl font-light text-ink-light dark:text-ink-dark">{topic.LABEL}</h1>
-        <span class="count-badge" title={`${posts.length} posts`}>{posts.length}</span>
-      </div>
+      <h1 class="font-display text-4xl sm:text-5xl font-light text-ink-light dark:text-ink-dark mt-4">
+        <span class="count-badge" title={`${posts.length} posts`}>{posts.length}</span>{topic.LABEL}
+      </h1>
       <p class="font-serif text-xl sm:text-2xl italic text-ink-light/75 dark:text-ink-dark/75 mt-4 max-w-2xl leading-relaxed">{topic.BLURB}</p>
     </header>
 
@@ -35,6 +34,9 @@ const wrap = isFeed ? "max-w-2xl" : "max-w-[1420px]"
 
 <style>
   .count-badge {
-    @apply self-center font-sans text-sm font-medium px-2.5 py-0.5 rounded-full bg-crimson/10 text-crimson dark:bg-crimson-dark/15 dark:text-crimson-dark;
+    @apply font-sans text-sm sm:text-base font-semibold text-crimson dark:text-crimson-dark;
+    vertical-align: super;
+    margin-right: 0.3em;
+    line-height: 1;
   }
 </style>
