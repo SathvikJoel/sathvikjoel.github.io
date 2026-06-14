@@ -18,12 +18,6 @@ const topicFacets = TOPICS.map((t) => ({
   n: count((p) => p.data.topic === t.KEY),
 }))
 
-const kindFacets = [
-  { value: "essay", label: "Essays", n: count((p) => p.data.kind === "essay") },
-  { value: "note", label: "Notes", n: count((p) => p.data.kind === "note") },
-  { value: "micro", label: "Micro", n: count((p) => p.data.kind === "micro") },
-]
-
 const stageFacets = [
   { value: "seedling", label: "Seedling", n: count((p) => p.data.growthStage === "seedling") },
   { value: "budding", label: "Budding", n: count((p) => p.data.growthStage === "budding") },
@@ -31,7 +25,6 @@ const stageFacets = [
 ]
 
 const groups = [
-  { name: "kind", placeholder: "All types", facets: kindFacets },
   { name: "topic", placeholder: "All streams", facets: topicFacets },
   { name: "stage", placeholder: "All stages", facets: stageFacets },
 ]
@@ -124,14 +117,13 @@ const groups = [
     const grid = document.querySelector<HTMLElement>("[data-garden]")
     if (!grid) return
     const empty = document.querySelector<HTMLElement>("[data-empty]")
-    const state: Record<string, Set<string>> = { kind: new Set(), topic: new Set(), stage: new Set() }
+    const state: Record<string, Set<string>> = { topic: new Set(), stage: new Set() }
 
     function apply() {
       const cards = grid!.querySelectorAll<HTMLElement>("[data-card]")
       let visible = 0
       cards.forEach((card) => {
         const ok =
-          (state.kind.size === 0 || state.kind.has(card.dataset.kind ?? "")) &&
           (state.topic.size === 0 || state.topic.has(card.dataset.topic ?? "")) &&
           (state.stage.size === 0 || state.stage.has(card.dataset.stage ?? ""))
         card.classList.toggle("filtered-out", !ok)
