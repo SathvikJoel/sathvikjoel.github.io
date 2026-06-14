@@ -32,8 +32,10 @@ export default {
         "sans": ["Lato", ...defaultTheme.fontFamily.sans],
         // Reading body — warm editorial serif (free Canela Text substitute).
         "serif": ["Newsreader Variable", "Georgia", ...defaultTheme.fontFamily.serif],
-        // Display / headings — high-contrast soft serif (free Canela Deck substitute).
-        "display": ["Fraunces Variable", "Georgia", "serif"],
+        // Headings — Source Serif 4, a clean New York Times-style editorial serif.
+        "display": ["Source Serif 4 Variable", "Georgia", "serif"],
+        // Home hero only — high-contrast soft serif.
+        "hero": ["Fraunces Variable", "Georgia", "serif"],
         "mono": ["JetBrains Mono Variable", "JetBrains Mono", ...defaultTheme.fontFamily.mono],
       },
       typography: {
