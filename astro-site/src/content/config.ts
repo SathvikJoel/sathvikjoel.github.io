@@ -42,4 +42,25 @@ const legal = defineCollection({
   }),
 })
 
-export const collections = { work, blog, projects, legal }
+const posts = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    description: z.string().default(""),
+    date: z.coerce.date(),
+    topic: z.enum(["tech", "life", "philosophy"]),
+    tags: z.array(z.string()).default([]),
+    // Two-voice model: polished "essay" (for others) vs personal "note" (the garden).
+    kind: z.enum(["essay", "note"]).default("essay"),
+    // Garden metadata (chiefly for notes).
+    growthStage: z.enum(["seedling", "budding", "evergreen"]).optional(),
+    lastTended: z.coerce.date().optional(),
+    draft: z.boolean().default(false),
+    math: z.boolean().default(false),
+    featured: z.boolean().default(false),
+    cover: z.string().optional(),
+    coverAlt: z.string().optional(),
+  }),
+})
+
+export const collections = { posts, work, blog, projects, legal }

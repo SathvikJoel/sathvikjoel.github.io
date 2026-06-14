@@ -1,0 +1,21 @@
+---
+interface Props {
+  title: string
+  anchor?: string
+}
+const { title, anchor } = Astro.props
+---
+<details
+  id={anchor}
+  class="excursion group my-7 rounded-xl border border-sage-light/30 bg-surface-light/50 px-5 py-3 dark:border-sage-dark/30 dark:bg-surface-dark/40"
+>
+  <summary
+    class="cursor-pointer list-none font-sans text-base font-semibold text-sage-light marker:hidden dark:text-sage-dark"
+  >
+    <span class="mr-1 inline-block transition-transform group-open:rotate-90">›</span>
+    {title}
+  </summary>
+  <div class="excursion-body mt-3">
+    <slot />
+  </div>
+</details>

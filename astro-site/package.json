@@ -29,10 +29,17 @@
     "astro": "^5.0.0",
     "clsx": "^2.1.0",
     "fuse.js": "^7.0.0",
+    "katex": "^0.17.0",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "sharp": "^0.33.2",
     "solid-js": "^1.8.15",
     "tailwind-merge": "^2.2.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.2.0"
   }
 }

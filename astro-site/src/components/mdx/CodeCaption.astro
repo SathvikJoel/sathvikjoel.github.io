@@ -1,0 +1,17 @@
+---
+interface Props {
+  title: string
+  lang?: string
+}
+const { title } = Astro.props
+---
+<figure class="codecaption my-6">
+  <figcaption
+    class="rounded-t-lg border-b border-ink-light/10 bg-surface-light px-4 py-2 font-mono text-xs text-ink-light/70 dark:border-ink-dark/10 dark:bg-surface-dark dark:text-ink-dark/70"
+  >
+    {title}
+  </figcaption>
+  <div class="codecaption-body">
+    <slot />
+  </div>
+</figure>

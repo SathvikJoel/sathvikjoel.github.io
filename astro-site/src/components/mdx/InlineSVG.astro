@@ -1,0 +1,14 @@
+---
+interface Props {
+  src: string
+}
+const { src } = Astro.props
+---
+<div class="my-7 flex justify-center">
+  <img
+    src={src}
+    loading="lazy"
+    decoding="async"
+    class="w-auto max-h-80 rounded-xl bg-surface-light p-4 dark:bg-surface-dark"
+  />
+</div>
