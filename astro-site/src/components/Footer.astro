@@ -25,10 +25,8 @@ import Container from "@components/Container.astro"
       <Container size="md">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div class="flex flex-col items-center sm:items-start">
-            <a href="/" class="flex gap-1 w-fit font-semibold text-current hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
-              <svg class="size-6 fill-current">
-                <use href="/brand.svg#brand"/>
-              </svg>
+            <a href="/" class="flex items-center gap-2 w-fit font-semibold text-current hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
+              <img src="/favicon.svg" alt="" width="24" height="24" class="size-6 rounded" />
               {SITE.TITLE}
             </a>
           </div>
@@ -62,6 +60,16 @@ import Container from "@components/Container.astro"
   
           <div class="order-1 sm:order-2 flex justify-center sm:justify-end">
             <div class="flex flex-wrap gap-1 items-center justify-center">
+              <a href="/search" aria-label={`Search ${SITE.TITLE}`} class="group size-10 rounded-full p-2.5 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/20 blend">
+                <svg class="size-full stroke-current group-hover:stroke-black group-hover:dark:stroke-white blend">
+                  <use href="/ui.svg#search" />
+                </svg>
+              </a>
+              <a href="/rss.xml" target="_blank" aria-label={`RSS feed for ${SITE.TITLE}`} class="group size-10 rounded-full p-2.5 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/20 blend">
+                <svg class="size-full stroke-current group-hover:stroke-black group-hover:dark:stroke-white blend">
+                  <use href="/ui.svg#rss" />
+                </svg>
+              </a>
               {
                 SOCIALS.map((SOCIAL) => (
                   <a 
