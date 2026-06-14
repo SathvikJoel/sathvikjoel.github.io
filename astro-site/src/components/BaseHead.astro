@@ -1,6 +1,4 @@
 ---
-import { ViewTransitions } from "astro:transitions"
-
 interface Props {
   title: string
   description: string
@@ -15,6 +13,7 @@ const { title, description, image = "/open-graph.jpg" } = Astro.props
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="color-scheme" content="dark" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta name="generator" content={Astro.generator} />
 
@@ -47,12 +46,9 @@ const { title, description, image = "/open-graph.jpg" } = Astro.props
 <link rel="alternate" type="application/rss+xml" title={title} href={`${Astro.site}rss.xml`}/>
 
 <!-- Global Scripts -->
-<script is:inline src="/js/theme.js"></script>
 <script is:inline src="/js/scroll.js"></script>
 <script is:inline src="/js/animate.js"></script>
 <script defer is:inline src="/js/copy.js"></script>
-
-<!-- <ViewTransitions  /> -->
 
 <script>
   import type { TransitionBeforeSwapEvent } from "astro:transitions/client"
