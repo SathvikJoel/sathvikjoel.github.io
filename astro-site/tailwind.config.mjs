@@ -30,8 +30,8 @@ export default {
       fontFamily: {
         // UI / labels / meta — exactly as Maggie Appleton uses.
         "sans": ["Lato", ...defaultTheme.fontFamily.sans],
-        // Reading body — light book serif (free Canela Text substitute, set Light for dark bg).
-        "serif": ["Spectral", "Georgia", ...defaultTheme.fontFamily.serif],
+        // Reading body — Fraunces, the same warm high-contrast serif as the headings/hero.
+        "serif": ["Fraunces Variable", "Georgia", ...defaultTheme.fontFamily.serif],
         // Margin / sidenotes — warm glyphic serif.
         "note": ["Hedvig Letters Serif", "Georgia", "serif"],
         // Headings — same high-contrast soft serif as the hero (Fraunces), kept light.

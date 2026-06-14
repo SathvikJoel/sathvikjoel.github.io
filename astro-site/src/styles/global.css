@@ -73,9 +73,10 @@ header {
 article {
   @apply prose dark:prose-invert max-w-full pb-12;
   font-family: theme(fontFamily.serif);
+  font-optical-sizing: auto;
   font-size: 1.2rem;
-  line-height: 1.75;
-  font-weight: 300;
+  line-height: 1.78;
+  font-weight: 400;
   --tw-prose-body: theme(colors.ink.light / 92%);
   --tw-prose-headings: theme(colors.ink.light);
   --tw-prose-links: theme(colors.sage.light);
@@ -102,7 +103,7 @@ article :is(h1, h2, h3, h4) {
 }
 
 article :is(strong, b) {
-  font-weight: 500;
+  font-weight: 560;
 }
 
 article a {
