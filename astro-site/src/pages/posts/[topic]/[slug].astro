@@ -20,6 +20,7 @@ import Reference from "@components/mdx/Reference.astro"
 import Pullquote from "@components/mdx/Pullquote.astro"
 import ComingSoon from "@components/mdx/ComingSoon.astro"
 import StageIcon from "@components/StageIcon.astro"
+import TableOfContents from "@components/TableOfContents.astro"
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts")
@@ -32,16 +33,10 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<"posts">
 const post = Astro.props
 const { title, description, date, topic, kind, growthStage, lastTended, tags } = post.data
-const { Content } = await post.render()
+const { Content, headings } = await post.render()
 
-// Prev / next within the same topic, by date.
+// All posts (used by Connections for backlinks).
 const allPosts = await getCollection("posts")
-const siblings = allPosts
-  .filter((p) => p.data.topic === topic && !p.data.draft)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-const index = siblings.findIndex((p) => p.slug === post.slug)
-const prev = index > 0 ? siblings[index - 1] : null
-const next = index < siblings.length - 1 ? siblings[index + 1] : null
 
 const mdxComponents = { Figure, Excursion, Details, CodeCaption, InlineSVG, Sidenote, Gallery, MediaList, MediaItem, Year, Y: Year, WideImage, Reference, Callout: Reference, Pullquote, ComingSoon }
 const stageWord = { seedling: "Seedling", budding: "Budding", evergreen: "Evergreen" }
@@ -87,6 +82,7 @@ const isMicro = kind === "micro"
     </div>
   </TopLayout>
   <BottomLayout>
+    <TableOfContents headings={headings} />
     <article class:list={["animate prose-post", isNote && "note"]}>
       <Content components={mdxComponents}/>
     </article>
@@ -104,20 +100,5 @@ const isMicro = kind === "micro"
     )}
 
     <Connections post={post} all={allPosts} />
-
-    <nav class="animate grid grid-cols-1 sm:grid-cols-2 gap-4 mt-16">
-      {prev &&
-        <a href={`/posts/${prev.slug}`} class="group p-4 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 hover:dark:bg-white/10 blend">
-          <div class="text-xs uppercase opacity-60">Newer</div>
-          <div class="font-display text-lg font-normal mt-1 text-black dark:text-white">{prev.data.title}</div>
-        </a>
-      }
-      {next &&
-        <a href={`/posts/${next.slug}`} class="group p-4 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 hover:dark:bg-white/10 blend sm:text-right sm:col-start-2">
-          <div class="text-xs uppercase opacity-60">Older</div>
-          <div class="font-display text-lg font-normal mt-1 text-black dark:text-white">{next.data.title}</div>
-        </a>
-      }
-    </nav>
   </BottomLayout>
 </PageLayout>

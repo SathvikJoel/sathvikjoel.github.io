@@ -67,18 +67,7 @@ h1, h2, h3, h4, h5, h6, .page-heading {
 }
 
 header {
-  @apply border-b;
-  @apply transition-all duration-300 ease-in-out;
-}
-
-header:not(.scrolled) {
-  @apply bg-transparent border-transparent;
-}
-
-header.scrolled {
-  @apply bg-white/75 dark:bg-black/50;
-  @apply border-black/10 dark:border-white/25;
-  @apply backdrop-blur-sm saturate-200;
+  @apply bg-paper-light dark:bg-paper-dark;
 }
 
 article {
@@ -110,6 +99,10 @@ article :is(h1, h2, h3, h4) {
   @apply font-display;
   letter-spacing: -0.005em;
   font-weight: 300;
+}
+
+article :is(strong, b) {
+  font-weight: 500;
 }
 
 article a {
