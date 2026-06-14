@@ -71,6 +71,10 @@ header.scrolled {
 
 article {
   @apply prose dark:prose-invert max-w-full pb-12;
+  font-family: theme(fontFamily.serif);
+  font-size: 1.3rem;
+  line-height: 1.65;
+  font-weight: 500;
   --tw-prose-body: theme(colors.ink.light / 90%);
   --tw-prose-headings: theme(colors.ink.light);
   --tw-prose-links: theme(colors.sage.light);
@@ -78,7 +82,6 @@ article {
   --tw-prose-quotes: theme(colors.ink.light / 80%);
   --tw-prose-quote-borders: theme(colors.sage.light / 40%);
   --tw-prose-code: theme(colors.clay.light);
-  font-size: 1.05rem;
 }
 
 .dark article {
@@ -93,7 +96,8 @@ article {
 
 article :is(h1, h2, h3, h4) {
   @apply font-display;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.005em;
+  font-weight: 600;
 }
 
 article a {

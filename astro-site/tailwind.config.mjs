@@ -21,11 +21,12 @@ export default {
         clay: { DEFAULT: "#B06A43", light: "#B06A43", dark: "#D69A6F" },
       },
       fontFamily: {
-        // Body + UI: warm literary serif.
-        "sans": ["Newsreader Variable", "Newsreader", "Georgia", ...defaultTheme.fontFamily.serif],
-        "serif": ["Newsreader Variable", "Newsreader", "Georgia", ...defaultTheme.fontFamily.serif],
-        // Display / headings: expressive old-style serif.
-        "display": ["Fraunces Variable", "Fraunces", "Georgia", "serif"],
+        // Supporting sans (UI / labels / meta) — exactly as Maggie Appleton uses.
+        "sans": ["Lato", ...defaultTheme.fontFamily.sans],
+        // Reading body — classical high-contrast serif (Canela substitute).
+        "serif": ["Cormorant Garamond", "Georgia", ...defaultTheme.fontFamily.serif],
+        // Display / headings — same serif family for a cohesive classical feel.
+        "display": ["Cormorant Garamond", "Georgia", "serif"],
         "mono": ["JetBrains Mono Variable", "JetBrains Mono", ...defaultTheme.fontFamily.mono],
       },
       typography: {
