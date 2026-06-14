@@ -73,10 +73,10 @@ header {
 article {
   @apply prose dark:prose-invert max-w-full pb-12;
   font-family: theme(fontFamily.serif);
-  font-optical-sizing: auto;
+  font-variation-settings: "opsz" 100;
   font-size: 1.2rem;
   line-height: 1.78;
-  font-weight: 400;
+  font-weight: 300;
   --tw-prose-body: theme(colors.ink.light / 92%);
   --tw-prose-headings: theme(colors.ink.light);
   --tw-prose-links: theme(colors.sage.light);
@@ -87,7 +87,7 @@ article {
 }
 
 .dark article {
-  --tw-prose-body: theme(colors.ink.dark / 90%);
+  --tw-prose-body: theme(colors.white);
   --tw-prose-headings: theme(colors.white);
   --tw-prose-links: theme(colors.crimson.dark);
   --tw-prose-bold: theme(colors.white);
