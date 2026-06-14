@@ -30,8 +30,10 @@ export default {
       fontFamily: {
         // UI / labels / meta — exactly as Maggie Appleton uses.
         "sans": ["Lato", ...defaultTheme.fontFamily.sans],
-        // Reading body — warm editorial serif (free Canela Text substitute).
-        "serif": ["Newsreader Variable", "Georgia", ...defaultTheme.fontFamily.serif],
+        // Reading body — light book serif (free Canela Text substitute, set Light for dark bg).
+        "serif": ["Spectral", "Georgia", ...defaultTheme.fontFamily.serif],
+        // Margin / sidenotes — warm glyphic serif.
+        "note": ["Hedvig Letters Serif", "Georgia", "serif"],
         // Headings — Source Serif 4, a clean New York Times-style editorial serif.
         "display": ["Source Serif 4 Variable", "Georgia", "serif"],
         // Home hero only — high-contrast soft serif.
