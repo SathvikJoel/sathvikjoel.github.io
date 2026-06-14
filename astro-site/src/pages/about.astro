@@ -1,0 +1,49 @@
+---
+import PageLayout from "@layouts/PageLayout.astro"
+import TopLayout from "@layouts/TopLayout.astro"
+import BottomLayout from "@layouts/BottomLayout.astro"
+import { ABOUT, SOCIALS } from "@consts"
+---
+
+<PageLayout title={ABOUT.TITLE} description={ABOUT.DESCRIPTION}>
+  <TopLayout>
+    <div class="animate flex flex-col-reverse sm:flex-row sm:items-end gap-6">
+      <div class="flex-1">
+        <h1 class="font-display text-4xl sm:text-5xl font-semibold text-black dark:text-white">Hi, I'm Sathvik.</h1>
+        <p class="font-serif text-xl opacity-80 mt-2">Tech enthusiast, perpetual learner, and gardener of notes.</p>
+      </div>
+      <img src="/profilepic.gif" alt="Sathvik Joel" width="120" height="120" class="size-28 rounded-full object-cover border-2 border-black/10 dark:border-white/15 shadow-md" />
+    </div>
+  </TopLayout>
+  <BottomLayout>
+    <article class="animate prose-post">
+      <p>
+        This is my corner of the internet — a digital garden where I document what I'm learning and
+        thinking about. Some pieces are polished <strong>essays</strong> meant to explain something
+        clearly; others are rough <strong>field notes</strong> I keep mostly for myself, and let grow
+        over time. You're welcome to read both.
+      </p>
+      <p>
+        I write across three loose gardens: <a href="/posts/tech">Tech</a> (machine learning, math,
+        and building software), <a href="/posts/life">Life</a> (travel, exams, applications, and the
+        ordinary adventures in between), and <a href="/posts/philosophy">Philosophy</a> (slow thoughts
+        on how to think and pay attention).
+      </p>
+      <p>
+        New things excite me, so the garden keeps changing. If something here resonates — or you just
+        want to say hi — reach out on any of the platforms below.
+      </p>
+
+      <h2>Find me</h2>
+      <ul>
+        {SOCIALS.map((social) => (
+          <li><a href={social.HREF} target="_blank">{social.NAME}</a> — {social.TEXT}</li>
+        ))}
+      </ul>
+
+      <p>
+        <a href="/resume">Read my resume →</a>
+      </p>
+    </article>
+  </BottomLayout>
+</PageLayout>

@@ -1,219 +1,128 @@
 ---
 import { getCollection } from "astro:content"
 import PageLayout from "@layouts/PageLayout.astro"
-import ArrowCard from "@components/ArrowCard"
-import StackCard from "@components/StackCard.astro"
-import { SITE, SOCIALS } from "@consts"
-import TwinklingStars from "@components/TwinklingStars.astro"
-import MeteorShower from "@components/MeteorShower.astro"
+import PostCard from "@components/PostCard.astro"
+import { SITE, SOCIALS, TOPICS } from "@consts"
 
-const posts = (await getCollection("blog"))
-  .filter(post => !post.data.draft)
+const all = (await getCollection("posts"))
+  .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0,3)
 
-const projects = (await getCollection("projects"))
-  .filter(project => !project.data.draft)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0,3)
+const featured = all.filter((p) => p.data.featured).slice(0, 2)
+const recent = all.slice(0, 4)
 
-const stack = [
-  { 
-    text: "Astro", 
-    icon: "astro", 
-    href: "https://astro.build" 
-  },
-  { 
-    text: "Javascript", 
-    icon: "javascript", 
-    href: "https://www.javascript.com" 
-  },
-  { 
-    text: "Typescript", 
-    icon: "typescript", 
-    href: "https://www.typescriptlang.org" 
-  },
-  { 
-    text: "Tailwind", 
-    icon: "tailwind", 
-    href: "https://tailwindcss.com" 
-  },
-]
+const topicCounts = TOPICS.map((t) => ({
+  ...t,
+  count: all.filter((p) => p.data.topic === t.KEY).length,
+}))
 ---
 
 <PageLayout title="Home" description={SITE.DESCRIPTION}>
-
-  <!-- Light Mode: Particles -->
-  <div class='absolute inset-0 block dark:hidden'>
-    <div id='particles1' class='fixed inset-0'></div>
-    <div id='particles2' class='fixed inset-0'></div>
-    <div id='particles3' class='fixed inset-0'></div>
-  </div>
-
-  <!-- Dark Theme: Stars -->
-  <div class='absolute inset-0 bg-black hidden dark:block'>
-    <div id='stars1' class='fixed inset-0'></div>
-    <div id='stars2' class='fixed inset-0'></div>
-    <div id='stars3' class='fixed inset-0'></div>
-  </div>
-
-  <!-- Dark Theme: Twinkling Stars / Metors -->
-  <div id="galaxy" class="fixed inset-0">
-    <div class="hidden dark:block">
-      <TwinklingStars/>
-      <MeteorShower/>
-    </div>
-  </div>
-
-  <script is:inline src="/js/bg.js"></script>
-  
   <!-- HERO -->
-  <section class="relative h-screen w-full">
-    <div id="planetcont" class='animate absolute inset-0 top-1/4 overflow-hidden'>
-      <div id="crescent" class='absolute top-0 left-1/2 -translate-x-1/2 w-[250vw] min-h-[100vh] aspect-square rounded-full p-[1px] bg-gradient-to-b from-black/25 dark:from-white/75 from-0% to-transparent to-5%'>
-        <div id="planet" class='w-full h-full bg-white dark:bg-black rounded-full p-[1px] overflow-hidden flex justify-center'>
-          <div id="blur" class='w-full h-20 rounded-full bg-neutral-900/25 dark:bg-white/25 blur-3xl'/>
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-surface-light/60 to-transparent dark:from-surface-dark/40"></div>
+    <div class="mx-auto max-w-screen-md px-5 pt-28 pb-16 sm:pt-36">
+      <div class="flex flex-col-reverse sm:flex-row items-center sm:items-end gap-8">
+        <div class="flex-1 text-center sm:text-left animate">
+          <p class="font-mono text-sm uppercase tracking-[0.2em] text-sage dark:text-sage-dark">A digital garden</p>
+          <h1 class="font-display text-5xl sm:text-6xl font-bold leading-[1.05] text-black dark:text-white mt-3">
+            Hi, I'm Sathvik Joel.
+          </h1>
+          <p class="font-serif text-2xl leading-snug opacity-85 mt-4">
+            I plant essays and field&nbsp;notes on <span class="text-sage dark:text-sage-dark">tech</span>,
+            <span class="text-clay">life</span>, and <span class="italic">philosophy</span> — and tend them as I keep learning.
+          </p>
+          <div class="flex flex-wrap gap-3 justify-center sm:justify-start mt-7">
+            <a href="/posts" class="py-2.5 px-5 rounded-full text-sm font-medium bg-black dark:bg-white text-white dark:text-black hover:opacity-80 blend">
+              Wander the garden
+            </a>
+            <a href="/about" class="py-2.5 px-5 rounded-full text-sm font-medium border border-black/20 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/10 blend">
+              About me
+            </a>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="animate absolute h-full w-full flex items-center justify-center">
-      <div class='relative w-full h-full flex items-center justify-center'>
-        <div class='p-5 text-center'>
-          <p class='animated text-lg md:text-xl lg:text-2xl font-semibold opacity-75'>
-            Hello, I am ...
-          </p>
-          <p class='animated text-2xl md:text-3xl lg:text-4xl font-bold uppercase text-black dark:text-white'>
-            Astro Sphere
-          </p>
-          <p class='animated text-sm md:text-base lg:text-lg opacity-75'>
-            Currently designing products for humans.
-          </p>
-          <div id="ctaButtons" class='animated flex flex-wrap gap-4 justify-center mt-5'>
-            <a href='/blog' class='py-2 px-4 rounded truncate text-xs md:text-sm lg:text-base bg-black dark:bg-white text-white dark:text-black hover:opacity-75 blend'>
-              Read my blog
-            </a>
-            <a href='/work' class='py-2 px-4 truncate rounded text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend'>
-              View my work
-            </a>
+        <div class="shrink-0 animate">
+          <div class="relative size-36 sm:size-44">
+            <div class="absolute inset-0 rounded-full bg-sage/20 blur-2xl"></div>
+            <img
+              src="/profilepic.gif"
+              alt="Sathvik Joel"
+              width="176"
+              height="176"
+              class="relative size-full rounded-full object-cover border-2 border-black/10 dark:border-white/15 shadow-lg"
+            />
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <div class="relative bg-white dark:bg-black">
-    <div class="mx-auto max-w-screen-sm p-5 space-y-24 pb-16">
+  <div class="mx-auto max-w-screen-md px-5 space-y-20 pb-24">
 
-      <!-- About Section -->
-      <section class="animate">
-        <article>
-          <p>I am a <b><i>software engineer</i></b>, <b><i>ui/ux designer</i></b>, <b><i>product planner</i></b>, <b><i>mentor</i></b>, <b><i>student</i></b>, <b><i>minimalist</i></b>, <b><i>eternal optimist</i></b>, <b><i>crypto enthusiast</i></b> and <b><i>sarcasm connoisseur</i></b>.</p>
-          <p>I love to both build and break things. I am motivated by challenging projects with self-guided research and dynamic problem solving. My true passion is crafting creative front end designs with unique takes on color, typography and motion.</p>
-          <p>During my career</p>
-          <p>I have built products ranging from marketing and ecommerce websites to complex enterprise apps with focus on delivering fast, elegant code along with delightful user interfaces.</p>
-          <p>Now</p>
-          <p>I currently work as a software engineer at StreamlineFS, where I do product planning, design and development.</p>
-        </article>
-      </section>
+    <!-- TOPIC GARDENS -->
+    <section class="animate">
+      <h2 class="font-display text-3xl font-semibold text-black dark:text-white">Three gardens</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+        {topicCounts.map((t) => (
+          <a href={`/posts/${t.KEY}`} class="group p-5 rounded-2xl border border-black/10 dark:border-white/15 hover:border-black/25 dark:hover:border-white/30 hover:-translate-y-1 bg-surface-light/40 dark:bg-surface-dark/40 transition-all duration-300">
+            <div class="text-3xl group-hover:animate-sway">{t.EMOJI}</div>
+            <h3 class="font-display text-xl font-semibold mt-3 text-black dark:text-white">{t.LABEL}</h3>
+            <p class="font-serif text-base leading-snug opacity-75 mt-1">{t.BLURB}</p>
+            <p class="font-mono text-xs uppercase tracking-wide opacity-50 mt-3">{t.count} pieces</p>
+          </a>
+        ))}
+      </div>
+    </section>
 
-      <!-- Blog Preview Section -->
+    {featured.length > 0 && (
       <section class="animate">
-        <div class="space-y-4">
-          <div class="flex justify-between">
-            <p class="font-semibold text-black dark:text-white">
-              Recent posts
-            </p>
-            <a href="/blog" class="w-fit col-span-3 group flex gap-1 items-center underline decoration-[.5px] decoration-black/25 dark:decoration-white/50 hover:decoration-black dark:hover:decoration-white text-black dark:text-white underline-offset-2 blend">
-              <span class="text-black/75 dark:text-white/75 group-hover:text-black group-hover:dark:text-white blend">
-                All posts
-              </span>
-            </a>
-          </div>
-          <ul class="space-y-4">
-            {posts.map((post) => (
-              <li>
-                <ArrowCard entry={post} />
-              </li>
-            ))}
-          </ul>
+        <div class="flex items-baseline justify-between">
+          <h2 class="font-display text-3xl font-semibold text-black dark:text-white">Favourites</h2>
+          <span class="font-mono text-xs uppercase tracking-wide opacity-50">curated</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+          {featured.map((post) => <PostCard entry={post} showTopic={true} />)}
         </div>
       </section>
+    )}
 
-      <!-- Tech Stack Section -->
-      <section class="animate">
-        <div class="space-y-4">
-          <p class="font-semibold text-black dark:text-white">
-            Website build with
-          </p>
-          <div class="flex flex-wrap items-center gap-2 mt-5">
-            {stack.map(item => (
-              <StackCard 
-                text={item.text}
-                icon={item.icon}
-                href={item.href}
-              />
-            ))}
-          </div>
-          <div>
-            Performing reactivity and statefulness, special guest
-            <a href="https://www.solidjs.com/" target="_blank" class="w-fit group underline decoration-[.5px] decoration-black/25 dark:decoration-white/50 hover:decoration-black dark:hover:decoration-white text-black dark:text-white underline-offset-2 blend">
-              <span class="text-black/75 dark:text-white/75 group-hover:text-black group-hover:dark:text-white blend">
-                SolidJS
-              </span>
-            </a>
-          </div>
-        </div>
-      </section>
+    <!-- RECENT WRITING -->
+    <section class="animate">
+      <div class="flex items-baseline justify-between">
+        <h2 class="font-display text-3xl font-semibold text-black dark:text-white">Recently tended</h2>
+        <a href="/posts" class="text-sm underline decoration-black/25 dark:decoration-white/40 hover:decoration-black dark:hover:decoration-white underline-offset-2 blend">
+          All writing
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+        {recent.map((post) => <PostCard entry={post} showTopic={true} />)}
+      </div>
+    </section>
 
-      <!-- Project Preview Section -->
-      <section class="animate">
-        <div class="space-y-4">
-          <div class="flex justify-between">
-            <p class="font-semibold text-black dark:text-white">
-              Recent projects
-            </p>
-            <a href="/projects" class="w-fit col-span-3 group flex gap-1 items-center underline decoration-[.5px] decoration-black/25 dark:decoration-white/50 hover:decoration-black dark:hover:decoration-white text-black dark:text-white underline-offset-2 blend">
-              <span class="text-black/75 dark:text-white/75 group-hover:text-black group-hover:dark:text-white blend">
-                All projects
-              </span>
-            </a>
-          </div>
-          <ul class="space-y-4">
-            {projects.map((project) => (
-              <li>
-                <ArrowCard entry={project} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+    <!-- NOW -->
+    <section class="animate">
+      <h2 class="font-display text-3xl font-semibold text-black dark:text-white">Now</h2>
+      <div class="mt-4 p-5 rounded-2xl border border-clay/30 bg-clay/5">
+        <p class="font-serif text-xl leading-relaxed opacity-90">
+          Documenting my learning notes and chasing whatever excites me — new tech, new ideas,
+          new places. Always learning something. <span class="opacity-60 font-mono text-sm">(this section grows with me)</span>
+        </p>
+      </div>
+    </section>
 
-      <!-- Contact Section -->
-      <section class="animate">
-        <div>
-          <p class="font-semibold text-black dark:text-white">
-            Let's Connect
-          </p>
-          <p>
-            Reach out to me via email or on social media.
-          </p>
-          <div class="grid grid-cols-4 gap-y-2 mt-4 auto-cols-min">
-            {SOCIALS.map(social => (
-              <div class="col-span-1 flex items-center gap-1">
-                <span class="whitespace-nowrap truncate">
-                  {social.NAME}
-                </span>
-              </div>
-              <div class="col-span-3 truncate">
-                <a href={social.HREF} target="_blank" class="w-fit col-span-3 group flex gap-1 items-center underline decoration-[.5px] decoration-black/25 dark:decoration-white/50 hover:decoration-black dark:hover:decoration-white text-black dark:text-white underline-offset-2 blend">
-                  <span class="text-black/75 dark:text-white/75 group-hover:text-black group-hover:dark:text-white blend">
-                    {social.TEXT}
-                  </span>
-                </a>
-              </div>
-            ))}
-        </div>
-      </section>
-    </div>
+    <!-- CONNECT -->
+    <section class="animate">
+      <h2 class="font-display text-3xl font-semibold text-black dark:text-white">Let's connect</h2>
+      <div class="flex flex-wrap gap-3 mt-5">
+        {SOCIALS.map((social) => (
+          <a href={social.HREF} target="_blank" class="group flex items-center gap-2 py-2 px-4 rounded-full border border-black/15 dark:border-white/20 hover:bg-black/5 hover:dark:bg-white/10 blend">
+            <svg class="size-4 fill-current opacity-75 group-hover:opacity-100">
+              <use href={`/social.svg#${social.ICON}`} />
+            </svg>
+            <span class="text-sm">{social.NAME}</span>
+          </a>
+        ))}
+      </div>
+    </section>
   </div>
 </PageLayout>

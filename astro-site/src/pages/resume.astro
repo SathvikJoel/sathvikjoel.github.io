@@ -1,0 +1,40 @@
+---
+import PageLayout from "@layouts/PageLayout.astro"
+import TopLayout from "@layouts/TopLayout.astro"
+import BottomLayout from "@layouts/BottomLayout.astro"
+---
+
+<PageLayout title="Resume" description="Sathvik Joel — resume and CV.">
+  <TopLayout>
+    <div class="animate flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h1 class="font-display text-4xl sm:text-5xl font-semibold text-black dark:text-white">Resume</h1>
+        <p class="font-serif text-xl opacity-80 mt-2">A snapshot of what I've worked on.</p>
+      </div>
+      <a
+        href="/resume.pdf"
+        download
+        class="py-2.5 px-5 rounded-full text-sm font-medium bg-black dark:bg-white text-white dark:text-black hover:opacity-80 blend"
+      >
+        Download PDF
+      </a>
+    </div>
+  </TopLayout>
+  <BottomLayout>
+    <div class="animate">
+      <object
+        data="/resume.pdf"
+        type="application/pdf"
+        class="w-full rounded-xl border border-black/10 dark:border-white/15 shadow-sm"
+        style="height: min(80vh, 1100px);"
+      >
+        <div class="p-8 text-center">
+          <p class="font-serif text-xl opacity-80">
+            Your browser can't display the embedded PDF.
+            <a href="/resume.pdf" class="underline" download>Download it here</a>.
+          </p>
+        </div>
+      </object>
+    </div>
+  </BottomLayout>
+</PageLayout>

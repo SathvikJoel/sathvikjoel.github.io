@@ -12,10 +12,10 @@ import InlineSVG from "@components/mdx/InlineSVG.astro"
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts")
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: post,
-  }))
+  return posts.map((post) => {
+    const [topic, slug] = post.slug.split("/")
+    return { params: { topic, slug }, props: post }
+  })
 }
 
 type Props = CollectionEntry<"posts">
@@ -23,8 +23,17 @@ const post = Astro.props
 const { title, description, date, topic, kind, growthStage, lastTended } = post.data
 const { Content } = await post.render()
 
+// Prev / next within the same topic, by date.
+const siblings = (await getCollection("posts"))
+  .filter((p) => p.data.topic === topic && !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+const index = siblings.findIndex((p) => p.slug === post.slug)
+const prev = index > 0 ? siblings[index - 1] : null
+const next = index < siblings.length - 1 ? siblings[index + 1] : null
+
 const mdxComponents = { Figure, Excursion, Details, CodeCaption, InlineSVG }
 const stageLabel = { seedling: "🌱 Seedling", budding: "🌿 Budding", evergreen: "🌳 Evergreen" }
+const isNote = kind === "note"
 ---
 
 <PageLayout title={title} description={description}>
@@ -48,26 +57,41 @@ const stageLabel = { seedling: "🌱 Seedling", budding: "🌿 Budding", evergre
           <svg class="size-5 stroke-current"><use href="/ui.svg#book-open"/></svg>
           {readingTime(post.body)}
         </div>
-        {kind === "note" && growthStage &&
-          <div class="px-2 py-0.5 rounded-full bg-sage/15 text-sage normal-case tracking-wide">
+        {isNote && growthStage &&
+          <div class="px-2 py-0.5 rounded-full bg-clay/15 text-clay normal-case tracking-wide">
             {stageLabel[growthStage]}
           </div>
         }
       </div>
-      <h1 class="font-display text-4xl sm:text-5xl font-semibold text-black dark:text-white mt-2 leading-tight">
+      <h1 class:list={["font-display text-4xl sm:text-5xl font-semibold text-black dark:text-white mt-2 leading-tight", isNote && "italic"]}>
         {title}
       </h1>
       {description &&
         <p class="font-display italic text-xl opacity-80 mt-3">{description}</p>
       }
-      {kind === "note" && lastTended &&
+      {isNote && lastTended &&
         <p class="font-mono text-xs opacity-60 mt-2">last tended {formatDate(lastTended)}</p>
       }
     </div>
   </TopLayout>
   <BottomLayout>
-    <article class="animate prose-post">
+    <article class:list={["animate prose-post", isNote && "note"]}>
       <Content components={mdxComponents}/>
     </article>
+
+    <nav class="animate grid grid-cols-1 sm:grid-cols-2 gap-4 mt-16">
+      {prev &&
+        <a href={`/posts/${prev.slug}`} class="group p-4 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 hover:dark:bg-white/10 blend">
+          <div class="text-xs uppercase opacity-60">Newer</div>
+          <div class="font-display text-lg font-semibold mt-1 text-black dark:text-white">{prev.data.title}</div>
+        </a>
+      }
+      {next &&
+        <a href={`/posts/${next.slug}`} class="group p-4 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 hover:dark:bg-white/10 blend sm:text-right sm:col-start-2">
+          <div class="text-xs uppercase opacity-60">Older</div>
+          <div class="font-display text-lg font-semibold mt-1 text-black dark:text-white">{next.data.title}</div>
+        </a>
+      }
+    </nav>
   </BottomLayout>
 </PageLayout>

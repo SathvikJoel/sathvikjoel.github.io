@@ -1,0 +1,22 @@
+---
+import PageLayout from "@layouts/PageLayout.astro"
+---
+
+<PageLayout title="404 — Lost in the garden" description="This page couldn't be found.">
+  <section class="min-h-[70vh] flex items-center justify-center px-5">
+    <div class="text-center animate">
+      <div class="text-6xl mb-4">🌿</div>
+      <h1 class="font-display text-5xl sm:text-6xl font-bold text-black dark:text-white">404</h1>
+      <p class="font-serif text-2xl opacity-80 mt-3">This path hasn't grown here.</p>
+      <p class="opacity-70 mt-1">The page you're looking for may have been moved, renamed, or never planted.</p>
+      <div class="flex flex-wrap gap-3 justify-center mt-7">
+        <a href="/" class="py-2.5 px-5 rounded-full text-sm font-medium bg-black dark:bg-white text-white dark:text-black hover:opacity-80 blend">
+          Back home
+        </a>
+        <a href="/posts" class="py-2.5 px-5 rounded-full text-sm font-medium border border-black/20 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/10 blend">
+          Browse writing
+        </a>
+      </div>
+    </div>
+  </section>
+</PageLayout>

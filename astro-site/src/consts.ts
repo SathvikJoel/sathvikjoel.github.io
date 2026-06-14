@@ -2,80 +2,89 @@ import type { Site, Page, Links, Socials } from "@types"
 
 // Global
 export const SITE: Site = {
-  TITLE: "Astro Sphere",
-  DESCRIPTION: "Welcome to Astro Sphere, a portfolio and blog for designers and developers.",
-  AUTHOR: "Mark Horn",
+  TITLE: "JoeLogs",
+  DESCRIPTION: "The digital garden of Sathvik Joel — essays and field notes on tech, life, and philosophy.",
+  AUTHOR: "Sathvik Joel",
 }
 
-// Work Page
-export const WORK: Page = {
-  TITLE: "Work",
-  DESCRIPTION: "Places I have worked.",
+// Writing (all posts)
+export const POSTS: Page = {
+  TITLE: "Writing",
+  DESCRIPTION: "Essays and notes growing across tech, life, and philosophy.",
 }
 
-// Blog Page
-export const BLOG: Page = {
-  TITLE: "Blog",
-  DESCRIPTION: "Writing on topics I am passionate about.",
-}
-
-// Projects Page 
-export const PROJECTS: Page = {
-  TITLE: "Projects",
-  DESCRIPTION: "Recent projects I have worked on.",
+// About Page
+export const ABOUT: Page = {
+  TITLE: "About",
+  DESCRIPTION: "A little about Sathvik Joel.",
 }
 
 // Search Page
 export const SEARCH: Page = {
   TITLE: "Search",
-  DESCRIPTION: "Search all posts and projects by keyword.",
+  DESCRIPTION: "Search all writing by keyword.",
 }
+
+// Topic gardens — order + presentation metadata.
+export const TOPICS = [
+  {
+    KEY: "tech",
+    LABEL: "Tech",
+    EMOJI: "👨‍💻",
+    BLURB: "Notes from the machine — ML, math, and the craft of building software.",
+  },
+  {
+    KEY: "life",
+    LABEL: "Life",
+    EMOJI: "🌱",
+    BLURB: "Letters from the road — travel, exams, applications, and growing up.",
+  },
+  {
+    KEY: "philosophy",
+    LABEL: "Philosophy",
+    EMOJI: "🧠",
+    BLURB: "Slow thoughts on how to think, live, and pay attention.",
+  },
+] as const
 
 // Links
 export const LINKS: Links = [
-  { 
-    TEXT: "Home", 
-    HREF: "/", 
-  },
-  { 
-    TEXT: "Work", 
-    HREF: "/work", 
-  },
-  { 
-    TEXT: "Blog", 
-    HREF: "/blog", 
-  },
-  { 
-    TEXT: "Projects", 
-    HREF: "/projects", 
-  },
+  { TEXT: "Home", HREF: "/" },
+  { TEXT: "Writing", HREF: "/posts" },
+  { TEXT: "About", HREF: "/about" },
+  { TEXT: "Resume", HREF: "/resume" },
 ]
 
 // Socials
 export const SOCIALS: Socials = [
-  { 
-    NAME: "Email",
-    ICON: "email", 
-    TEXT: "markhorn.dev@gmail.com",
-    HREF: "mailto:markhorn.dev@gmail.com",
-  },
-  { 
+  {
     NAME: "Github",
     ICON: "github",
-    TEXT: "markhorn-dev",
-    HREF: "https://github.com/markhorn-dev/astro-sphere"
+    TEXT: "SathvikJoel",
+    HREF: "https://github.com/SathvikJoel",
   },
-  { 
+  {
     NAME: "LinkedIn",
     ICON: "linkedin",
-    TEXT: "markhorn-dev",
-    HREF: "https://www.linkedin.com/in/markhorn-dev/",
+    TEXT: "sathvik-joel",
+    HREF: "https://www.linkedin.com/in/sathvik-joel-97524b18b/",
   },
-  { 
+  {
     NAME: "Twitter",
     ICON: "twitter-x",
-    TEXT: "markhorn_dev",
-    HREF: "https://twitter.com/markhorn_dev",
+    TEXT: "JoelSathvik",
+    HREF: "https://twitter.com/JoelSathvik",
+  },
+  {
+    NAME: "Instagram",
+    ICON: "instagram",
+    TEXT: "its.me.sathvik",
+    HREF: "https://www.instagram.com/its.me.sathvik/",
+  },
+  {
+    NAME: "Spotify",
+    ICON: "spotify",
+    TEXT: "Sathvik Joel",
+    HREF: "https://open.spotify.com/user/2ur48kajlcusfrez1xv8mvhtv",
   },
 ]
-

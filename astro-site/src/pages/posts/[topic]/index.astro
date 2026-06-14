@@ -1,0 +1,45 @@
+---
+import { getCollection } from "astro:content"
+import PageLayout from "@layouts/PageLayout.astro"
+import TopLayout from "@layouts/TopLayout.astro"
+import BottomLayout from "@layouts/BottomLayout.astro"
+import PostCard from "@components/PostCard.astro"
+import { TOPICS } from "@consts"
+
+export async function getStaticPaths() {
+  return TOPICS.map((t) => ({ params: { topic: t.KEY }, props: { topic: t } }))
+}
+
+const { topic } = Astro.props
+const posts = (await getCollection("posts"))
+  .filter((p) => p.data.topic === topic.KEY && !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+---
+
+<PageLayout title={`${topic.LABEL} — Writing`} description={topic.BLURB}>
+  <TopLayout>
+    <div class="animate">
+      <a href="/posts" class="group w-fit p-1.5 gap-1.5 text-sm flex items-center border rounded hover:bg-black/5 hover:dark:bg-white/10 border-black/15 dark:border-white/20 blend">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="stroke-current group-hover:stroke-black group-hover:dark:stroke-white">
+          <line x1="19" y1="12" x2="5" y2="12" />
+          <polyline points="12 19 5 12 12 5" />
+        </svg>
+        <div class="capitalize">All writing</div>
+      </a>
+      <div class="flex items-center gap-3 mt-10">
+        <span class="text-4xl">{topic.EMOJI}</span>
+        <h1 class="font-display text-4xl sm:text-5xl font-semibold text-black dark:text-white">{topic.LABEL}</h1>
+      </div>
+      <p class="font-serif text-xl opacity-80 mt-2 max-w-2xl">{topic.BLURB}</p>
+      <p class="text-sm uppercase tracking-wide opacity-60 mt-3">{posts.length} {posts.length === 1 ? "piece" : "pieces"}</p>
+    </div>
+  </TopLayout>
+  <BottomLayout>
+    <div class="animate grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {posts.map((post) => <PostCard entry={post} />)}
+    </div>
+    {posts.length === 0 && (
+      <p class="animate font-serif text-xl opacity-70 italic">Nothing has grown here yet. Check back soon.</p>
+    )}
+  </BottomLayout>
+</PageLayout>
