@@ -1,0 +1,46 @@
+---
+// A row in a MediaList: text on one side, an image alongside it.
+interface Props {
+  image: string
+  alt?: string
+  href?: string
+  flip?: boolean
+}
+const { image, alt = "", href, flip = false } = Astro.props
+---
+
+<div class:list={["media-item not-prose", flip && "sm:flip"]}>
+  <div class="media-body">
+    {href ? <a href={href}><slot /></a> : <slot />}
+  </div>
+  <div class="media-thumb">
+    <img src={image} alt={alt} loading="lazy" decoding="async" />
+  </div>
+</div>
+
+<style>
+  .media-item {
+    @apply grid items-center gap-4 py-5 border-b border-black/10 dark:border-white/10;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .media-item {
+      grid-template-columns: 1fr 11rem;
+    }
+    .media-item.flip {
+      grid-template-columns: 11rem 1fr;
+    }
+    .media-item.flip .media-body {
+      order: 2;
+    }
+    .media-item.flip .media-thumb {
+      order: 1;
+    }
+  }
+  .media-body {
+    @apply font-serif text-[1.05rem] leading-relaxed text-ink-light/90 dark:text-ink-dark/85;
+  }
+  .media-thumb :global(img) {
+    @apply w-full rounded-lg m-0 object-cover;
+  }
+</style>

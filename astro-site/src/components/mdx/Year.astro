@@ -1,0 +1,17 @@
+---
+// Inline year with an automatic "years ago" annotation, e.g. <Y y={1992} /> -> 1992 (33ya).
+interface Props {
+  y: number
+}
+const { y } = Astro.props
+const ago = new Date().getFullYear() - y
+---
+
+<span class="year">{y}<sup class="year-ago" title={`${ago} years ago`}>{ago}ya</sup></span>
+
+<style>
+  .year-ago {
+    @apply align-super text-[0.6em] font-sans tracking-tight text-ink-light/45 dark:text-ink-dark/45 ml-0.5;
+    line-height: 0;
+  }
+</style>

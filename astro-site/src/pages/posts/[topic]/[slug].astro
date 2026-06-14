@@ -10,6 +10,11 @@ import Excursion from "@components/mdx/Excursion.astro"
 import Details from "@components/mdx/Details.astro"
 import CodeCaption from "@components/mdx/CodeCaption.astro"
 import InlineSVG from "@components/mdx/InlineSVG.astro"
+import Sidenote from "@components/mdx/Sidenote.astro"
+import Gallery from "@components/mdx/Gallery.astro"
+import MediaList from "@components/mdx/MediaList.astro"
+import MediaItem from "@components/mdx/MediaItem.astro"
+import Year from "@components/mdx/Year.astro"
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts")
@@ -33,7 +38,7 @@ const index = siblings.findIndex((p) => p.slug === post.slug)
 const prev = index > 0 ? siblings[index - 1] : null
 const next = index < siblings.length - 1 ? siblings[index + 1] : null
 
-const mdxComponents = { Figure, Excursion, Details, CodeCaption, InlineSVG }
+const mdxComponents = { Figure, Excursion, Details, CodeCaption, InlineSVG, Sidenote, Gallery, MediaList, MediaItem, Year, Y: Year }
 const stageLabel = { seedling: "🌱 Seedling", budding: "🌿 Budding", evergreen: "🌳 Evergreen" }
 const isNote = kind === "note"
 ---

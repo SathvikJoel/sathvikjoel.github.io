@@ -1,0 +1,25 @@
+---
+// Image group: lay images side by side (cols=2) or stacked full-width (cols=1).
+interface Props {
+  cols?: number
+  caption?: string
+}
+const { cols = 2, caption } = Astro.props
+---
+
+<figure class="my-8 not-prose">
+  <div class:list={["grid gap-3", cols === 1 ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2"]}>
+    <slot />
+  </div>
+  {caption && (
+    <figcaption class="mt-3 text-center font-sans text-sm leading-snug text-ink-light/60 dark:text-ink-dark/55">
+      {caption}
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  .not-prose :global(img) {
+    @apply w-full h-full object-cover rounded-lg m-0;
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+// Tufte-style sidenote: a numbered margin note on wide screens, inline on mobile.
+interface Props {
+  n?: number | string
+}
+const { n = "*" } = Astro.props
+---
+
+<span class="sidenote-ref">{n}</span>
+<aside class="sidenote">
+  <sup class="sidenote-num">{n}</sup><slot />
+</aside>
+
+<style>
+  .sidenote-ref {
+    @apply align-super text-[0.7em] font-sans font-medium text-crimson dark:text-crimson-dark;
+    line-height: 0;
+  }
+  .sidenote {
+    @apply block font-sans text-[0.8rem] leading-relaxed text-ink-light/65 dark:text-ink-dark/60;
+    margin: 0.4rem 0 1rem;
+    padding-left: 0.9rem;
+    border-left: 2px solid theme(colors.crimson.DEFAULT / 35%);
+  }
+  .sidenote-num {
+    @apply text-crimson dark:text-crimson-dark font-medium mr-1;
+  }
+  /* Float into the right margin once there's gutter room. */
+  @media (min-width: 1280px) {
+    .sidenote {
+      float: right;
+      clear: right;
+      width: 13rem;
+      margin-right: -14rem;
+      margin-top: 0.2rem;
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+</style>

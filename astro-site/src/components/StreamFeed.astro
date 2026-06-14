@@ -6,13 +6,18 @@ import Excursion from "@components/mdx/Excursion.astro"
 import Details from "@components/mdx/Details.astro"
 import CodeCaption from "@components/mdx/CodeCaption.astro"
 import InlineSVG from "@components/mdx/InlineSVG.astro"
+import Sidenote from "@components/mdx/Sidenote.astro"
+import Gallery from "@components/mdx/Gallery.astro"
+import MediaList from "@components/mdx/MediaList.astro"
+import MediaItem from "@components/mdx/MediaItem.astro"
+import Year from "@components/mdx/Year.astro"
 
 type Props = {
   posts: CollectionEntry<"posts">[]
 }
 
 const { posts } = Astro.props
-const mdxComponents = { Figure, Excursion, Details, CodeCaption, InlineSVG }
+const mdxComponents = { Figure, Excursion, Details, CodeCaption, InlineSVG, Sidenote, Gallery, MediaList, MediaItem, Year, Y: Year }
 
 const rendered = await Promise.all(
   posts.map(async (post) => ({ post, Content: (await post.render()).Content }))
