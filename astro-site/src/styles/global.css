@@ -96,13 +96,13 @@ article {
 }
 
 .dark article {
-  --tw-prose-body: theme(colors.ink.dark / 85%);
-  --tw-prose-headings: theme(colors.ink.dark);
-  --tw-prose-links: theme(colors.sage.dark);
-  --tw-prose-bold: theme(colors.ink.dark);
+  --tw-prose-body: theme(colors.ink.dark / 90%);
+  --tw-prose-headings: theme(colors.white);
+  --tw-prose-links: theme(colors.crimson.dark);
+  --tw-prose-bold: theme(colors.white);
   --tw-prose-quotes: theme(colors.ink.dark / 80%);
-  --tw-prose-quote-borders: theme(colors.sage.dark / 40%);
-  --tw-prose-code: theme(colors.clay.dark);
+  --tw-prose-quote-borders: theme(colors.crimson.dark / 40%);
+  --tw-prose-code: theme(colors.gold.DEFAULT);
 }
 
 article :is(h1, h2, h3, h4) {

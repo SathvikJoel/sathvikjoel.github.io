@@ -7,20 +7,25 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Warm "paper / ink" remap so the whole template warms at once.
-        // white = light paper background & dark text; black = light text & dark soil background.
-        white: "#FBF7EF",
-        black: "#1A1712",
-        // Explicit garden tokens for new components.
-        paper: { light: "#FBF7EF", dark: "#15130E" },
-        surface: { light: "#F2EADB", dark: "#211D16" },
-        ink: { light: "#2A2620", dark: "#ECE4D6" },
-        // Botanical accent (Essays / primary voice).
-        sage: { DEFAULT: "#4E6B4F", light: "#4E6B4F", dark: "#9CBE97" },
-        // Clay accent (Notes / personal voice).
-        clay: { DEFAULT: "#B06A43", light: "#B06A43", dark: "#D69A6F" },
-        // Crimson hover accent (Maggie-style card hover highlight).
-        crimson: { DEFAULT: "#A33A28", light: "#A33A28", dark: "#E08B6F" },
+        // Maggie Appleton's exact DARK palette (her site's prefers-color-scheme: dark).
+        // white = bright text/headings; black = the cream page background.
+        white: "#D4D1CC",
+        black: "#1C1B18",
+        // Page + surfaces (her cream / light-cream / tinted-cream, dark values).
+        paper: { light: "#F6F5F1", dark: "#1C1B18" },
+        surface: { light: "#FCFBF7", dark: "#252420" },
+        ink: { light: "#353534", dark: "#C2BFBA" },
+        // Secondary accent — her sea-blue.
+        sage: { DEFAULT: "#2BC4DA", light: "#008BA3", dark: "#2BC4DA" },
+        // Tertiary accent — her salmon.
+        clay: { DEFAULT: "#FF9A8A", light: "#FD8370", dark: "#FF9A8A" },
+        // Primary accent — her crimson (pink in dark) for links + card hover.
+        crimson: { DEFAULT: "#E85AAB", light: "#5F023E", dark: "#E85AAB" },
+        // Extra accents from her palette, available for use.
+        seablue: { DEFAULT: "#2BC4DA", dark: "#008BA3" },
+        gold: { DEFAULT: "#E5B876" },
+        salmon: { DEFAULT: "#FF9A8A" },
+        purple: { DEFAULT: "#9B7FD9" },
       },
       fontFamily: {
         // UI / labels / meta — exactly as Maggie Appleton uses.
