@@ -109,7 +109,7 @@ article {
 article :is(h1, h2, h3, h4) {
   @apply font-display;
   letter-spacing: -0.005em;
-  font-weight: 400;
+  font-weight: 300;
 }
 
 article a {
