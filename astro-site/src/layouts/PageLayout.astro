@@ -24,7 +24,8 @@ import { SITE } from "@consts"
   <body>
     <Header />
     <Drawer />
-    <main>
+    <main class="relative">
+      <div class="page-glow" aria-hidden="true"></div>
       <slot />
     </main>
     <Footer />
