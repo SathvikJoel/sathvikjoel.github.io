@@ -15,6 +15,7 @@ import WideImage from "@components/mdx/WideImage.astro"
 import Reference from "@components/mdx/Reference.astro"
 import Pullquote from "@components/mdx/Pullquote.astro"
 import ComingSoon from "@components/mdx/ComingSoon.astro"
+import StageIcon from "@components/StageIcon.astro"
 
 type Props = {
   posts: CollectionEntry<"posts">[]
@@ -26,21 +27,18 @@ const mdxComponents = { Figure, Excursion, Details, CodeCaption, InlineSVG, Side
 const rendered = await Promise.all(
   posts.map(async (post) => ({ post, Content: (await post.render()).Content }))
 )
-
-const stageEmoji: Record<string, string> = { seedling: "🌱", budding: "🌿", evergreen: "🌳" }
 ---
 
 <div class="stream-feed flex flex-col">
   {rendered.map(({ post, Content }, i) => (
-    <article class="animate stream-item">
+    <article class="group animate stream-item">
       {i > 0 && <hr class="stream-sep" />}
       <header class="mb-4">
         <div class="flex items-center gap-2 font-sans text-[0.72rem] uppercase tracking-wide opacity-55">
           <time>{formatDate(post.data.date)}</time>
           {post.data.kind === "note" && post.data.growthStage && (
-            <span title={post.data.growthStage}>{stageEmoji[post.data.growthStage]}</span>
+            <StageIcon stage={post.data.growthStage} class="size-4" />
           )}
-          {post.data.kind === "micro" && <span title="micro-post">💬</span>}
         </div>
         {post.data.kind !== "micro" && (
           <h2 class="font-display text-2xl sm:text-3xl leading-tight mt-1 text-black dark:text-white">

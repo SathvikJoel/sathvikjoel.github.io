@@ -15,7 +15,6 @@ const count = (pred: (p: CollectionEntry<"posts">) => boolean) => posts.filter(p
 const topicFacets = TOPICS.map((t) => ({
   value: t.KEY,
   label: t.LABEL,
-  emoji: t.EMOJI,
   n: count((p) => p.data.topic === t.KEY),
 }))
 
@@ -26,41 +25,40 @@ const kindFacets = [
 ]
 
 const stageFacets = [
-  { value: "seedling", label: "🌱 Seedling", n: count((p) => p.data.growthStage === "seedling") },
-  { value: "budding", label: "🌿 Budding", n: count((p) => p.data.growthStage === "budding") },
-  { value: "evergreen", label: "🌳 Evergreen", n: count((p) => p.data.growthStage === "evergreen") },
+  { value: "seedling", label: "Seedling", n: count((p) => p.data.growthStage === "seedling") },
+  { value: "budding", label: "Budding", n: count((p) => p.data.growthStage === "budding") },
+  { value: "evergreen", label: "Evergreen", n: count((p) => p.data.growthStage === "evergreen") },
+]
+
+const groups = [
+  { name: "kind", placeholder: "All types", facets: kindFacets },
+  { name: "topic", placeholder: "All streams", facets: topicFacets },
+  { name: "stage", placeholder: "All stages", facets: stageFacets },
 ]
 ---
 
 {showFilters && (
-  <div class="filter-bar animate flex flex-wrap items-end gap-x-6 gap-y-4 mb-8">
-    <label class="flex flex-col gap-1">
-      <span class="font-sans text-[0.7rem] uppercase tracking-widest text-ink-light/40 dark:text-ink-dark/40">Type</span>
-      <select class="facet-select" data-group="kind">
-        <option value="all">All types</option>
-        {kindFacets.map((f) => (
-          <option value={f.value} disabled={f.n === 0}>{f.label} ({f.n})</option>
-        ))}
-      </select>
-    </label>
-    <label class="flex flex-col gap-1">
-      <span class="font-sans text-[0.7rem] uppercase tracking-widest text-ink-light/40 dark:text-ink-dark/40">Stream</span>
-      <select class="facet-select" data-group="topic">
-        <option value="all">All streams</option>
-        {topicFacets.map((f) => (
-          <option value={f.value} disabled={f.n === 0}>{f.emoji} {f.label} ({f.n})</option>
-        ))}
-      </select>
-    </label>
-    <label class="flex flex-col gap-1">
-      <span class="font-sans text-[0.7rem] uppercase tracking-widest text-ink-light/40 dark:text-ink-dark/40">Stage</span>
-      <select class="facet-select" data-group="stage">
-        <option value="all">All stages</option>
-        {stageFacets.map((f) => (
-          <option value={f.value} disabled={f.n === 0}>{f.label} ({f.n})</option>
-        ))}
-      </select>
-    </label>
+  <div class="filter-bar animate flex flex-wrap items-center gap-2 mb-8">
+    {groups.map((g) => (
+      <div class="facet-dd relative" data-group={g.name} data-placeholder={g.placeholder}>
+        <button type="button" class="facet-toggle" aria-haspopup="true" aria-expanded="false">
+          <span class="facet-label">{g.placeholder}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="facet-chevron size-3.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="facet-menu" hidden>
+          {g.facets.map((f) => (
+            <label class:list={["facet-option", f.n === 0 && "is-empty"]}>
+              <input type="checkbox" value={f.value} disabled={f.n === 0} />
+              <span class="facet-check" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span class="facet-text">{f.label}</span>
+              <span class="facet-n">{f.n}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+    ))}
   </div>
 )}
 
@@ -72,18 +70,50 @@ const stageFacets = [
 </p>
 
 <style>
-  .facet-select {
-    @apply font-sans text-sm px-3 py-2 pr-8 rounded-lg border border-clay/20 dark:border-white/15 bg-surface-light dark:bg-surface-dark text-ink-light dark:text-ink-dark transition-colors duration-200 cursor-pointer appearance-none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23A8A5A0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.6rem center;
+  .facet-toggle {
+    @apply flex items-center gap-2 font-sans text-sm pl-3 pr-2.5 py-1.5 rounded-lg border border-clay/20 dark:border-white/15 bg-surface-light dark:bg-surface-dark text-ink-light/80 dark:text-ink-dark/80 transition-colors duration-200 cursor-pointer;
   }
-  .facet-select:hover {
-    @apply border-clay/50;
+  .facet-toggle:hover {
+    @apply border-clay/50 text-ink-light dark:text-ink-dark;
   }
-  .facet-select:focus {
-    @apply outline-none border-crimson dark:border-crimson-dark;
+  .facet-dd.is-active .facet-toggle {
+    @apply border-crimson/60 text-ink-light dark:text-ink-dark;
   }
+  .facet-dd.has-selection .facet-toggle {
+    @apply border-crimson/60 text-crimson dark:text-crimson-dark;
+  }
+  .facet-chevron {
+    @apply opacity-60 transition-transform duration-200;
+  }
+  .facet-dd.is-open .facet-chevron {
+    @apply rotate-180;
+  }
+  .facet-menu {
+    @apply absolute left-0 top-[calc(100%+0.4rem)] z-30 min-w-[12rem] p-1.5 rounded-xl border border-clay/20 dark:border-white/15 bg-surface-light dark:bg-surface-dark shadow-lg;
+  }
+  .facet-menu[hidden] { display: none; }
+  .facet-option {
+    @apply flex items-center gap-2.5 px-2 py-1.5 rounded-lg font-sans text-sm text-ink-light/85 dark:text-ink-dark/85 cursor-pointer transition-colors duration-150;
+  }
+  .facet-option:hover {
+    @apply bg-black/5 dark:bg-white/10;
+  }
+  .facet-option.is-empty {
+    @apply opacity-35 cursor-not-allowed;
+  }
+  .facet-option input {
+    @apply sr-only;
+  }
+  .facet-check {
+    @apply flex items-center justify-center size-4 rounded border border-clay/40 dark:border-white/30 text-white shrink-0 transition-colors duration-150;
+  }
+  .facet-check svg { @apply size-3 opacity-0 transition-opacity duration-150; }
+  .facet-option input:checked ~ .facet-check {
+    @apply bg-crimson dark:bg-crimson-dark border-transparent;
+  }
+  .facet-option input:checked ~ .facet-check svg { @apply opacity-100; }
+  .facet-text { @apply flex-1; }
+  .facet-n { @apply text-[0.7em] opacity-50 tabular-nums; }
   .post-card.filtered-out {
     display: none;
   }
@@ -94,30 +124,69 @@ const stageFacets = [
     const grid = document.querySelector<HTMLElement>("[data-garden]")
     if (!grid) return
     const empty = document.querySelector<HTMLElement>("[data-empty]")
-    const state: Record<string, string> = { kind: "all", topic: "all", stage: "all" }
+    const state: Record<string, Set<string>> = { kind: new Set(), topic: new Set(), stage: new Set() }
 
     function apply() {
       const cards = grid!.querySelectorAll<HTMLElement>("[data-card]")
       let visible = 0
       cards.forEach((card) => {
         const ok =
-          (state.kind === "all" || card.dataset.kind === state.kind) &&
-          (state.topic === "all" || card.dataset.topic === state.topic) &&
-          (state.stage === "all" || card.dataset.stage === state.stage)
+          (state.kind.size === 0 || state.kind.has(card.dataset.kind ?? "")) &&
+          (state.topic.size === 0 || state.topic.has(card.dataset.topic ?? "")) &&
+          (state.stage.size === 0 || state.stage.has(card.dataset.stage ?? ""))
         card.classList.toggle("filtered-out", !ok)
         if (ok) visible++
       })
       if (empty) empty.classList.toggle("hidden", visible !== 0)
     }
 
-    document.querySelectorAll<HTMLSelectElement>(".filter-bar select[data-group]").forEach((select) => {
-      const name = select.dataset.group!
-      select.value = state[name] ?? "all"
-      select.addEventListener("change", () => {
-        state[name] = select.value
-        apply()
+    const dds = Array.from(document.querySelectorAll<HTMLElement>(".filter-bar .facet-dd"))
+
+    function closeAll(except?: HTMLElement) {
+      dds.forEach((dd) => {
+        if (dd === except) return
+        dd.classList.remove("is-open")
+        dd.querySelector(".facet-menu")?.setAttribute("hidden", "")
+        dd.querySelector(".facet-toggle")?.setAttribute("aria-expanded", "false")
+      })
+    }
+
+    dds.forEach((dd) => {
+      const name = dd.dataset.group!
+      const placeholder = dd.dataset.placeholder ?? "All"
+      const toggle = dd.querySelector<HTMLButtonElement>(".facet-toggle")!
+      const menu = dd.querySelector<HTMLElement>(".facet-menu")!
+      const labelEl = dd.querySelector<HTMLElement>(".facet-label")!
+
+      toggle.addEventListener("click", (e) => {
+        e.stopPropagation()
+        const willOpen = !dd.classList.contains("is-open")
+        closeAll(dd)
+        dd.classList.toggle("is-open", willOpen)
+        toggle.setAttribute("aria-expanded", String(willOpen))
+        if (willOpen) menu.removeAttribute("hidden")
+        else menu.setAttribute("hidden", "")
+      })
+
+      menu.querySelectorAll<HTMLInputElement>("input[type=checkbox]").forEach((cb) => {
+        cb.addEventListener("change", () => {
+          if (cb.checked) state[name].add(cb.value)
+          else state[name].delete(cb.value)
+
+          const selected = menu.querySelectorAll<HTMLInputElement>("input:checked")
+          if (selected.length === 0) labelEl.textContent = placeholder
+          else if (selected.length === 1) {
+            labelEl.textContent = selected[0].parentElement!.querySelector(".facet-text")!.textContent
+          } else labelEl.textContent = `${selected.length} selected`
+
+          dd.classList.toggle("has-selection", selected.length > 0)
+          apply()
+        })
       })
     })
+
+    document.addEventListener("click", () => closeAll())
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll() })
   }
 
   initGarden()

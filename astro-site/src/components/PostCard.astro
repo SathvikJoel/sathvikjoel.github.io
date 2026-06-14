@@ -1,18 +1,18 @@
 ---
 import type { CollectionEntry } from "astro:content"
 import { formatDate, truncateText } from "@lib/utils"
+import StageIcon from "@components/StageIcon.astro"
 
 type Props = {
   entry: CollectionEntry<"posts">
 }
 
 const { entry } = Astro.props
-const { title, description, date, topic, tags, kind, growthStage, cover, coverAlt } = entry.data
+const { title, description, date, topic, kind, growthStage, cover, coverAlt, image, imageAlt } = entry.data
 const href = `/posts/${entry.slug}`
 const isNote = kind === "note"
 const isMicro = kind === "micro"
 const stage = growthStage ?? ""
-const stageEmoji: Record<string, string> = { seedling: "🌱", budding: "🌿", evergreen: "🌳" }
 
 // Micro-posts have no formal title — show a stripped excerpt of the body instead.
 const microExcerpt = isMicro
@@ -34,13 +34,18 @@ const microExcerpt = isMicro
     </div>
   )}
 
+  {isMicro && image && (
+    <div class="mb-3 overflow-hidden rounded-lg aspect-[4/5]">
+      <img src={image} alt={imageAlt ?? ""} loading="lazy" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500" />
+    </div>
+  )}
+
   <div class="flex items-center gap-1.5 font-sans text-[0.72rem] uppercase tracking-wide text-ink-light/55 dark:text-ink-dark/55">
     <span class="capitalize font-medium text-sage dark:text-sage-dark">{topic}</span>
     <span class="opacity-40">·</span>
     <span>{formatDate(date)}</span>
-    {isMicro && <span class="ml-auto text-sm" title="micro-post">💬</span>}
     {isNote && stage && (
-      <span class="ml-auto text-sm" title={stage}>{stageEmoji[stage]}</span>
+      <StageIcon stage={stage} class="ml-auto size-4" />
     )}
   </div>
 
@@ -62,15 +67,5 @@ const microExcerpt = isMicro
 
   {description && !isMicro && (
     <p class="font-sans text-sm leading-snug text-ink-light/60 dark:text-ink-dark/60 mt-1.5 line-clamp-3">{description}</p>
-  )}
-
-  {tags.length > 0 && (
-    <ul class="flex flex-wrap gap-1.5 mt-3">
-      {tags.slice(0, 3).map((tag) => (
-        <li class="font-sans text-[0.65rem] uppercase tracking-wide py-0.5 px-2 rounded-full bg-clay/10 dark:bg-white/10 text-ink-light/60 dark:text-ink-dark/60">
-          {tag}
-        </li>
-      ))}
-    </ul>
   )}
 </a>

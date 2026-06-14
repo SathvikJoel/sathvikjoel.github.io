@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content"
 import { getBacklinks, getRelated } from "@lib/connections"
+import StageIcon from "@components/StageIcon.astro"
 
 type Props = {
   post: CollectionEntry<"posts">
@@ -11,16 +12,6 @@ const { post, all } = Astro.props
 
 const backlinks = getBacklinks(post, all)
 const related = getRelated(post, all, backlinks, 3)
-
-const stageEmoji: Record<string, string> = { seedling: "🌱", budding: "🌿", evergreen: "🌳" }
-
-const card = (p: CollectionEntry<"posts">) => ({
-  href: `/posts/${p.slug}`,
-  title: p.data.title,
-  description: p.data.description,
-  topic: p.data.topic,
-  emoji: p.data.kind === "note" && p.data.growthStage ? stageEmoji[p.data.growthStage] : "",
-})
 ---
 
 {(backlinks.length > 0 || related.length > 0) && (
@@ -31,18 +22,24 @@ const card = (p: CollectionEntry<"posts">) => ({
           {backlinks.length} {backlinks.length === 1 ? "post links" : "posts link"} here
         </h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {backlinks.map((p) => {
-            const c = card(p)
-            return (
-              <a href={c.href} class="conn-card group">
-                <span class="conn-emoji">{c.emoji || "🔗"}</span>
-                <span class="min-w-0">
-                  <span class="conn-title">{c.title}</span>
-                  {c.description && <span class="conn-desc">{c.description}</span>}
-                </span>
-              </a>
-            )
-          })}
+          {backlinks.map((p) => (
+            <a href={`/posts/${p.slug}`} class="conn-card group">
+              <span class="conn-emoji">
+                {p.data.kind === "note" && p.data.growthStage ? (
+                  <StageIcon stage={p.data.growthStage} class="size-4" />
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="size-4 opacity-60">
+                    <path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1" />
+                    <path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1" />
+                  </svg>
+                )}
+              </span>
+              <span class="min-w-0">
+                <span class="conn-title">{p.data.title}</span>
+                {p.data.description && <span class="conn-desc">{p.data.description}</span>}
+              </span>
+            </a>
+          ))}
         </div>
       </div>
     )}
@@ -51,18 +48,15 @@ const card = (p: CollectionEntry<"posts">) => ({
       <div>
         <h3 class="font-sans text-xs uppercase tracking-widest opacity-50 mb-4">Keep exploring</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {related.map((p) => {
-            const c = card(p)
-            return (
-              <a href={c.href} class="conn-card group">
-                <span class="conn-emoji capitalize text-[0.62rem] tracking-wide opacity-60 not-italic font-sans">{c.topic}</span>
-                <span class="min-w-0">
-                  <span class="conn-title">{c.title}</span>
-                  {c.description && <span class="conn-desc">{c.description}</span>}
-                </span>
-              </a>
-            )
-          })}
+          {related.map((p) => (
+            <a href={`/posts/${p.slug}`} class="conn-card group">
+              <span class="conn-emoji capitalize text-[0.62rem] tracking-wide opacity-60 not-italic font-sans">{p.data.topic}</span>
+              <span class="min-w-0">
+                <span class="conn-title">{p.data.title}</span>
+                {p.data.description && <span class="conn-desc">{p.data.description}</span>}
+              </span>
+            </a>
+          ))}
         </div>
       </div>
     )}

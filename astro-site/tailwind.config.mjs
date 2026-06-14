@@ -7,25 +7,25 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Maggie Appleton's exact DARK palette (her site's prefers-color-scheme: dark).
-        // white = bright text/headings; black = the cream page background.
-        white: "#D4D1CC",
-        black: "#1C1B18",
-        // Page + surfaces (her cream / light-cream / tinted-cream, dark values).
-        paper: { light: "#F6F5F1", dark: "#1C1B18" },
-        surface: { light: "#FCFBF7", dark: "#252420" },
-        ink: { light: "#353534", dark: "#C2BFBA" },
-        // Secondary accent — her sea-blue.
-        sage: { DEFAULT: "#2BC4DA", light: "#008BA3", dark: "#2BC4DA" },
+        // Background = Astro Sphere's pitch black; accents = Maggie Appleton's palette,
+        // brightened so links/marks pop against true black.
+        white: "#ECEAE6",
+        black: "#000000",
+        // Page + surfaces. paper.dark is pure black (Astro Sphere); surfaces are subtly raised.
+        paper: { light: "#F6F5F1", dark: "#000000" },
+        surface: { light: "#FCFBF7", dark: "#111113" },
+        ink: { light: "#353534", dark: "#C9C6C2" },
+        // Secondary accent — Maggie's sea-blue, brightened for black bg.
+        sage: { DEFAULT: "#3DD6ED", light: "#008BA3", dark: "#3DD6ED" },
         // Tertiary accent — her salmon.
         clay: { DEFAULT: "#FF9A8A", light: "#FD8370", dark: "#FF9A8A" },
-        // Primary accent — her crimson (pink in dark) for links + card hover.
-        crimson: { DEFAULT: "#E85AAB", light: "#5F023E", dark: "#E85AAB" },
+        // Primary accent — her crimson (pink), brightened for links + card hover.
+        crimson: { DEFAULT: "#FF6FB5", light: "#5F023E", dark: "#FF6FB5" },
         // Extra accents from her palette, available for use.
-        seablue: { DEFAULT: "#2BC4DA", dark: "#008BA3" },
-        gold: { DEFAULT: "#E5B876" },
+        seablue: { DEFAULT: "#3DD6ED", dark: "#008BA3" },
+        gold: { DEFAULT: "#F0C27B" },
         salmon: { DEFAULT: "#FF9A8A" },
-        purple: { DEFAULT: "#9B7FD9" },
+        purple: { DEFAULT: "#A98CE6" },
       },
       fontFamily: {
         // UI / labels / meta — exactly as Maggie Appleton uses.

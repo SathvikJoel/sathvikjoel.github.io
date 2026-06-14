@@ -19,6 +19,7 @@ import WideImage from "@components/mdx/WideImage.astro"
 import Reference from "@components/mdx/Reference.astro"
 import Pullquote from "@components/mdx/Pullquote.astro"
 import ComingSoon from "@components/mdx/ComingSoon.astro"
+import StageIcon from "@components/StageIcon.astro"
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts")
@@ -30,7 +31,7 @@ export async function getStaticPaths() {
 
 type Props = CollectionEntry<"posts">
 const post = Astro.props
-const { title, description, date, topic, kind, growthStage, lastTended } = post.data
+const { title, description, date, topic, kind, growthStage, lastTended, tags } = post.data
 const { Content } = await post.render()
 
 // Prev / next within the same topic, by date.
@@ -43,7 +44,7 @@ const prev = index > 0 ? siblings[index - 1] : null
 const next = index < siblings.length - 1 ? siblings[index + 1] : null
 
 const mdxComponents = { Figure, Excursion, Details, CodeCaption, InlineSVG, Sidenote, Gallery, MediaList, MediaItem, Year, Y: Year, WideImage, Reference, Callout: Reference, Pullquote, ComingSoon }
-const stageLabel = { seedling: "🌱 Seedling", budding: "🌿 Budding", evergreen: "🌳 Evergreen" }
+const stageWord = { seedling: "Seedling", budding: "Budding", evergreen: "Evergreen" }
 const isNote = kind === "note"
 ---
 
@@ -69,8 +70,9 @@ const isNote = kind === "note"
           {readingTime(post.body)}
         </div>
         {isNote && growthStage &&
-          <div class="px-2 py-0.5 rounded-full bg-clay/15 text-clay normal-case tracking-wide">
-            {stageLabel[growthStage]}
+          <div class="group flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-clay/15 text-clay normal-case tracking-wide">
+            <StageIcon stage={growthStage} class="size-4" />
+            {stageWord[growthStage]}
           </div>
         }
       </div>
@@ -89,6 +91,18 @@ const isNote = kind === "note"
     <article class:list={["animate prose-post", isNote && "note"]}>
       <Content components={mdxComponents}/>
     </article>
+
+    {tags.length > 0 && (
+      <div class="animate mt-10 pt-6 border-t border-black/10 dark:border-white/10">
+        <ul class="flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <li class="font-sans text-xs uppercase tracking-wide py-1 px-3 rounded-full border border-clay/20 dark:border-white/15 text-ink-light/65 dark:text-ink-dark/65 hover:border-crimson/50 hover:text-crimson dark:hover:text-crimson-dark transition-colors">
+              #{tag}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
 
     <Connections post={post} all={allPosts} />
 

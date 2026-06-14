@@ -18,6 +18,10 @@ const posts = defineCollection({
     featured: z.boolean().default(false),
     cover: z.string().optional(),
     coverAlt: z.string().optional(),
+    // In-card illustration (esp. for micro-posts): shown inside the masonry card
+    // at 4:5, NOT as a top cover banner.
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
   }),
 })
 

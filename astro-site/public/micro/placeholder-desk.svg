@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1a2230"/>
+      <stop offset="1" stop-color="#301a2a"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#g2)"/>
+  <rect x="0" y="640" width="800" height="360" fill="#000" opacity="0.3"/>
+  <rect x="180" y="380" width="440" height="280" rx="14" fill="#0c0c10" stroke="#3DD6ED" stroke-opacity="0.5" stroke-width="4"/>
+  <rect x="210" y="410" width="280" height="14" rx="7" fill="#FF6FB5" opacity="0.7"/>
+  <rect x="210" y="446" width="380" height="10" rx="5" fill="#ECEAE6" opacity="0.25"/>
+  <rect x="210" y="476" width="340" height="10" rx="5" fill="#ECEAE6" opacity="0.25"/>
+  <circle cx="600" cy="760" r="46" fill="none" stroke="#F0C27B" stroke-width="8" opacity="0.8"/>
+  <path d="M640 740 q40 20 0 40" fill="none" stroke="#F0C27B" stroke-width="8" opacity="0.8"/>
+  <text x="400" y="930" text-anchor="middle" font-family="Georgia, serif" font-size="26" fill="#ECEAE6" opacity="0.5">replace with your 4:5 image</text>
+</svg>

@@ -32,21 +32,18 @@ export const TOPICS = [
   {
     KEY: "tech",
     LABEL: "Tech",
-    EMOJI: "👨‍💻",
     LAYOUT: "masonry",
     BLURB: "Notes from the machine — ML, math, and the craft of building software.",
   },
   {
     KEY: "life",
     LABEL: "Life",
-    EMOJI: "🌱",
     LAYOUT: "feed",
     BLURB: "Letters from the road — travel, exams, applications, and growing up.",
   },
   {
     KEY: "philosophy",
     LABEL: "Philosophy",
-    EMOJI: "🧠",
     LAYOUT: "masonry",
     BLURB: "Slow thoughts on how to think, live, and pay attention.",
   },

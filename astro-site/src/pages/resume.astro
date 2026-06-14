@@ -2,39 +2,232 @@
 import PageLayout from "@layouts/PageLayout.astro"
 import TopLayout from "@layouts/TopLayout.astro"
 import BottomLayout from "@layouts/BottomLayout.astro"
+
+const contacts = [
+  { label: "ksjoe30@gmail.com", href: "mailto:ksjoe30@gmail.com" },
+  { label: "+91 6281213917", href: "tel:+916281213917" },
+  { label: "JoeLogs", href: "/" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/sathvik-joel-97524b18b/" },
+  { label: "GitHub", href: "https://github.com/SathvikJoel" },
+]
+
+const education = [
+  {
+    school: "Indian Institute of Technology Madras",
+    detail: "B.Tech & M.Tech in Computer Science and Engineering · GPA 8.73 / 10.00",
+    where: "Chennai, India",
+    when: "Aug 2019 – Jun 2024",
+  },
+  {
+    school: "Pohang University of Science and Technology (POSTECH)",
+    detail: "Year Exchange, Computer Science (POSCO GYP Scholarship) · GPA 3.20 / 4.30",
+    where: "Pohang, South Korea",
+    when: "Aug 2023 – Jul 2024",
+  },
+  {
+    school: "KTH Royal Institute of Technology",
+    detail: "Semester Exchange, Computer Science · GPA 4.40 / 5.00",
+    where: "Stockholm, Sweden",
+    when: "Aug 2022 – Jan 2023",
+  },
+]
+
+const experience = [
+  {
+    org: "Microsoft Research India",
+    role: "Research Fellow — AI4Code & SCAI Teams",
+    where: "Bangalore, India",
+    when: "Jun 2024 – Present",
+    points: [
+      "Built Code Researcher, an autonomous deep research agent for multi-million line codebases; achieved 58% crash-resolution rate on the Linux kernel benchmark vs. 37.5% by SWE-agent (+55% relative improvement).",
+      "Developed SafeAgents, a security framework exposing vulnerabilities in multi-agent LLM systems; introduced novel adversarial prompting techniques and the Dharma metric for quantifying systemic risks across 5 MAS architectures.",
+      "Scaled a medical Vision-Language Model (VLM) via GRPO post-training; reduced hallucinations in radiology report generation while optimizing for low-latency clinical inference.",
+    ],
+  },
+  {
+    org: "University of British Columbia",
+    role: "Visiting Research Student (MITACS Globalink Fellowship)",
+    where: "Kelowna, Canada",
+    when: "Summer 2023",
+    points: [
+      "Led instruction fine-tuning research for code generation LLMs under Prof. Fatemeh Hendijani Fard; improved model performance on low-resource programming languages.",
+      "Benchmarked OpenAI GPT embeddings against 6 code-specific models for semantic code search; published comparative analysis informing embedding selection for retrieval systems.",
+    ],
+  },
+]
+
+const publications = [
+  {
+    title: "A Survey on LLM-based Code Generation for Low-Resource and Domain-Specific PLs",
+    detail: "First Author — ACM TOSEM (Oct 2024). Systematic review of 111 papers on LLM code generation for LRPLs / DSLs.",
+  },
+  {
+    title: "Code Researcher: Deep Research Agent for Large Systems Code",
+    detail: "First Author — Under Review at ICLR 2026. Deep research agent achieving 58% crash-resolution on the Linux kernel.",
+  },
+  {
+    title: "Exposing Weak Links in Multi-Agent Systems under Adversarial Prompting",
+    detail: "First Author — Under Review at ICLR 2026. SafeAgents framework for MAS security assessment.",
+  },
+]
+
+const awards = [
+  { title: "JEE Advanced — Rank 38 / 1.2M candidates", year: "2019", detail: "India's premier engineering entrance examination." },
+  { title: "POSCO Global Young Leaders Scholarship", year: "2024", detail: "Sole Indian representative; fully funded year at POSTECH, South Korea." },
+  { title: "MITACS Globalink Graduate Fellowship", year: "2023", detail: "Awarded for exceptional research during international internship." },
+  { title: "CODS-COMAD 2023 Data Challenge — 2nd Place", year: "2023", detail: "Deep-learning solution for educational video prerequisite identification; presented at main conference." },
+]
+
+const skills = [
+  { group: "Languages", items: "Python, JavaScript / TypeScript, C++, SQL" },
+  { group: "ML / AI", items: "PyTorch, Transformers, LangChain, RAG, RLHF / GRPO, Fine-tuning, Multi-Agent Systems" },
+  { group: "Tools & Frameworks", items: "React Native, Plotly Dash, Git, Linux, CUDA, Docker" },
+  { group: "Research Areas", items: "LLM Agents, Code Generation, Adversarial ML, Medical AI, NLP" },
+]
 ---
 
 <PageLayout title="Resume" description="Sathvik Joel — resume and CV.">
   <TopLayout>
-    <div class="animate flex flex-wrap items-end justify-between gap-4">
+    <div class="animate flex flex-wrap items-start justify-between gap-4">
       <div>
-        <h1 class="font-display text-4xl sm:text-5xl font-semibold text-black dark:text-white">Resume</h1>
-        <p class="font-serif text-xl opacity-80 mt-2">A snapshot of what I've worked on.</p>
+        <h1 class="font-display text-4xl sm:text-5xl font-semibold text-black dark:text-white">Sathvik Joel</h1>
+        <p class="font-serif text-lg opacity-80 mt-2">Research Fellow · LLM agents, code generation, and applied ML.</p>
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-4 font-sans text-sm">
+          {contacts.map((c, i) => (
+            <>
+              {i > 0 && <span class="opacity-30">·</span>}
+              <a href={c.href} class="text-sage dark:text-sage-dark hover:text-crimson dark:hover:text-crimson-dark transition-colors">{c.label}</a>
+            </>
+          ))}
+        </div>
       </div>
       <a
         href="/resume.pdf"
         download
-        class="py-2.5 px-5 rounded-full text-sm font-medium bg-black dark:bg-white text-white dark:text-black hover:opacity-80 blend"
+        class="shrink-0 inline-flex items-center gap-2 py-2.5 px-5 rounded-full text-sm font-medium bg-black dark:bg-white text-white dark:text-black hover:opacity-80 blend"
       >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Download PDF
       </a>
     </div>
   </TopLayout>
+
   <BottomLayout>
-    <div class="animate">
-      <object
-        data="/resume.pdf"
-        type="application/pdf"
-        class="w-full rounded-xl border border-black/10 dark:border-white/15 shadow-sm"
-        style="height: min(80vh, 1100px);"
-      >
-        <div class="p-8 text-center">
-          <p class="font-serif text-xl opacity-80">
-            Your browser can't display the embedded PDF.
-            <a href="/resume.pdf" class="underline" download>Download it here</a>.
-          </p>
+    <div class="resume animate flex flex-col gap-12">
+      <section>
+        <h2 class="resume-h">Education</h2>
+        <div class="flex flex-col gap-5">
+          {education.map((e) => (
+            <div class="resume-row">
+              <div class="min-w-0">
+                <h3 class="resume-title">{e.school}</h3>
+                <p class="resume-sub">{e.detail}</p>
+              </div>
+              <div class="resume-meta">
+                <span class="resume-where">{e.where}</span>
+                <span class="resume-when">{e.when}</span>
+              </div>
+            </div>
+          ))}
         </div>
-      </object>
+      </section>
+
+      <section>
+        <h2 class="resume-h">Professional Experience</h2>
+        <div class="flex flex-col gap-7">
+          {experience.map((x) => (
+            <div>
+              <div class="resume-row">
+                <div class="min-w-0">
+                  <h3 class="resume-title">{x.org}</h3>
+                  <p class="resume-sub italic">{x.role}</p>
+                </div>
+                <div class="resume-meta">
+                  <span class="resume-where">{x.where}</span>
+                  <span class="resume-when">{x.when}</span>
+                </div>
+              </div>
+              <ul class="mt-3 flex flex-col gap-2 font-serif text-[1.02rem] leading-relaxed">
+                {x.points.map((p) => (
+                  <li class="resume-bullet">{p}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 class="resume-h">Publications</h2>
+        <div class="flex flex-col gap-5">
+          {publications.map((p) => (
+            <div>
+              <h3 class="resume-title">{p.title}</h3>
+              <p class="resume-sub mt-0.5">{p.detail}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 class="resume-h">Awards & Achievements</h2>
+        <div class="flex flex-col gap-5">
+          {awards.map((a) => (
+            <div class="resume-row">
+              <div class="min-w-0">
+                <h3 class="resume-title">{a.title}</h3>
+                <p class="resume-sub">{a.detail}</p>
+              </div>
+              <div class="resume-meta">
+                <span class="resume-when">{a.year}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 class="resume-h">Technical Skills</h2>
+        <dl class="flex flex-col gap-3">
+          {skills.map((s) => (
+            <div class="grid grid-cols-1 sm:grid-cols-[10rem_1fr] gap-1 sm:gap-4">
+              <dt class="font-sans text-sm uppercase tracking-wide text-sage dark:text-sage-dark">{s.group}</dt>
+              <dd class="font-serif text-[1.02rem] text-ink-light/90 dark:text-ink-dark/90">{s.items}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
     </div>
   </BottomLayout>
 </PageLayout>
+
+<style>
+  .resume-h {
+    @apply font-display text-sm uppercase tracking-[0.2em] text-crimson dark:text-crimson-dark pb-2 mb-6 border-b border-black/10 dark:border-white/10;
+  }
+  .resume-row {
+    @apply flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-x-6 gap-y-1;
+  }
+  .resume-title {
+    @apply font-display text-lg font-semibold text-black dark:text-white leading-snug;
+  }
+  .resume-sub {
+    @apply font-serif text-[1.02rem] leading-relaxed text-ink-light/80 dark:text-ink-dark/80;
+  }
+  .resume-meta {
+    @apply shrink-0 flex flex-col sm:items-end font-sans text-sm;
+  }
+  .resume-where {
+    @apply text-ink-light/70 dark:text-ink-dark/70;
+  }
+  .resume-when {
+    @apply text-ink-light/50 dark:text-ink-dark/50 tabular-nums;
+  }
+  .resume-bullet {
+    @apply relative pl-5 text-ink-light/85 dark:text-ink-dark/85;
+  }
+  .resume-bullet::before {
+    content: "";
+    @apply absolute left-0 top-[0.7em] size-1.5 rounded-full bg-crimson dark:bg-crimson-dark;
+  }
+</style>

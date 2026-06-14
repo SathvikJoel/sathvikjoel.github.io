@@ -112,12 +112,12 @@ article :is(h1, h2, h3, h4) {
 }
 
 article a {
-  text-decoration-color: theme(colors.sage.light / 40%);
+  text-decoration-color: theme(colors.crimson.dark / 45%);
   text-underline-offset: 3px;
   transition: text-decoration-color 0.2s ease;
 }
 article a:hover {
-  text-decoration-color: theme(colors.sage.light);
+  text-decoration-color: theme(colors.crimson.dark);
 }
 
 .page-heading {
