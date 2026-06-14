@@ -1,0 +1,85 @@
+---
+import type { CollectionEntry } from "astro:content"
+import { getBacklinks, getRelated } from "@lib/connections"
+
+type Props = {
+  post: CollectionEntry<"posts">
+  all: CollectionEntry<"posts">[]
+}
+
+const { post, all } = Astro.props
+
+const backlinks = getBacklinks(post, all)
+const related = getRelated(post, all, backlinks, 3)
+
+const stageEmoji: Record<string, string> = { seedling: "🌱", budding: "🌿", evergreen: "🌳" }
+
+const card = (p: CollectionEntry<"posts">) => ({
+  href: `/posts/${p.slug}`,
+  title: p.data.title,
+  description: p.data.description,
+  topic: p.data.topic,
+  emoji: p.data.kind === "note" && p.data.growthStage ? stageEmoji[p.data.growthStage] : "",
+})
+---
+
+{(backlinks.length > 0 || related.length > 0) && (
+  <section class="animate mt-16 pt-8 border-t border-black/10 dark:border-white/10">
+    {backlinks.length > 0 && (
+      <div class="mb-8">
+        <h3 class="font-sans text-xs uppercase tracking-widest opacity-50 mb-4">
+          {backlinks.length} {backlinks.length === 1 ? "post links" : "posts link"} here
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {backlinks.map((p) => {
+            const c = card(p)
+            return (
+              <a href={c.href} class="conn-card group">
+                <span class="conn-emoji">{c.emoji || "🔗"}</span>
+                <span class="min-w-0">
+                  <span class="conn-title">{c.title}</span>
+                  {c.description && <span class="conn-desc">{c.description}</span>}
+                </span>
+              </a>
+            )
+          })}
+        </div>
+      </div>
+    )}
+
+    {related.length > 0 && (
+      <div>
+        <h3 class="font-sans text-xs uppercase tracking-widest opacity-50 mb-4">Keep exploring</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {related.map((p) => {
+            const c = card(p)
+            return (
+              <a href={c.href} class="conn-card group">
+                <span class="conn-emoji capitalize text-[0.62rem] tracking-wide opacity-60 not-italic font-sans">{c.topic}</span>
+                <span class="min-w-0">
+                  <span class="conn-title">{c.title}</span>
+                  {c.description && <span class="conn-desc">{c.description}</span>}
+                </span>
+              </a>
+            )
+          })}
+        </div>
+      </div>
+    )}
+  </section>
+)}
+
+<style>
+  .conn-card {
+    @apply flex items-start gap-3 p-3 rounded-lg border border-black/10 dark:border-white/10 bg-surface-light dark:bg-surface-dark/60 transition-all duration-300 hover:border-crimson/40 hover:-translate-y-0.5;
+  }
+  .conn-emoji {
+    @apply flex-shrink-0 text-base leading-6 w-6 text-center;
+  }
+  .conn-title {
+    @apply block font-display text-base leading-snug text-black dark:text-white group-hover:text-crimson dark:group-hover:text-crimson-dark transition-colors;
+  }
+  .conn-desc {
+    @apply block font-sans text-xs leading-snug opacity-55 mt-0.5 line-clamp-2;
+  }
+</style>

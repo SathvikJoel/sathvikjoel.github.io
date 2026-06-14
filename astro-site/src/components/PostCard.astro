@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content"
-import { formatDate } from "@lib/utils"
+import { formatDate, truncateText } from "@lib/utils"
 
 type Props = {
   entry: CollectionEntry<"posts">
@@ -10,8 +10,14 @@ const { entry } = Astro.props
 const { title, description, date, topic, tags, kind, growthStage, cover, coverAlt } = entry.data
 const href = `/posts/${entry.slug}`
 const isNote = kind === "note"
+const isMicro = kind === "micro"
 const stage = growthStage ?? ""
 const stageEmoji: Record<string, string> = { seedling: "🌱", budding: "🌿", evergreen: "🌳" }
+
+// Micro-posts have no formal title — show a stripped excerpt of the body instead.
+const microExcerpt = isMicro
+  ? truncateText(entry.body.replace(/[#>*_`~\-]/g, "").replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/\s+/g, " ").trim(), 220)
+  : ""
 ---
 
 <a
@@ -22,7 +28,7 @@ const stageEmoji: Record<string, string> = { seedling: "🌱", budding: "🌿", 
   data-kind={kind}
   data-stage={stage}
 >
-  {cover && (
+  {cover && !isMicro && (
     <div class="-mx-4 -mt-4 mb-3 overflow-hidden rounded-t-xl aspect-[16/10]">
       <img src={cover} alt={coverAlt ?? title} loading="lazy" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500" />
     </div>
@@ -32,22 +38,29 @@ const stageEmoji: Record<string, string> = { seedling: "🌱", budding: "🌿", 
     <span class="capitalize font-medium text-sage dark:text-sage-dark">{topic}</span>
     <span class="opacity-40">·</span>
     <span>{formatDate(date)}</span>
+    {isMicro && <span class="ml-auto text-sm" title="micro-post">💬</span>}
     {isNote && stage && (
       <span class="ml-auto text-sm" title={stage}>{stageEmoji[stage]}</span>
     )}
   </div>
 
-  <h3
-    class:list={[
-      "font-display leading-snug mt-1.5 text-ink-light dark:text-ink-dark group-hover:text-crimson dark:group-hover:text-crimson-dark transition-colors duration-300",
-      cover ? "text-2xl" : "text-xl",
-      isNote && "italic font-normal",
-    ]}
-  >
-    {title}
-  </h3>
+  {isMicro ? (
+    <p class="font-serif text-[1.05rem] leading-relaxed text-ink-light/90 dark:text-ink-dark/90 mt-2 group-hover:text-crimson dark:group-hover:text-crimson-dark transition-colors duration-300">
+      {microExcerpt}
+    </p>
+  ) : (
+    <h3
+      class:list={[
+        "font-display leading-snug mt-1.5 text-ink-light dark:text-ink-dark group-hover:text-crimson dark:group-hover:text-crimson-dark transition-colors duration-300",
+        cover ? "text-2xl" : "text-xl",
+        isNote && "italic font-normal",
+      ]}
+    >
+      {title}
+    </h3>
+  )}
 
-  {description && (
+  {description && !isMicro && (
     <p class="font-sans text-sm leading-snug text-ink-light/60 dark:text-ink-dark/60 mt-1.5 line-clamp-3">{description}</p>
   )}
 

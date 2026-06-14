@@ -22,6 +22,7 @@ const topicFacets = TOPICS.map((t) => ({
 const kindFacets = [
   { value: "essay", label: "Essays", n: count((p) => p.data.kind === "essay") },
   { value: "note", label: "Notes", n: count((p) => p.data.kind === "note") },
+  { value: "micro", label: "Micro", n: count((p) => p.data.kind === "micro") },
 ]
 
 const stageFacets = [
@@ -41,7 +42,7 @@ const stageFacets = [
       ))}
     </div>
     <div class="flex flex-wrap items-center gap-2" data-group="topic">
-      <span class="font-sans text-[0.7rem] uppercase tracking-widest text-ink-light/40 dark:text-ink-dark/40 w-14">Topic</span>
+      <span class="font-sans text-[0.7rem] uppercase tracking-widest text-ink-light/40 dark:text-ink-dark/40 w-14">Stream</span>
       <button class="facet is-active" data-value="all">All</button>
       {topicFacets.map((f) => (
         <button class="facet" data-value={f.value} disabled={f.n === 0}>{f.emoji} {f.label}<span class="facet-n">{f.n}</span></button>

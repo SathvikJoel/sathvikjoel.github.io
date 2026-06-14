@@ -8,8 +8,8 @@ const posts = defineCollection({
     date: z.coerce.date(),
     topic: z.enum(["tech", "life", "philosophy"]),
     tags: z.array(z.string()).default([]),
-    // Two-voice model: polished "essay" (for others) vs personal "note" (the garden).
-    kind: z.enum(["essay", "note"]).default("essay"),
+    // Content voices: polished "essay", personal "note" (garden), short "micro" (stream).
+    kind: z.enum(["essay", "note", "micro"]).default("essay"),
     // Garden metadata (chiefly for notes).
     growthStage: z.enum(["seedling", "budding", "evergreen"]).optional(),
     lastTended: z.coerce.date().optional(),

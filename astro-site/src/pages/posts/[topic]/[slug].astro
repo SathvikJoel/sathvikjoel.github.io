@@ -4,6 +4,7 @@ import PageLayout from "@layouts/PageLayout.astro"
 import TopLayout from "@layouts/TopLayout.astro"
 import BottomLayout from "@layouts/BottomLayout.astro"
 import { formatDate, readingTime } from "@lib/utils"
+import Connections from "@components/Connections.astro"
 import Figure from "@components/mdx/Figure.astro"
 import Excursion from "@components/mdx/Excursion.astro"
 import Details from "@components/mdx/Details.astro"
@@ -24,7 +25,8 @@ const { title, description, date, topic, kind, growthStage, lastTended } = post.
 const { Content } = await post.render()
 
 // Prev / next within the same topic, by date.
-const siblings = (await getCollection("posts"))
+const allPosts = await getCollection("posts")
+const siblings = allPosts
   .filter((p) => p.data.topic === topic && !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 const index = siblings.findIndex((p) => p.slug === post.slug)
@@ -78,6 +80,8 @@ const isNote = kind === "note"
     <article class:list={["animate prose-post", isNote && "note"]}>
       <Content components={mdxComponents}/>
     </article>
+
+    <Connections post={post} all={allPosts} />
 
     <nav class="animate grid grid-cols-1 sm:grid-cols-2 gap-4 mt-16">
       {prev &&
