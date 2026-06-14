@@ -34,8 +34,8 @@ export default {
         "serif": ["Spectral", "Georgia", ...defaultTheme.fontFamily.serif],
         // Margin / sidenotes — warm glyphic serif.
         "note": ["Hedvig Letters Serif", "Georgia", "serif"],
-        // Headings — Source Serif 4, a clean New York Times-style editorial serif.
-        "display": ["Source Serif 4 Variable", "Georgia", "serif"],
+        // Headings — same high-contrast soft serif as the hero (Fraunces), kept light.
+        "display": ["Fraunces Variable", "Georgia", "serif"],
         // Home hero only — high-contrast soft serif.
         "hero": ["Fraunces Variable", "Georgia", "serif"],
         "mono": ["JetBrains Mono Variable", "JetBrains Mono", ...defaultTheme.fontFamily.mono],

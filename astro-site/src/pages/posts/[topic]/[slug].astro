@@ -75,7 +75,7 @@ const isMicro = kind === "micro"
           </>
         }
       </div>
-      <h1 class:list={["font-display text-4xl sm:text-5xl font-semibold text-black dark:text-white mt-2 leading-tight", isNote && "italic"]}>
+      <h1 class:list={["font-display text-4xl sm:text-5xl font-light text-black dark:text-white mt-2 leading-tight", isNote && "italic"]}>
         {title}
       </h1>
       {description &&
@@ -109,13 +109,13 @@ const isMicro = kind === "micro"
       {prev &&
         <a href={`/posts/${prev.slug}`} class="group p-4 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 hover:dark:bg-white/10 blend">
           <div class="text-xs uppercase opacity-60">Newer</div>
-          <div class="font-display text-lg font-semibold mt-1 text-black dark:text-white">{prev.data.title}</div>
+          <div class="font-display text-lg font-normal mt-1 text-black dark:text-white">{prev.data.title}</div>
         </a>
       }
       {next &&
         <a href={`/posts/${next.slug}`} class="group p-4 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 hover:dark:bg-white/10 blend sm:text-right sm:col-start-2">
           <div class="text-xs uppercase opacity-60">Older</div>
-          <div class="font-display text-lg font-semibold mt-1 text-black dark:text-white">{next.data.title}</div>
+          <div class="font-display text-lg font-normal mt-1 text-black dark:text-white">{next.data.title}</div>
         </a>
       }
     </nav>
