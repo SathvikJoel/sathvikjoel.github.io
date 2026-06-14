@@ -1,44 +1,20 @@
 ---
 import { getCollection } from "astro:content"
 import PageLayout from "@layouts/PageLayout.astro"
-import TopLayout from "@layouts/TopLayout.astro"
-import BottomLayout from "@layouts/BottomLayout.astro"
-import PostCard from "@components/PostCard.astro"
-import { POSTS, TOPICS } from "@consts"
+import Garden from "@components/Garden.astro"
+import { POSTS } from "@consts"
 
 const all = (await getCollection("posts"))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-
-const byTopic = TOPICS.map((t) => ({
-  ...t,
-  posts: all.filter((p) => p.data.topic === t.KEY),
-}))
 ---
 
 <PageLayout title={POSTS.TITLE} description={POSTS.DESCRIPTION}>
-  <TopLayout>
-    <div class="animate">
-      <h1 class="font-display text-4xl sm:text-5xl font-semibold text-black dark:text-white">{POSTS.TITLE}</h1>
-      <p class="font-serif text-xl opacity-80 mt-2 max-w-2xl">{POSTS.DESCRIPTION}</p>
-    </div>
-  </TopLayout>
-  <BottomLayout>
-    <div class="space-y-16">
-      {byTopic.map((t) => (
-        <section class="animate">
-          <div class="flex items-baseline justify-between border-b border-black/10 dark:border-white/15 pb-2 mb-5">
-            <a href={`/posts/${t.KEY}`} class="group flex items-center gap-2 hover:text-black dark:hover:text-white blend">
-              <span class="text-2xl">{t.EMOJI}</span>
-              <h2 class="font-display text-2xl font-semibold text-black dark:text-white">{t.LABEL}</h2>
-            </a>
-            <span class="text-sm uppercase tracking-wide opacity-60">{t.posts.length}</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {t.posts.map((post) => <PostCard entry={post} />)}
-          </div>
-        </section>
-      ))}
-    </div>
-  </BottomLayout>
+  <div class="mx-auto max-w-[1420px] px-5 sm:px-8 pt-28 pb-24">
+    <header class="animate max-w-2xl mb-10">
+      <h1 class="font-display text-4xl sm:text-5xl font-light text-ink-light dark:text-ink-dark">{POSTS.TITLE}</h1>
+      <p class="font-serif text-xl text-ink-light/70 dark:text-ink-dark/70 mt-3">{POSTS.DESCRIPTION}</p>
+    </header>
+    <Garden posts={all} />
+  </div>
 </PageLayout>

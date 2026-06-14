@@ -19,14 +19,16 @@ export default {
         sage: { DEFAULT: "#4E6B4F", light: "#4E6B4F", dark: "#9CBE97" },
         // Clay accent (Notes / personal voice).
         clay: { DEFAULT: "#B06A43", light: "#B06A43", dark: "#D69A6F" },
+        // Crimson hover accent (Maggie-style card hover highlight).
+        crimson: { DEFAULT: "#A33A28", light: "#A33A28", dark: "#E08B6F" },
       },
       fontFamily: {
-        // Supporting sans (UI / labels / meta) — exactly as Maggie Appleton uses.
+        // UI / labels / meta — exactly as Maggie Appleton uses.
         "sans": ["Lato", ...defaultTheme.fontFamily.sans],
-        // Reading body — classical high-contrast serif (Canela substitute).
-        "serif": ["Cormorant Garamond", "Georgia", ...defaultTheme.fontFamily.serif],
-        // Display / headings — same serif family for a cohesive classical feel.
-        "display": ["Cormorant Garamond", "Georgia", "serif"],
+        // Reading body — warm editorial serif (free Canela Text substitute).
+        "serif": ["Newsreader Variable", "Georgia", ...defaultTheme.fontFamily.serif],
+        // Display / headings — high-contrast soft serif (free Canela Deck substitute).
+        "display": ["Fraunces Variable", "Georgia", "serif"],
         "mono": ["JetBrains Mono Variable", "JetBrains Mono", ...defaultTheme.fontFamily.mono],
       },
       typography: {

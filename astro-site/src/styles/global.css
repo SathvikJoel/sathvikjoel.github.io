@@ -2,8 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --copy-btn-margin: 10px;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 :root {
@@ -72,10 +83,10 @@ header.scrolled {
 article {
   @apply prose dark:prose-invert max-w-full pb-12;
   font-family: theme(fontFamily.serif);
-  font-size: 1.3rem;
-  line-height: 1.65;
-  font-weight: 500;
-  --tw-prose-body: theme(colors.ink.light / 90%);
+  font-size: 1.2rem;
+  line-height: 1.7;
+  font-weight: 400;
+  --tw-prose-body: theme(colors.ink.light / 92%);
   --tw-prose-headings: theme(colors.ink.light);
   --tw-prose-links: theme(colors.sage.light);
   --tw-prose-bold: theme(colors.ink.light);

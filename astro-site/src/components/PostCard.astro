@@ -1,65 +1,60 @@
 ---
 import type { CollectionEntry } from "astro:content"
-import { formatDate, readingTime } from "@lib/utils"
+import { formatDate } from "@lib/utils"
 
 type Props = {
   entry: CollectionEntry<"posts">
-  showTopic?: boolean
 }
 
-const { entry, showTopic = false } = Astro.props
-const { title, description, date, topic, tags, kind, growthStage } = entry.data
+const { entry } = Astro.props
+const { title, description, date, topic, tags, kind, growthStage, cover, coverAlt } = entry.data
 const href = `/posts/${entry.slug}`
 const isNote = kind === "note"
-const stageEmoji = { seedling: "🌱", budding: "🌿", evergreen: "🌳" }
+const stage = growthStage ?? ""
+const stageEmoji: Record<string, string> = { seedling: "🌱", budding: "🌿", evergreen: "🌳" }
 ---
 
 <a
   href={href}
-  class:list={[
-    "group relative block h-full p-5 rounded-2xl border transition-all duration-300 ease-out",
-    "border-black/10 dark:border-white/15 hover:border-black/25 dark:hover:border-white/30",
-    "bg-surface-light/40 dark:bg-surface-dark/40 hover:-translate-y-1 hover:shadow-lg hover:shadow-black/5",
-  ]}
+  class="post-card group flex flex-col p-4 mb-4 rounded-xl border border-clay/15 dark:border-white/10 bg-surface-light dark:bg-surface-dark/60 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 ease-out break-inside-avoid"
+  data-card
+  data-topic={topic}
+  data-kind={kind}
+  data-stage={stage}
 >
-  <span
-    class:list={[
-      "absolute left-0 top-5 bottom-5 w-[3px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300",
-      isNote ? "bg-clay" : "bg-sage",
-    ]}
-  ></span>
+  {cover && (
+    <div class="-mx-4 -mt-4 mb-3 overflow-hidden rounded-t-xl aspect-[16/10]">
+      <img src={cover} alt={coverAlt ?? title} loading="lazy" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500" />
+    </div>
+  )}
 
-  <div class="flex flex-wrap items-center gap-2 text-xs uppercase tracking-wide opacity-70">
-    {showTopic && (
-      <span class="capitalize font-medium text-sage dark:text-sage-dark">{topic}</span>
-    )}
-    {showTopic && <span class="opacity-40">·</span>}
-    <span class="font-mono">{formatDate(date)}</span>
+  <div class="flex items-center gap-1.5 font-sans text-[0.72rem] uppercase tracking-wide text-ink-light/55 dark:text-ink-dark/55">
+    <span class="capitalize font-medium text-sage dark:text-sage-dark">{topic}</span>
     <span class="opacity-40">·</span>
-    <span>{readingTime(entry.body)}</span>
-    {isNote && growthStage && (
-      <span class="ml-auto text-sm normal-case" title={growthStage}>{stageEmoji[growthStage]}</span>
+    <span>{formatDate(date)}</span>
+    {isNote && stage && (
+      <span class="ml-auto text-sm" title={stage}>{stageEmoji[stage]}</span>
     )}
   </div>
 
   <h3
     class:list={[
-      "font-display font-semibold leading-tight mt-2 text-black dark:text-white",
-      "text-2xl group-hover:text-sage dark:group-hover:text-sage-dark transition-colors duration-300",
-      isNote && "italic",
+      "font-display leading-snug mt-1.5 text-ink-light dark:text-ink-dark group-hover:text-crimson dark:group-hover:text-crimson-dark transition-colors duration-300",
+      cover ? "text-2xl" : "text-xl",
+      isNote && "italic font-normal",
     ]}
   >
     {title}
   </h3>
 
   {description && (
-    <p class="font-serif text-lg leading-snug opacity-80 mt-1 line-clamp-2">{description}</p>
+    <p class="font-sans text-sm leading-snug text-ink-light/60 dark:text-ink-dark/60 mt-1.5 line-clamp-3">{description}</p>
   )}
 
   {tags.length > 0 && (
     <ul class="flex flex-wrap gap-1.5 mt-3">
-      {tags.slice(0, 4).map((tag) => (
-        <li class="text-[0.7rem] uppercase tracking-wide py-0.5 px-2 rounded-full bg-black/5 dark:bg-white/10 opacity-75">
+      {tags.slice(0, 3).map((tag) => (
+        <li class="font-sans text-[0.65rem] uppercase tracking-wide py-0.5 px-2 rounded-full bg-clay/10 dark:bg-white/10 text-ink-light/60 dark:text-ink-dark/60">
           {tag}
         </li>
       ))}

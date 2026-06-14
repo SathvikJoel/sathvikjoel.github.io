@@ -10,11 +10,12 @@
       <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language><atom:link href="http://localhost:1313/tags/clubbing/index.xml" rel="self" type="application/rss+xml" />
+    <language>en</language>
+    <lastBuildDate>Mon, 22 Dec 2025 09:30:03 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/clubbing/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>A Definitive Guide to Clubbing in Kora</title>
       <link>http://localhost:1313/posts/life/12222025_kora/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 22 Dec 2025 09:30:03 +0000</pubDate>
       
       <guid>http://localhost:1313/posts/life/12222025_kora/</guid>
       <description>kora clubbing guide</description>

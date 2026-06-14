@@ -50,7 +50,6 @@ export const TOPICS = [
 // Links
 export const LINKS: Links = [
   { TEXT: "Home", HREF: "/" },
-  { TEXT: "Writing", HREF: "/posts" },
   { TEXT: "About", HREF: "/about" },
   { TEXT: "Resume", HREF: "/resume" },
 ]

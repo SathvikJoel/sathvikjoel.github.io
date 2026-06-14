@@ -1,0 +1,125 @@
+---
+import type { CollectionEntry } from "astro:content"
+import PostCard from "@components/PostCard.astro"
+import { TOPICS } from "@consts"
+
+type Props = {
+  posts: CollectionEntry<"posts">[]
+  showFilters?: boolean
+}
+
+const { posts, showFilters = true } = Astro.props
+
+const count = (pred: (p: CollectionEntry<"posts">) => boolean) => posts.filter(pred).length
+
+const topicFacets = TOPICS.map((t) => ({
+  value: t.KEY,
+  label: t.LABEL,
+  emoji: t.EMOJI,
+  n: count((p) => p.data.topic === t.KEY),
+}))
+
+const kindFacets = [
+  { value: "essay", label: "Essays", n: count((p) => p.data.kind === "essay") },
+  { value: "note", label: "Notes", n: count((p) => p.data.kind === "note") },
+]
+
+const stageFacets = [
+  { value: "seedling", label: "🌱 Seedling", n: count((p) => p.data.growthStage === "seedling") },
+  { value: "budding", label: "🌿 Budding", n: count((p) => p.data.growthStage === "budding") },
+  { value: "evergreen", label: "🌳 Evergreen", n: count((p) => p.data.growthStage === "evergreen") },
+]
+---
+
+{showFilters && (
+  <div class="filter-bar animate flex flex-col gap-3 mb-8">
+    <div class="flex flex-wrap items-center gap-2" data-group="kind">
+      <span class="font-sans text-[0.7rem] uppercase tracking-widest text-ink-light/40 dark:text-ink-dark/40 w-14">Type</span>
+      <button class="facet is-active" data-value="all">All</button>
+      {kindFacets.map((f) => (
+        <button class="facet" data-value={f.value} disabled={f.n === 0}>{f.label}<span class="facet-n">{f.n}</span></button>
+      ))}
+    </div>
+    <div class="flex flex-wrap items-center gap-2" data-group="topic">
+      <span class="font-sans text-[0.7rem] uppercase tracking-widest text-ink-light/40 dark:text-ink-dark/40 w-14">Topic</span>
+      <button class="facet is-active" data-value="all">All</button>
+      {topicFacets.map((f) => (
+        <button class="facet" data-value={f.value} disabled={f.n === 0}>{f.emoji} {f.label}<span class="facet-n">{f.n}</span></button>
+      ))}
+    </div>
+    <div class="flex flex-wrap items-center gap-2" data-group="stage">
+      <span class="font-sans text-[0.7rem] uppercase tracking-widest text-ink-light/40 dark:text-ink-dark/40 w-14">Stage</span>
+      <button class="facet is-active" data-value="all">All</button>
+      {stageFacets.map((f) => (
+        <button class="facet" data-value={f.value} disabled={f.n === 0}>{f.label}<span class="facet-n">{f.n}</span></button>
+      ))}
+    </div>
+  </div>
+)}
+
+<div class="garden-grid columns-1 sm:columns-2 lg:columns-3 gap-4" data-garden>
+  {posts.map((post) => <PostCard entry={post} />)}
+</div>
+<p class="garden-empty hidden font-serif text-xl italic text-ink-light/60 dark:text-ink-dark/60 mt-6" data-empty>
+  Nothing matches that combination yet — try widening your filters.
+</p>
+
+<style>
+  .facet {
+    @apply font-sans text-sm px-3 py-1 rounded-full border border-clay/20 dark:border-white/15 text-ink-light/70 dark:text-ink-dark/70 transition-colors duration-200;
+  }
+  .facet:hover:not(:disabled) {
+    @apply border-clay/50 text-ink-light dark:text-ink-dark;
+  }
+  .facet.is-active {
+    @apply bg-ink-light text-paper-light dark:bg-ink-dark dark:text-paper-dark border-transparent;
+  }
+  .facet:disabled {
+    @apply opacity-35 cursor-not-allowed;
+  }
+  .facet-n {
+    @apply ml-1.5 text-[0.7em] opacity-60;
+  }
+  .post-card.filtered-out {
+    display: none;
+  }
+</style>
+
+<script>
+  function initGarden() {
+    const grid = document.querySelector<HTMLElement>("[data-garden]")
+    if (!grid) return
+    const empty = document.querySelector<HTMLElement>("[data-empty]")
+    const state: Record<string, string> = { kind: "all", topic: "all", stage: "all" }
+
+    function apply() {
+      const cards = grid!.querySelectorAll<HTMLElement>("[data-card]")
+      let visible = 0
+      cards.forEach((card) => {
+        const ok =
+          (state.kind === "all" || card.dataset.kind === state.kind) &&
+          (state.topic === "all" || card.dataset.topic === state.topic) &&
+          (state.stage === "all" || card.dataset.stage === state.stage)
+        card.classList.toggle("filtered-out", !ok)
+        if (ok) visible++
+      })
+      if (empty) empty.classList.toggle("hidden", visible !== 0)
+    }
+
+    document.querySelectorAll<HTMLElement>(".filter-bar [data-group]").forEach((group) => {
+      const name = group.dataset.group!
+      group.querySelectorAll<HTMLButtonElement>(".facet").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (btn.disabled) return
+          state[name] = btn.dataset.value!
+          group.querySelectorAll(".facet").forEach((b) => b.classList.remove("is-active"))
+          btn.classList.add("is-active")
+          apply()
+        })
+      })
+    })
+  }
+
+  initGarden()
+  document.addEventListener("astro:after-swap", initGarden)
+</script>

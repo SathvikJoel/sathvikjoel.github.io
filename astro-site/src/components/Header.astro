@@ -3,18 +3,17 @@ import { SITE, LINKS } from "@consts"
 import { cn } from "@lib/utils"
 const { pathname } = Astro.url
 const subpath = pathname.match(/[^/]+/g)
-import Container from "@components/Container.astro"
 ---
 
 <header id="header" class="fixed top-0 w-full h-16 z-50 ">
-  <Container size="md">
+  <div class="w-full h-full mx-auto px-5 sm:px-8 max-w-[1420px]">
     <div class="relative h-full w-full">
       <div class="absolute left-0 top-1/2 -translate-y-1/2 flex gap-1 font-semibold">
-        <a href="/" class="flex gap-1 text-current hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
+        <a href="/" class="flex items-center gap-1.5 text-current hover:text-crimson dark:hover:text-crimson-dark transition-colors duration-300 ease-in-out">
           <svg class="size-6 fill-current">
             <use href="/brand.svg#brand"></use>
           </svg>
-          <div>
+          <div class="font-display text-xl font-semibold tracking-tight">
             {SITE.TITLE}
           </div>
         </a>
@@ -64,7 +63,7 @@ import Container from "@components/Container.astro"
       </button>
     </div>
   </div>
-  </Container>
+  </div>
 </header>
 
 <style>

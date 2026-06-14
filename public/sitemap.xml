@@ -2,22 +2,55 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://localhost:1313/tags/ethics/</loc>
+    <lastmod>2026-04-14T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/human-nature/</loc>
+    <lastmod>2026-04-14T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2026-04-14T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/philosophy/</loc>
+    <lastmod>2026-04-14T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/philosophy/</loc>
+    <lastmod>2026-04-14T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2026-04-14T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/philosophy/14052026_bad/</loc>
+    <lastmod>2026-04-14T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2026-04-14T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/concerts/</loc>
+    <lastmod>2026-01-09T01:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/debates/</loc>
+    <lastmod>2026-01-09T01:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/life/</loc>
+    <lastmod>2026-01-09T01:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/sid-sriram/</loc>
+    <lastmod>2026-01-09T01:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/life/09012026_sid/</loc>
+    <lastmod>2026-01-09T01:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/life/12222025_kora/</loc>
+    <lastmod>2025-12-22T09:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/clubbing/</loc>
+    <lastmod>2025-12-22T09:30:03+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/posts/life/13042024_gyp/</loc>
     <lastmod>2024-04-11T11:30:03+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/gyp/</loc>
-    <lastmod>2024-04-11T11:30:03+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2024-04-11T11:30:03+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/life/</loc>
-    <lastmod>2024-04-11T11:30:03+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2024-04-11T11:30:03+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/</loc>
     <lastmod>2024-04-11T11:30:03+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/tech/12042024_msft_interview/</loc>
@@ -68,13 +101,9 @@
     <loc>http://localhost:1313/posts/life/22082023_mitacs_2/</loc>
     <lastmod>2023-08-22T11:30:03+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/life/12222025_kora/</loc>
-  </url><url>
     <loc>http://localhost:1313/archives/</loc>
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
-  </url><url>
-    <loc>http://localhost:1313/tags/clubbing/</loc>
   </url><url>
     <loc>http://localhost:1313/search/</loc>
   </url><url>

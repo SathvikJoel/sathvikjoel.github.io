@@ -11,7 +11,70 @@
     </image>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 11 Apr 2024 11:30:03 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 14 Apr 2026 11:30:03 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Ethics</title>
+      <link>http://localhost:1313/tags/ethics/</link>
+      <pubDate>Tue, 14 Apr 2026 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/ethics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Human Nature</title>
+      <link>http://localhost:1313/tags/human-nature/</link>
+      <pubDate>Tue, 14 Apr 2026 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/human-nature/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Philosophy</title>
+      <link>http://localhost:1313/tags/philosophy/</link>
+      <pubDate>Tue, 14 Apr 2026 11:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/philosophy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Concerts</title>
+      <link>http://localhost:1313/tags/concerts/</link>
+      <pubDate>Fri, 09 Jan 2026 01:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/concerts/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Debates</title>
+      <link>http://localhost:1313/tags/debates/</link>
+      <pubDate>Fri, 09 Jan 2026 01:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/debates/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Sid Sriram</title>
+      <link>http://localhost:1313/tags/sid-sriram/</link>
+      <pubDate>Fri, 09 Jan 2026 01:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/sid-sriram/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Clubbing</title>
+      <link>http://localhost:1313/tags/clubbing/</link>
+      <pubDate>Mon, 22 Dec 2025 09:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/clubbing/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Gyp</title>
       <link>http://localhost:1313/tags/gyp/</link>
@@ -81,15 +144,6 @@
       <pubDate>Tue, 22 Aug 2023 11:30:03 +0000</pubDate>
       
       <guid>http://localhost:1313/tags/mitacs/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Clubbing</title>
-      <link>http://localhost:1313/tags/clubbing/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/tags/clubbing/</guid>
       <description></description>
     </item>
     

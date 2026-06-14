@@ -11,7 +11,25 @@
     </image>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 11 Apr 2024 11:30:03 +0000</lastBuildDate><atom:link href="http://localhost:1313/posts/life/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 09 Jan 2026 01:30:03 +0000</lastBuildDate><atom:link href="http://localhost:1313/posts/life/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Great Pulav vs Biryani Debate: Settled by Sid Sriram</title>
+      <link>http://localhost:1313/posts/life/09012026_sid/</link>
+      <pubDate>Fri, 09 Jan 2026 01:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/life/09012026_sid/</guid>
+      <description>Settling the oldest debate known to mankind with a Sid Sriram concert</description>
+    </item>
+    
+    <item>
+      <title>A Definitive Guide to Clubbing in Kora</title>
+      <link>http://localhost:1313/posts/life/12222025_kora/</link>
+      <pubDate>Mon, 22 Dec 2025 09:30:03 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/life/12222025_kora/</guid>
+      <description>kora clubbing guide</description>
+    </item>
+    
     <item>
       <title>Best 10 months, POSCO GYP Program</title>
       <link>http://localhost:1313/posts/life/13042024_gyp/</link>
@@ -46,15 +64,6 @@
       
       <guid>http://localhost:1313/posts/life/22082023_mitacs_2/</guid>
       <description>I extend a warm welcome to the second segment of my two-part series recounting the transformative journey of my MITACS internship at UBC, Canada. For those who may have missed the initial part, I invite you to peruse it as this post seamlessly continues the narrative. In this installment, I delve further into the intricacies of my personal expedition, encapsulating a comprehensive account of my encounters. From offering insights into the contours of my project, to painting a vivid picture of the city that played host to my internship, and to sharing the challenges I encountered and surmounted, this narrative unveils the multi-dimensional facets of my journey.</description>
-    </item>
-    
-    <item>
-      <title>A Definitive Guide to Clubbing in Kora</title>
-      <link>http://localhost:1313/posts/life/12222025_kora/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/posts/life/12222025_kora/</guid>
-      <description>kora clubbing guide</description>
     </item>
     
   </channel>
