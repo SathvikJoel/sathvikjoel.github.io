@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content"
 import PageLayout from "@layouts/PageLayout.astro"
 import Garden from "@components/Garden.astro"
+import StreamFeed from "@components/StreamFeed.astro"
 import { TOPICS } from "@consts"
 
 export async function getStaticPaths() {
@@ -12,19 +13,29 @@ const { topic } = Astro.props
 const posts = (await getCollection("posts"))
   .filter((p) => p.data.topic === topic.KEY && !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+
+const isFeed = topic.LAYOUT === "feed"
+const wrap = isFeed ? "max-w-2xl" : "max-w-[1420px]"
 ---
 
 <PageLayout title={`${topic.LABEL} — Writing`} description={topic.BLURB}>
-  <div class="mx-auto max-w-[1420px] px-5 sm:px-8 pt-28 pb-24">
-    <header class="animate max-w-2xl mb-10">
-      <a href="/posts" class="font-sans text-sm text-ink-light/60 dark:text-ink-dark/60 hover:text-crimson dark:hover:text-crimson-dark transition-colors">← All writing</a>
-      <div class="flex items-center gap-3 mt-4">
+  <div class:list={["mx-auto px-5 sm:px-8 pt-28 pb-24", wrap]}>
+    <header class="animate mb-12">
+      <a href="/" class="font-sans text-sm text-ink-light/60 dark:text-ink-dark/60 hover:text-crimson dark:hover:text-crimson-dark transition-colors">← All writing</a>
+      <div class="flex items-baseline gap-3 mt-4">
         <span class="text-4xl">{topic.EMOJI}</span>
         <h1 class="font-display text-4xl sm:text-5xl font-light text-ink-light dark:text-ink-dark">{topic.LABEL}</h1>
+        <span class="count-badge" title={`${posts.length} posts`}>{posts.length}</span>
       </div>
-      <p class="font-serif text-xl text-ink-light/70 dark:text-ink-dark/70 mt-3">{topic.BLURB}</p>
-      <p class="font-sans text-xs uppercase tracking-wide text-ink-light/45 dark:text-ink-dark/45 mt-3">{posts.length} {posts.length === 1 ? "piece" : "pieces"}</p>
+      <p class="font-serif text-xl sm:text-2xl italic text-ink-light/75 dark:text-ink-dark/75 mt-4 max-w-2xl leading-relaxed">{topic.BLURB}</p>
     </header>
-    <Garden posts={posts} showFilters={false} />
+
+    {isFeed ? <StreamFeed posts={posts} /> : <Garden posts={posts} showFilters={false} />}
   </div>
 </PageLayout>
+
+<style>
+  .count-badge {
+    @apply self-center font-sans text-sm font-medium px-2.5 py-0.5 rounded-full bg-crimson/10 text-crimson dark:bg-crimson-dark/15 dark:text-crimson-dark;
+  }
+</style>

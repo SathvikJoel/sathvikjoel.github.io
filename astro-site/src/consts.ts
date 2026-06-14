@@ -25,24 +25,29 @@ export const SEARCH: Page = {
   DESCRIPTION: "Search all writing by keyword.",
 }
 
-// Topic gardens — order + presentation metadata.
+// Streams — Tech / Life / Philosophy. Each is a feed you tend over time.
+// LAYOUT: "masonry" = 3-column previews (like Maggie's Notes);
+//         "feed"    = full posts stacked with separators (like her Smidgeons).
 export const TOPICS = [
   {
     KEY: "tech",
     LABEL: "Tech",
     EMOJI: "👨‍💻",
+    LAYOUT: "masonry",
     BLURB: "Notes from the machine — ML, math, and the craft of building software.",
   },
   {
     KEY: "life",
     LABEL: "Life",
     EMOJI: "🌱",
+    LAYOUT: "feed",
     BLURB: "Letters from the road — travel, exams, applications, and growing up.",
   },
   {
     KEY: "philosophy",
     LABEL: "Philosophy",
     EMOJI: "🧠",
+    LAYOUT: "masonry",
     BLURB: "Slow thoughts on how to think, live, and pay attention.",
   },
 ] as const

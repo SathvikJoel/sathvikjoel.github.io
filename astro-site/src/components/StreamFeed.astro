@@ -1,0 +1,56 @@
+---
+import type { CollectionEntry } from "astro:content"
+import { formatDate } from "@lib/utils"
+import Figure from "@components/mdx/Figure.astro"
+import Excursion from "@components/mdx/Excursion.astro"
+import Details from "@components/mdx/Details.astro"
+import CodeCaption from "@components/mdx/CodeCaption.astro"
+import InlineSVG from "@components/mdx/InlineSVG.astro"
+
+type Props = {
+  posts: CollectionEntry<"posts">[]
+}
+
+const { posts } = Astro.props
+const mdxComponents = { Figure, Excursion, Details, CodeCaption, InlineSVG }
+
+const rendered = await Promise.all(
+  posts.map(async (post) => ({ post, Content: (await post.render()).Content }))
+)
+
+const stageEmoji: Record<string, string> = { seedling: "🌱", budding: "🌿", evergreen: "🌳" }
+---
+
+<div class="stream-feed flex flex-col">
+  {rendered.map(({ post, Content }, i) => (
+    <article class="animate stream-item">
+      {i > 0 && <hr class="stream-sep" />}
+      <header class="mb-4">
+        <div class="flex items-center gap-2 font-sans text-[0.72rem] uppercase tracking-wide opacity-55">
+          <time>{formatDate(post.data.date)}</time>
+          {post.data.kind === "note" && post.data.growthStage && (
+            <span title={post.data.growthStage}>{stageEmoji[post.data.growthStage]}</span>
+          )}
+          {post.data.kind === "micro" && <span title="micro-post">💬</span>}
+        </div>
+        {post.data.kind !== "micro" && (
+          <h2 class="font-display text-2xl sm:text-3xl leading-tight mt-1 text-black dark:text-white">
+            <a href={`/posts/${post.slug}`} class="hover:text-crimson dark:hover:text-crimson-dark transition-colors">{post.data.title}</a>
+          </h2>
+        )}
+      </header>
+      <div class="prose-post stream-body">
+        <Content components={mdxComponents} />
+      </div>
+      <a href={`/posts/${post.slug}`} class="inline-block mt-4 font-sans text-sm text-crimson dark:text-crimson-dark hover:underline">
+        Permalink →
+      </a>
+    </article>
+  ))}
+</div>
+
+<style>
+  .stream-sep {
+    @apply border-0 border-t border-black/10 dark:border-white/10 my-14;
+  }
+</style>
