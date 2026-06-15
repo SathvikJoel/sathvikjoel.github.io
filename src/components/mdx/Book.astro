@@ -98,4 +98,21 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
   .book-desc :global(p) {
     @apply m-0;
   }
+
+  /* On narrow screens the fixed 164px cover + gap can exceed the available
+     width (especially inside the indented Now timeline) and push the page wide.
+     Shrink the cover and gap so the card always fits. */
+  @media (max-width: 600px) {
+    .book-card:not(.is-small) {
+      @apply gap-5;
+    }
+    .book-card:not(.is-small) .book-cover {
+      width: 128px;
+    }
+  }
+  @media (max-width: 400px) {
+    .book-card:not(.is-small) .book-cover {
+      width: 108px;
+    }
+  }
 </style>

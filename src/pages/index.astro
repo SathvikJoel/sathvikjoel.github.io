@@ -15,7 +15,7 @@ const all = (await getCollection("posts"))
     <header class="animate max-w-2xl mx-auto text-center mb-12">
       <p id="garden-eyebrow" class="font-sans text-sm uppercase tracking-[0.2em] text-sage dark:text-sage-dark inline-block cursor-default">Garden</p>
       <h1 class="font-hero text-4xl sm:text-5xl font-light leading-[1.1] text-ink-light dark:text-ink-dark mt-3">
-        <span class="count-badge" title={`${all.length} posts`}>{all.length}</span><span class="hero-vary">Thinking out loud about machines, meaning, and the mess in between.</span>
+        <span class="count-badge" title={`${all.length} posts`}>{all.length}</span>Thinking out loud about machines, meaning, and the mess in between.
       </h1>
       <p class="font-serif text-xl leading-snug text-ink-light/70 dark:text-ink-dark/70 mt-4">
         I write to understand the things I can't stop thinking about. Most of it still half-formed,
@@ -34,83 +34,9 @@ const all = (await getCollection("posts"))
     margin-right: 0.3em;
     line-height: 1;
   }
-  .hero-vary :global(.hv-word) {
-    display: inline-block;
-  }
-  .hero-vary :global(.hv-l) {
-    transition: font-variation-settings 0.14s ease;
-    will-change: font-variation-settings;
-  }
 </style>
 
 <script>
-  function initHomeFx() {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
-
-    const hero = document.querySelector(".hero-vary") as HTMLElement | null
-    if (!hero) return
-
-    // Split the hero headline into per-word / per-letter spans (once).
-    if (!hero.dataset.split) {
-      const text = hero.textContent ?? ""
-      hero.textContent = ""
-      for (const word of text.split(" ")) {
-        const w = document.createElement("span")
-        w.className = "hv-word"
-        for (const ch of word) {
-          const l = document.createElement("span")
-          l.className = "hv-l"
-          l.textContent = ch
-          w.appendChild(l)
-        }
-        hero.appendChild(w)
-        hero.appendChild(document.createTextNode(" "))
-      }
-      hero.dataset.split = "1"
-    }
-    const letters = Array.from(hero.querySelectorAll<HTMLElement>(".hv-l"))
-
-    let mx = window.innerWidth / 2
-    let my = 160
-    let raf = 0
-
-    const schedule = () => {
-      if (!raf) raf = requestAnimationFrame(tick)
-    }
-
-    function tick() {
-      raf = 0
-      for (const l of letters) {
-        const r = l.getBoundingClientRect()
-        const cx = r.left + r.width / 2
-        const cy = r.top + r.height / 2
-        const d = Math.hypot(mx - cx, my - cy)
-        const t = Math.max(0, 1 - d / 230)
-        const wght = Math.round(300 + t * 260)
-        l.style.fontVariationSettings = `"wght" ${wght}`
-      }
-    }
-
-    window.addEventListener(
-      "pointermove",
-      (e) => {
-        mx = e.clientX
-        my = e.clientY
-        schedule()
-      },
-      { passive: true }
-    )
-
-    document.addEventListener("pointerleave", () => {
-      mx = -9999
-      my = -9999
-      schedule()
-    })
-  }
-
-  initHomeFx()
-  document.addEventListener("astro:page-load", initHomeFx)
-
   // Hovering the "Garden" eyebrow blooms the header logo (same leaf animation).
   function initGardenBloom() {
     const eyebrow = document.getElementById("garden-eyebrow")

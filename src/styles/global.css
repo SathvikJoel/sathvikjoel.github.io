@@ -337,3 +337,24 @@ article img {
   margin-top: 1.6rem;
   margin-bottom: 1.6rem;
 }
+
+/**
+ * Mobile overflow guard. Long, unbreakable tokens — inline `code`, long words,
+ * and bare URLs — must not force the page wider than the viewport (which on
+ * phones shows up as a squished text column with empty/black space on the side).
+ * Code BLOCKS are excluded: they keep `white-space: pre` and scroll horizontally
+ * inside their own frame (`pre`).
+ */
+.prose-post {
+  overflow-wrap: break-word;
+}
+.prose-post :not(pre) > code {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+/* Wide display math scrolls within the reading column instead of overflowing. */
+.prose-post .katex-display {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}

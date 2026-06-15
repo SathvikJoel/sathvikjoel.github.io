@@ -101,6 +101,11 @@ const rendered = await Promise.all(
   .now-entry:last-child {
     margin-bottom: 0;
   }
+  @media (max-width: 480px) {
+    .now-entry {
+      padding-left: 1.5rem;
+    }
+  }
   .now-entry::before {
     content: "";
     position: absolute;
