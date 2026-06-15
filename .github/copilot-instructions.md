@@ -2,86 +2,151 @@
 
 This file documents conventions and structure of this repository for use by AI agents and contributors.
 
+This site was migrated from Hugo to **Astro** in June 2026. The Astro project lives
+at the **repository root**. The original hand-built Hugo + PaperMod site is preserved
+on the **`hugo-old`** branch.
+
 ---
 
-## Resume
+## Tech stack & structure
 
-The resume is stored as a PDF at `static/resume.pdf`.
+- **Framework:** [Astro](https://astro.build/) (static output), Tailwind CSS, TypeScript,
+  with a little SolidJS for stateful components. Content is Markdown / MDX.
+- **Key folders:**
+  - `src/pages/` — routes (`index.astro`, `about.astro`, `resume.astro`, `now/`,
+    `posts/[topic]/[slug].astro`, `search/`, `404.astro`, `rss.xml.ts`, etc.).
+  - `src/content/posts/<topic>/<slug>/index.md(x)` — blog posts.
+  - `src/content/now/` — dated "Now" snapshots (separate collection; kept out of the
+    garden, RSS, and search).
+  - `src/content/config.ts` — content collection schemas (frontmatter validation).
+  - `src/components/` — UI + `src/components/mdx/` custom MDX components.
+  - `src/consts.ts` — site config: `TOPICS` (streams), nav `LINKS`, `SOCIALS`.
+  - `public/` — static assets served at the site root (e.g. `public/resume.pdf` -> `/resume.pdf`).
+  - `docs/` — the private writer handbook (see below).
+  - `scripts/build-docs.mjs` — encrypts `docs/` into `public/docs.enc.json` at build time.
 
-Hugo serves everything in `static/` at the root URL, so the resume is publicly accessible at:
-
-```
-https://sathvikjoel.github.io/resume.pdf
-```
-
-### How to update the resume
-
-To replace the resume with a newer version, simply overwrite the file:
+## Build, dev & preview
 
 ```bash
-cp /path/to/new_resume.pdf static/resume.pdf
+npm install                                              # first time only
+DOCS_PASSWORD='garden-test' npm run dev -- --port 4399   # dev server
+DOCS_PASSWORD='garden-test' npm run build                # production build -> dist/
+npm run preview                                          # preview the built site
 ```
 
-Then commit and push — the GitHub Actions workflow will automatically rebuild and deploy the site.
-
-**Do not rename the file.** The filename `resume.pdf` is referenced in `config.yml` (profile buttons and nav menu). If you must rename it, update both of those references too.
-
-### Where it is linked
-
-- **Homepage profile buttons** — `config.yml` → `params.profileMode.buttons`
-- **Top navigation menu** — `config.yml` → `menu.main` (identifier: `Resume`)
+- `npm run build` runs `astro check` (type check) then `astro build`. A `prebuild`
+  step (`build-docs.mjs`) regenerates the encrypted docs bundle first.
+- Restart the dev server after editing `src/content/config.ts` (stale styles otherwise).
 
 ---
 
-## Deployment
+## Streams (topics)
 
-The site is built with [Hugo](https://gohugo.io/) using the [PaperMod](https://github.com/adityatelange/hugo-PaperMod) theme (loaded as a git submodule).
+Blog "streams" are defined in `src/consts.ts` -> `TOPICS`, each with a `KEY`, route, and
+`LAYOUT`:
 
-Deployment is handled by `.github/workflows/gh-pages.yml`, which:
-1. Triggers on every push to `main`
-2. Builds the site with Hugo
-3. Deploys the output to GitHub Pages
+- `masonry` — multi-column preview cards (e.g. **tech**, **philosophy**).
+- `column` — single-column framed cards (e.g. **life**).
+- `list` — compact text list (e.g. **writings**).
 
-To trigger a manual deploy, use the **workflow_dispatch** event from the Actions tab.
+A post's `topic` frontmatter field must match a topic `KEY`.
 
-### Gotcha: post dates and future-dated posts
+## Writing a post
 
-The workflow runs `hugo` **without** the `--buildFuture` flag, so any post whose front matter `date` is later than the build moment (in UTC) is silently dropped from the rendered site — it will be missing from the homepage, the section index, and the RSS feed, and the post URL will return 404.
+Create `src/content/posts/<topic>/<slug>/index.mdx` (use `.mdx` to use custom
+components; `.md` is fine for plain prose). Frontmatter is validated by
+`src/content/config.ts`. Common fields:
 
-The author works from India (IST, `+05:30`). If you write `date: 2026-05-29T14:15:03+00:00` and push at 14:30 IST, the date is `14:15 UTC` but the CI build happens at `09:00 UTC` — five hours in the "future" — and Hugo skips the post.
+```yaml
+title: "My post"
+description: "One-line summary."
+date: 2026-05-29T14:15:03+05:30
+topic: tech
+tags: ["meta"]
+growthStage: evergreen        # seedling | budding | evergreen
+draft: false                  # true hides the post everywhere
+unlisted: false               # see below
+```
 
-**Rule:** always use the IST offset in post front matter so the timestamp matches the local clock used to write it:
+### `draft` vs `unlisted`
+
+- **`draft: true`** — the post is filtered out of the homepage, stream indexes,
+  search, RSS, and related-post connections. Use for work in progress.
+- **`unlisted: true`** — the post still **builds and is reachable by URL**, but is
+  excluded from the homepage, stream indexes, search, RSS, related posts, and the
+  sitemap. Use for pages you want to link to privately. The **Writing toolkit**
+  (`/posts/tech/toolkit/`) uses this pattern and is linked only from the `/docs`
+  handbook. The sitemap exclusion lives in `astro.config.mjs` (`sitemap.filter`).
+
+### Post date / timezone convention
+
+Always write the frontmatter `date` with the IST offset `+05:30` so the timestamp
+matches the local clock used to write it:
 
 ```yaml
 date: 2026-05-29T14:15:03+05:30
 ```
 
-Older posts in this repo use `+00:00` and still work because they were committed hours-to-days before the build; do not rely on that for posts you publish the same day.
+Unlike the old Hugo build (which dropped future-dated posts), Astro renders posts
+regardless of date — but a correct timestamp keeps the relative-date display and the
+homepage/stream **sort order** accurate.
 
 ---
 
-## Summary Section Styling (Dagger + EB Garamond)
+## Resume
 
-All `## Summary` sections in any blog post automatically render with a **† dagger prefix** and **EB Garamond** font. No per-post changes are needed — just use `## Summary` as the heading.
+The resume PDF lives at `public/resume.pdf` and is served at:
 
-### How it works
+```
+https://sathvikjoel.github.io/resume.pdf
+```
 
-Three files were changed to achieve this:
+There is also a styled HTML resume page at `/resume` (`src/pages/resume.astro`).
 
-1. **`layouts/partials/extend_head.html`** — EB Garamond is loaded from Google Fonts:
-   ```html
-   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Fira+Code:wght@300..700&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
-   ```
+### How to update the resume
 
-2. **`assets/css/extended/style.css`** — CSS targets `h2#summary` (Hugo auto-generates this ID from `## Summary`):
-   ```css
-   .post-content h2#summary::before { content: "† "; font-family: 'EB Garamond', Georgia, serif; }
-   .post-content h2#summary { font-family: 'EB Garamond', Georgia, serif; }
-   .post-content h2#summary + ol { font-family: 'EB Garamond', Georgia, serif; font-size: 1.1em; line-height: 1.9; }
-   ```
+Overwrite the file, then commit and push:
 
-3. **Blog post front matter** — no special flags needed; the heading `## Summary` is sufficient.
+```bash
+cp /path/to/new_resume.pdf public/resume.pdf
+```
 
-### To change the font in future
+**Do not rename the file** — `/resume.pdf` is linked from `src/pages/resume.astro`. If
+you must rename it, update that reference (and any nav/button links).
 
-Replace `EB Garamond` in both files above with any Google Font. Update the `@import` URL in `extend_head.html` and the `font-family` values in `style.css`.
+---
+
+## Private docs handbook
+
+`docs/*.md` is a writer handbook (how to write posts, use components, etc.). At build
+time `scripts/build-docs.mjs` encrypts it (AES-256-GCM) into `public/docs.enc.json`;
+the plaintext never ships to `dist/`. The `/docs` page unlocks it in the browser with a
+password.
+
+- The password comes from the **`DOCS_PASSWORD`** env var (or a local
+  `.docs-password` file). If unset, the build falls back to the default `garden`.
+- In CI, `DOCS_PASSWORD` is read from a **repo secret** (see Deployment).
+
+---
+
+## Deployment
+
+The site is built with Astro and deployed to GitHub Pages by
+`.github/workflows/gh-pages.yml` (**Deploy Astro site to Pages**), which:
+
+1. Triggers on every **push to `main`** (and via **workflow_dispatch**).
+2. Runs `npm ci` then `npm run build`.
+3. Uploads `./dist` and deploys it to GitHub Pages.
+
+To trigger a manual deploy:
+
+```bash
+gh workflow run gh-pages.yml --repo SathvikJoel/sathvikjoel.github.io --ref main
+gh run list --workflow=gh-pages.yml --repo SathvikJoel/sathvikjoel.github.io --limit 3
+```
+
+The build reads `DOCS_PASSWORD` from a repo secret
+(**Settings -> Secrets and variables -> Actions**). If unset, the docs are still
+encrypted with the default password `garden`.
+
+See `.agents/deployment.md` for more detail.
