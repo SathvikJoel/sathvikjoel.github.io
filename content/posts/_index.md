@@ -1,4 +1,0 @@
----
-title: "Posts📚"
-hidemeta: true
----
