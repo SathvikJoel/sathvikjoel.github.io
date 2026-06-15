@@ -16,6 +16,7 @@ import WideImage from "./WideImage.astro"
 import Reference from "./Reference.astro"
 import Pullquote from "./Pullquote.astro"
 import ComingSoon from "./ComingSoon.astro"
+import UnderDevelopment from "./UnderDevelopment.astro"
 import IconList from "./IconList.astro"
 import Card from "./Card.astro"
 import Tweet from "./Tweet.astro"
@@ -44,6 +45,7 @@ export const mdxComponents = {
   Callout: Reference,
   Pullquote,
   ComingSoon,
+  UnderDevelopment,
   IconList,
   Card,
   Tweet,

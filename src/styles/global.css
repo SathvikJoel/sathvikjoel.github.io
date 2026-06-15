@@ -358,3 +358,13 @@ article img {
   overflow-x: auto;
   overflow-y: hidden;
 }
+
+/* <UnderDevelopment> marker: everything that follows it in the post is dimmed to
+   signal it's still a rough, in-progress draft. The card itself stays full opacity. */
+.prose-post .under-dev ~ * {
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
+}
+.prose-post .under-dev ~ *:hover {
+  opacity: 0.7;
+}

@@ -379,6 +379,26 @@ A friendly placeholder for a section you haven't written yet, with an optional m
 <ComingSoon note="Optional custom message." />
 ```
 
+### Under development
+
+A marker for a post you're **actively writing**. It looks like *Coming soon* (same card,
+but with a warm trowel-and-sprout icon that gently animates), and it has one extra power:
+**everything after it in the post is dimmed**, so readers can tell the notes below are a
+rough, in-progress draft. Drop it in right where the polished writing stops and the
+work-in-progress begins.
+
+```mdx
+Polished, finished writing up to here.
+
+<UnderDevelopment note="Optional custom message." />
+
+These paragraphs — and everything after them — render faded, because they're
+still being tended.
+```
+
+When the post is done, just delete the `<UnderDevelopment />` line and the dimming goes
+away.
+
 ---
 
 ## At a glance
@@ -406,3 +426,4 @@ A friendly placeholder for a section you haven't written yet, with an optional m
 | `MediaList` / `MediaItem` | A list of text-plus-thumbnail rows |
 | `CodeCaption` | A titled header over a code block |
 | `ComingSoon` | A placeholder for unfinished sections |
+| `UnderDevelopment` | A "still writing" marker that fades everything after it |

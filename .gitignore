@@ -25,3 +25,4 @@ pnpm-debug.log*
 
 # Generated encrypted docs bundle (rebuilt by prebuild/predev)
 public/docs.enc.json
+public/og/

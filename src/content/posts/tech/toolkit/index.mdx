@@ -72,6 +72,30 @@ Mark an unfinished post so readers know it's still growing:
 <ComingSoon note="Optional custom message." />
 ```
 
+## Under development
+
+Mark a post you're **still writing**. It mirrors *Coming soon*, but everything after it
+is dimmed so readers know the rest is a rough draft (the demo below is wrapped in a box
+so only it is affected):
+
+<div class="rounded-sm border border-white/10 p-5">
+
+This sentence is finished and crisp.
+
+<UnderDevelopment />
+
+This sentence sits *after* the marker, so it renders faded — the in-progress signal.
+
+</div>
+
+```mdx
+Polished writing up to here.
+
+<UnderDevelopment note="Optional custom message." />
+
+Everything below renders dimmed until you remove the marker.
+```
+
 ## Two images side by side
 
 Place images in a row, **each with its own caption**. Children are regular `<Figure>`s, so they keep their natural aspect ratio and collapse to one column on mobile.

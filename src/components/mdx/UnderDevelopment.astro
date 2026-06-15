@@ -1,0 +1,87 @@
+---
+// An "actively being written" marker. Mirrors <ComingSoon>, but signals work *in
+// progress* rather than an empty placeholder — and everything AFTER it in the post is
+// dimmed (see the `.under-dev ~ *` rule in global.css) to show it's still rough draft.
+interface Props {
+  note?: string
+}
+const { note = "I'm still tending this — the notes below are rough and may change." } =
+  Astro.props
+---
+
+<div class="under-dev depth-card not-prose">
+  <span class="under-dev-icon" aria-hidden="true">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <!-- rotating dashed ring = work in motion -->
+      <circle cx="24" cy="24" r="22" class="ud-ring" stroke-width="1" />
+      <!-- a garden trowel, tending the soil -->
+      <path d="M30 13l5 5-7 7-5-5z" class="ud-blade" />
+      <path d="M28 20l-9 9c-1.5 1.5-4 1.5-5.5 0s-1.5-4 0-5.5l9-9" class="ud-handle" />
+      <!-- a little sprout coming up -->
+      <path d="M16 35c0-4 2-6 6-6" class="ud-stem" />
+      <path d="M22 29c-3 .3-4.5-1-5-3.5 2.5-.5 4.3.8 5 3.5Z" class="ud-leaf" />
+      <!-- spark of activity -->
+      <path d="M36 30l.8 1.7 1.7.8-1.7.8-.8 1.7-.8-1.7-1.7-.8 1.7-.8Z" class="ud-spark" />
+    </svg>
+  </span>
+  <h3 class="under-dev-title">Under Development</h3>
+  <p class="under-dev-note">{note}</p>
+</div>
+
+<style>
+  .under-dev {
+    @apply my-10 mx-auto flex max-w-2xl flex-col items-center gap-2 rounded-sm border border-clay/20 bg-surface-light px-6 py-10 text-center dark:border-white/15 dark:bg-surface-dark;
+  }
+  .under-dev-icon {
+    @apply mb-1 block text-clay-light dark:text-clay-dark;
+  }
+  .under-dev-icon svg {
+    @apply h-12 w-12;
+  }
+  .ud-ring {
+    @apply opacity-30;
+    stroke-dasharray: 3 5;
+    transform-origin: 24px 24px;
+    animation: ud-spin 9s linear infinite;
+  }
+  .ud-blade {
+    @apply fill-clay-light/15 dark:fill-clay-dark/15;
+  }
+  .ud-leaf {
+    @apply fill-clay-light/20 dark:fill-clay-dark/20;
+  }
+  .ud-spark {
+    @apply fill-clay-light dark:fill-clay-dark;
+    stroke: none;
+    animation: ud-pulse 2.4s ease-in-out infinite;
+  }
+  .under-dev-title {
+    @apply m-0 font-display text-[1.45rem] font-light leading-snug text-ink-light dark:text-[#EAE8E5];
+    letter-spacing: -0.01em;
+  }
+  .under-dev-note {
+    @apply font-sans text-sm text-ink-light/60 dark:text-ink-dark/55 mt-1 mb-0;
+  }
+
+  @keyframes ud-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes ud-pulse {
+    0%,
+    100% {
+      opacity: 0.4;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ud-ring,
+    .ud-spark {
+      animation: none;
+    }
+  }
+</style>

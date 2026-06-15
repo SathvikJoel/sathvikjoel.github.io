@@ -4,11 +4,11 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "predev": "node scripts/build-docs.mjs",
+    "predev": "node scripts/build-docs.mjs && node scripts/build-og.mjs",
     "dev:network": "astro dev --host",
     "start": "astro dev",
     "build": "astro check && astro build",
-    "prebuild": "node scripts/build-docs.mjs",
+    "prebuild": "node scripts/build-docs.mjs && node scripts/build-og.mjs",
     "preview": "astro preview",
     "preview:network": "astro dev --host",
     "astro": "astro",
