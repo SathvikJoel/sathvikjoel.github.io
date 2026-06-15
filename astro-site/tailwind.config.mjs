@@ -13,7 +13,7 @@ export default {
         black: "#000000",
         // Page + surfaces. paper.dark is pure black (Astro Sphere); surfaces are subtly raised.
         paper: { light: "#F6F5F1", dark: "#000000" },
-        surface: { light: "#FCFBF7", dark: "#111113" },
+        surface: { light: "#FCFBF7", dark: "#18181B" },
         ink: { light: "#353534", dark: "#C9C6C2" },
         // Secondary accent — Maggie's sea-blue, brightened for black bg.
         sage: { DEFAULT: "#3DD6ED", light: "#008BA3", dark: "#3DD6ED" },
@@ -30,8 +30,8 @@ export default {
       fontFamily: {
         // UI / labels / meta — exactly as Maggie Appleton uses.
         "sans": ["Lato", ...defaultTheme.fontFamily.sans],
-        // Reading body — Fraunces, the same warm high-contrast serif as the headings/hero.
-        "serif": ["Fraunces Variable", "Georgia", ...defaultTheme.fontFamily.serif],
+        // Reading body — EB Garamond, a classical, elegant book serif.
+        "serif": ["EB Garamond Variable", "Georgia", ...defaultTheme.fontFamily.serif],
         // Margin / sidenotes — warm glyphic serif.
         "note": ["Hedvig Letters Serif", "Georgia", "serif"],
         // Headings — same high-contrast soft serif as the hero (Fraunces), kept light.

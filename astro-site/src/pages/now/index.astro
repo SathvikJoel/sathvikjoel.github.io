@@ -1,0 +1,137 @@
+---
+import { getCollection } from "astro:content"
+import PageLayout from "@layouts/PageLayout.astro"
+import TopLayout from "@layouts/TopLayout.astro"
+import BottomLayout from "@layouts/BottomLayout.astro"
+import { mdxComponents } from "@components/mdx/registry"
+
+const entries = (await getCollection("now"))
+  .filter((e) => !e.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+
+const rendered = await Promise.all(
+  entries.map(async (entry) => ({ entry, Content: (await entry.render()).Content }))
+)
+---
+
+<PageLayout title="Now" description="What Sathvik Joel is focused on right now — a snapshot, updated when life shifts." topGradient={true}>
+  <TopLayout>
+    <div class="animate">
+      <a href="/" class="stream-back" aria-label="Back to Garden">
+        <svg class="stream-back-arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" aria-hidden="true">
+          <path d="M11.5 5.5 7 10l4.5 4.5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span class="stream-back-label">Back to Garden</span>
+      </a>
+      <h1 class="font-display text-5xl sm:text-6xl font-light text-ink-light dark:text-ink-dark mt-6 leading-[1.05]">
+        What I'm doing now
+      </h1>
+      <p class="font-serif text-xl sm:text-2xl text-ink-light/70 dark:text-ink-dark/70 mt-5 max-w-2xl leading-relaxed">
+        A snapshot of where my head and hours are going at the moment — not a permanent record.
+        Inspired by <a href="https://nownownow.com/about" class="now-inline-link" target="_blank" rel="noopener">Derek Sivers' /now page movement</a>.
+        It changes when life does.
+      </p>
+    </div>
+  </TopLayout>
+  <BottomLayout>
+    {rendered.length > 0 ? (
+      <div class="now-timeline animate">
+        {rendered.map(({ entry, Content }) => (
+          <section class="now-entry">
+            <a href={`/now/${entry.slug}`} class="now-month">{entry.data.title}</a>
+            <article class="prose-post no-dropcap now-body">
+              <Content components={mdxComponents} />
+            </article>
+          </section>
+        ))}
+      </div>
+    ) : (
+      <p class="font-serif text-lg text-ink-light/60 dark:text-ink-dark/60">Nothing here yet — check back soon.</p>
+    )}
+  </BottomLayout>
+</PageLayout>
+
+<style>
+  .stream-back {
+    @apply font-sans text-ink-light/55 dark:text-ink-dark/55;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: color 0.25s ease, transform 0.25s ease;
+  }
+  .stream-back:hover {
+    color: #3dd6ed;
+    transform: translateX(4px);
+  }
+  .stream-back-arrow {
+    width: 0;
+    height: 1em;
+    opacity: 0;
+    transform: translateX(5px);
+    transition: width 0.25s ease, opacity 0.25s ease, transform 0.25s ease,
+      margin-right 0.25s ease;
+  }
+  .stream-back:hover .stream-back-arrow {
+    width: 1em;
+    opacity: 1;
+    transform: translateX(0);
+    margin-right: 0.3em;
+  }
+  .now-inline-link {
+    @apply text-crimson dark:text-crimson-dark;
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+  }
+
+  /* Vertical timeline — each month is its own short solid segment: a node at the
+     title, a track down to where that month's body ends, then a gap before the next. */
+  .now-timeline {
+    margin-left: 0.4rem;
+  }
+  .now-entry {
+    position: relative;
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+    padding-left: 2.75rem;
+    margin-bottom: 3.75rem;
+  }
+  .now-entry:last-child {
+    margin-bottom: 0;
+  }
+  .now-entry::before {
+    content: "";
+    position: absolute;
+    left: -7px;
+    top: 0;
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.38);
+    background: #000;
+    border-radius: 50%;
+  }
+  .now-month {
+    @apply font-display text-ink-light dark:text-ink-dark;
+    display: inline-block;
+    font-size: 1.95rem;
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .now-month:hover {
+    @apply text-crimson dark:text-crimson-dark;
+  }
+  .now-body {
+    margin-top: 1.1rem;
+  }
+  .now-body > :global(:first-child) {
+    margin-top: 0;
+  }
+  .now-body > :global(:last-child) {
+    margin-bottom: 0;
+  }
+</style>

@@ -6,7 +6,7 @@ import BottomLayout from "@layouts/BottomLayout.astro";
 import Search from "@components/Search";
 import { SEARCH } from "@consts";
 
-const posts = (await getCollection("posts")).filter((post) => !post.data.draft);
+const posts = (await getCollection("posts")).filter((post) => !post.data.draft && !post.data.unlisted);
 
 const data = posts as CollectionEntry<"posts">[];
 ---

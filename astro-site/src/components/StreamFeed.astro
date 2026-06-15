@@ -1,20 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content"
-import { formatDate } from "@lib/utils"
-import Figure from "@components/mdx/Figure.astro"
-import Excursion from "@components/mdx/Excursion.astro"
-import Details from "@components/mdx/Details.astro"
-import CodeCaption from "@components/mdx/CodeCaption.astro"
-import InlineSVG from "@components/mdx/InlineSVG.astro"
-import Sidenote from "@components/mdx/Sidenote.astro"
-import Gallery from "@components/mdx/Gallery.astro"
-import MediaList from "@components/mdx/MediaList.astro"
-import MediaItem from "@components/mdx/MediaItem.astro"
-import Year from "@components/mdx/Year.astro"
-import WideImage from "@components/mdx/WideImage.astro"
-import Reference from "@components/mdx/Reference.astro"
-import Pullquote from "@components/mdx/Pullquote.astro"
-import ComingSoon from "@components/mdx/ComingSoon.astro"
+import { relativeDate } from "@lib/utils"
+import { mdxComponents } from "@components/mdx/registry"
 import StageIcon from "@components/StageIcon.astro"
 
 type Props = {
@@ -22,7 +9,6 @@ type Props = {
 }
 
 const { posts } = Astro.props
-const mdxComponents = { Figure, Excursion, Details, CodeCaption, InlineSVG, Sidenote, Gallery, MediaList, MediaItem, Year, Y: Year, WideImage, Reference, Callout: Reference, Pullquote, ComingSoon }
 
 const rendered = await Promise.all(
   posts.map(async (post) => ({ post, Content: (await post.render()).Content }))
@@ -35,16 +21,12 @@ const rendered = await Promise.all(
       {i > 0 && <hr class="stream-sep" />}
       <header class="mb-4">
         <div class="flex items-center gap-2 font-sans text-[0.72rem] uppercase tracking-wide opacity-55">
-          <time>{formatDate(post.data.date)}</time>
-          {post.data.kind === "note" && post.data.growthStage && (
-            <StageIcon stage={post.data.growthStage} class="size-4" />
-          )}
+          <time class="normal-case">{relativeDate(post.data.date)}</time>
+          <StageIcon stage={post.data.growthStage} class="size-4" />
         </div>
-        {post.data.kind !== "micro" && (
-          <h2 class="font-display text-2xl sm:text-3xl leading-tight mt-1 text-black dark:text-white">
-            <a href={`/posts/${post.slug}`} class="hover:text-crimson dark:hover:text-crimson-dark transition-colors">{post.data.title}</a>
-          </h2>
-        )}
+        <h2 class="font-display text-2xl sm:text-3xl leading-tight mt-1 text-black dark:text-white">
+          <a href={`/posts/${post.slug}`} class="hover:text-crimson dark:hover:text-crimson-dark transition-colors">{post.data.title}</a>
+        </h2>
       </header>
       <div class="prose-post stream-body">
         <Content components={mdxComponents} />

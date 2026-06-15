@@ -3,22 +3,9 @@ import { type CollectionEntry, getCollection } from "astro:content"
 import PageLayout from "@layouts/PageLayout.astro"
 import TopLayout from "@layouts/TopLayout.astro"
 import BottomLayout from "@layouts/BottomLayout.astro"
-import { formatDate, readingTime } from "@lib/utils"
+import { formatDate, relativeDate, readingTime } from "@lib/utils"
 import Connections from "@components/Connections.astro"
-import Figure from "@components/mdx/Figure.astro"
-import Excursion from "@components/mdx/Excursion.astro"
-import Details from "@components/mdx/Details.astro"
-import CodeCaption from "@components/mdx/CodeCaption.astro"
-import InlineSVG from "@components/mdx/InlineSVG.astro"
-import Sidenote from "@components/mdx/Sidenote.astro"
-import Gallery from "@components/mdx/Gallery.astro"
-import MediaList from "@components/mdx/MediaList.astro"
-import MediaItem from "@components/mdx/MediaItem.astro"
-import Year from "@components/mdx/Year.astro"
-import WideImage from "@components/mdx/WideImage.astro"
-import Reference from "@components/mdx/Reference.astro"
-import Pullquote from "@components/mdx/Pullquote.astro"
-import ComingSoon from "@components/mdx/ComingSoon.astro"
+import { mdxComponents } from "@components/mdx/registry"
 import StageIcon from "@components/StageIcon.astro"
 import TableOfContents from "@components/TableOfContents.astro"
 
@@ -32,63 +19,51 @@ export async function getStaticPaths() {
 
 type Props = CollectionEntry<"posts">
 const post = Astro.props
-const { title, description, date, topic, kind, growthStage, lastTended, tags } = post.data
+const { title, description, date, topic, growthStage, lastTended, tags, width, dropCap, topGlow } = post.data
 const { Content, headings } = await post.render()
 
-// All posts (used by Connections for backlinks).
-const allPosts = await getCollection("posts")
+// All posts (used by Connections for backlinks). Unlisted posts are excluded so
+// they don't surface as related/backlinks, but their own page still builds.
+const allPosts = (await getCollection("posts")).filter((p) => !p.data.unlisted)
 
-const mdxComponents = { Figure, Excursion, Details, CodeCaption, InlineSVG, Sidenote, Gallery, MediaList, MediaItem, Year, Y: Year, WideImage, Reference, Callout: Reference, Pullquote, ComingSoon }
-const stageWord = { seedling: "Seedling", budding: "Budding", evergreen: "Evergreen" }
-const isNote = kind === "note"
-const isMicro = kind === "micro"
+const breadcrumbStage = growthStage
 ---
 
-<PageLayout title={title} description={description}>
+<PageLayout title={title} description={description} topGradient={topGlow}>
   <TopLayout>
-    <div class="animate">
-      <nav class="font-sans text-sm flex flex-wrap items-center gap-2 text-ink-light/60 dark:text-ink-dark/60" aria-label="Breadcrumb">
-        <a href="/" class="hover:text-crimson dark:hover:text-crimson-dark transition-colors">All writing</a>
-        <span class="opacity-30">/</span>
-        <a href={`/posts/${topic}`} class="capitalize hover:text-crimson dark:hover:text-crimson-dark transition-colors">{topic}</a>
-      </nav>
-      <div class="flex flex-wrap items-center font-sans text-sm mt-12 gap-2 text-ink-light/60 dark:text-ink-dark/60">
-        <time datetime={date.toISOString()}>{formatDate(date)}</time>
-        {!isMicro && (
-          <>
-            <span class="opacity-30">·</span>
-            <span>{readingTime(post.body)}</span>
-          </>
-        )}
-        {isNote && growthStage &&
-          <>
-            <span class="opacity-30">·</span>
-            <span class="group inline-flex items-center gap-1.5 text-clay dark:text-clay-dark">
-              <StageIcon stage={growthStage} class="size-4" />
-              {stageWord[growthStage]}
-            </span>
-          </>
-        }
-      </div>
-      <h1 class:list={["font-display text-4xl sm:text-5xl font-light text-black dark:text-white mt-2 leading-tight", isNote && "italic"]}>
+    <div class:list={["animate", width === "wide" && "wide-col"]}>
+      <a href={`/posts/${topic}`} class="breadcrumb-stream group" aria-label={`Back to the ${topic} stream`}>
+        <svg class="bc-arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" aria-hidden="true">
+          <path d="M16 10H4m5-5l-5 5 5 5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span class="bc-stream">{topic}</span>
+        <StageIcon stage={breadcrumbStage} class="size-4 mx-2" />
+        <span class="bc-stage">{growthStage}</span>
+      </a>
+      <h1 class="font-display text-4xl sm:text-5xl font-light text-black dark:text-white mt-6 leading-tight">
         {title}
       </h1>
       {description &&
-        <p class="font-display italic text-xl opacity-80 mt-3">{description}</p>
+        <p class="font-display font-light text-lg sm:text-xl opacity-70 mt-3">{description}</p>
       }
-      {isNote && lastTended &&
-        <p class="font-mono text-xs opacity-60 mt-2">last tended {formatDate(lastTended)}</p>
+      <hr class="border-t mt-6 border-crimson/50 dark:border-crimson-dark/50" />
+      <div class="flex flex-col items-end font-sans text-sm mt-3 text-ink-light/55 dark:text-ink-dark/55">
+        <time datetime={date.toISOString()}>{relativeDate(date)}</time>
+        <span>{readingTime(post.body)}</span>
+      </div>
+      {lastTended &&
+        <p class="font-mono text-xs opacity-60 mt-2">last tended {relativeDate(lastTended)}</p>
       }
     </div>
   </TopLayout>
   <BottomLayout>
-    <TableOfContents headings={headings} />
-    <article class:list={["animate prose-post", isNote && "note"]}>
+    <TableOfContents headings={headings} pinned={width !== "wide"} />
+    <article class:list={["animate prose-post", width === "wide" && "wide-col", !dropCap && "no-dropcap"]}>
       <Content components={mdxComponents}/>
     </article>
 
     {tags.length > 0 && (
-      <div class="animate mt-10 pt-6 border-t border-black/10 dark:border-white/10">
+      <div class:list={["animate mt-10 pt-6 border-t border-black/10 dark:border-white/10", width === "wide" && "wide-col"]}>
         <ul class="flex flex-wrap gap-2">
           {tags.map((tag) => (
             <li class="font-sans text-xs uppercase tracking-wide py-1 px-3 rounded-full border border-clay/20 dark:border-white/15 text-ink-light/65 dark:text-ink-dark/65 hover:border-crimson/50 hover:text-crimson dark:hover:text-crimson-dark transition-colors">
@@ -99,6 +74,44 @@ const isMicro = kind === "micro"
       </div>
     )}
 
-    <Connections post={post} all={allPosts} />
+    <div class:list={[width === "wide" && "wide-col"]}>
+      <Connections post={post} all={allPosts} />
+    </div>
   </BottomLayout>
 </PageLayout>
+
+<style>
+  .breadcrumb-stream {
+    @apply inline-flex items-center no-underline;
+  }
+  .bc-stream {
+    @apply font-sans text-crimson dark:text-crimson-dark;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+  .bc-stage {
+    @apply font-sans text-black dark:text-white;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 400;
+  }
+  .bc-arrow {
+    width: 0;
+    height: 0.85em;
+    opacity: 0;
+    color: #3dd6ed;
+    transform: translateX(4px);
+    transition: width 0.25s ease, opacity 0.25s ease, transform 0.25s ease,
+      margin-right 0.25s ease;
+  }
+  .breadcrumb-stream:hover .bc-arrow {
+    width: 0.85em;
+    opacity: 1;
+    transform: translateX(0);
+    margin-right: 0.4em;
+  }
+</style>

@@ -1,0 +1,16 @@
+---
+// One slide in a scroll-synced presentation. Holds the slide image and the
+// running notes that belong beside it. On desktop the parent <ScrollSlides>
+// pins the images and crossfades to this one when its notes scroll into view;
+// on mobile the image simply sits inline above its notes.
+interface Props {
+  image: string
+  alt?: string
+}
+const { image, alt = "" } = Astro.props
+---
+
+<div class="scrolly-slide" data-slide data-image={image} data-alt={alt}>
+  <img class="scrolly-inline-img" src={image} alt={alt} loading="lazy" decoding="async" />
+  <div class="scrolly-note"><slot /></div>
+</div>

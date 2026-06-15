@@ -1,23 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" fill="none">
   <defs>
-    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#2a1830"/>
-      <stop offset="0.55" stop-color="#3a2440"/>
-      <stop offset="1" stop-color="#1a2a3a"/>
-    </linearGradient>
+    <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#FFE3A8"/>
+      <stop offset="0.45" stop-color="#F0C27B"/>
+      <stop offset="1" stop-color="#FF9A8A"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#F0C27B" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#F0C27B" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-  <rect width="800" height="1000" fill="url(#g1)"/>
-  <circle cx="600" cy="230" r="90" fill="#FF9A8A" opacity="0.85"/>
-  <g fill="#000" opacity="0.35">
-    <rect x="0" y="720" width="800" height="280"/>
-    <path d="M0 720 L120 640 L240 720 Z"/>
-    <path d="M180 720 L360 600 L520 720 Z"/>
-    <path d="M460 720 L640 650 L800 720 L800 720 Z"/>
+  <!-- sun glow + sun (transparent everywhere else) -->
+  <circle cx="400" cy="420" r="300" fill="url(#glow)"/>
+  <circle cx="400" cy="420" r="150" fill="url(#sun)"/>
+  <!-- distant hills -->
+  <path d="M80 640 q120 -80 240 -30 q150 -70 300 -10 q60 25 100 40 V700 H80 Z" fill="#3a2440" fill-opacity="0.55"/>
+  <!-- water reflection -->
+  <g stroke="#FFCB8A" stroke-linecap="round" opacity="0.8">
+    <line x1="360" y1="630" x2="440" y2="630" stroke-width="10"/>
+    <line x1="330" y1="668" x2="470" y2="668" stroke-width="8" opacity="0.7"/>
+    <line x1="300" y1="708" x2="500" y2="708" stroke-width="7" opacity="0.55"/>
+    <line x1="345" y1="748" x2="455" y2="748" stroke-width="6" opacity="0.45"/>
+    <line x1="290" y1="788" x2="510" y2="788" stroke-width="5" opacity="0.35"/>
   </g>
-  <g fill="#3DD6ED" opacity="0.5">
-    <rect x="120" y="800" width="6" height="120"/>
-    <rect x="320" y="780" width="6" height="140"/>
-    <rect x="560" y="810" width="6" height="110"/>
+  <!-- crane silhouettes -->
+  <g stroke="#FF9A8A" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M160 610 V320 L330 360"/>
+    <path d="M160 360 L110 430"/>
+    <path d="M160 320 v-26"/>
+    <path d="M650 610 V290 L500 340"/>
+    <path d="M650 330 L715 410"/>
   </g>
-  <text x="400" y="970" text-anchor="middle" font-family="Georgia, serif" font-size="26" fill="#ECEAE6" opacity="0.5">replace with your 4:5 image</text>
+  <!-- little boat -->
+  <g stroke="#3DD6ED" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity="0.9">
+    <path d="M250 600 h120 l-20 34 h-80 z" fill="#3DD6ED" fill-opacity="0.18"/>
+    <path d="M310 600 V540 l46 30"/>
+  </g>
 </svg>

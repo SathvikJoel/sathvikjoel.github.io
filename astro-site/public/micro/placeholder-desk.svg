@@ -1,17 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" fill="none">
   <defs>
-    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#1a2230"/>
-      <stop offset="1" stop-color="#301a2a"/>
+    <linearGradient id="lamp" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE3A8" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#FFE3A8" stop-opacity="0"/>
     </linearGradient>
   </defs>
-  <rect width="800" height="1000" fill="url(#g2)"/>
-  <rect x="0" y="640" width="800" height="360" fill="#000" opacity="0.3"/>
-  <rect x="180" y="380" width="440" height="280" rx="14" fill="#0c0c10" stroke="#3DD6ED" stroke-opacity="0.5" stroke-width="4"/>
-  <rect x="210" y="410" width="280" height="14" rx="7" fill="#FF6FB5" opacity="0.7"/>
-  <rect x="210" y="446" width="380" height="10" rx="5" fill="#ECEAE6" opacity="0.25"/>
-  <rect x="210" y="476" width="340" height="10" rx="5" fill="#ECEAE6" opacity="0.25"/>
-  <circle cx="600" cy="760" r="46" fill="none" stroke="#F0C27B" stroke-width="8" opacity="0.8"/>
-  <path d="M640 740 q40 20 0 40" fill="none" stroke="#F0C27B" stroke-width="8" opacity="0.8"/>
-  <text x="400" y="930" text-anchor="middle" font-family="Georgia, serif" font-size="26" fill="#ECEAE6" opacity="0.5">replace with your 4:5 image</text>
+  <!-- warm lamp light cone (transparent bg around it) -->
+  <path d="M470 300 L300 760 L660 760 Z" fill="url(#lamp)"/>
+  <!-- desk line -->
+  <line x1="150" y1="760" x2="690" y2="760" stroke="#FF9A8A" stroke-width="8" stroke-linecap="round" opacity="0.8"/>
+  <!-- lamp -->
+  <g stroke="#F0C27B" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M560 760 V470 L460 320"/>
+    <path d="M408 300 a60 38 0 0 1 110 64 z" fill="#F0C27B" fill-opacity="0.35"/>
+    <circle cx="463" cy="384" r="10" fill="#FFE3A8" stroke="none"/>
+  </g>
+  <!-- laptop -->
+  <g stroke="#3DD6ED" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M250 600 h190 a16 16 0 0 1 16 16 v120 a16 16 0 0 1 -16 16 h-190 a16 16 0 0 1 -16 -16 v-120 a16 16 0 0 1 16 -16 z" fill="#3DD6ED" fill-opacity="0.10"/>
+    <path d="M222 752 h246 a14 14 0 0 1 14 14 v6 H208 v-6 a14 14 0 0 1 14 -14 z" fill="#3DD6ED" fill-opacity="0.18"/>
+    <line x1="280" y1="636" x2="410" y2="636" opacity="0.7"/>
+    <line x1="280" y1="676" x2="380" y2="676" opacity="0.5"/>
+  </g>
+  <!-- steaming mug -->
+  <g stroke="#FF9A8A" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M190 660 h78 v66 a14 14 0 0 1 -14 14 h-50 a14 14 0 0 1 -14 -14 z" fill="#FF9A8A" fill-opacity="0.12"/>
+    <path d="M268 674 h22 a18 18 0 0 1 0 36 h-22"/>
+    <path d="M214 632 q-10 -18 4 -34" opacity="0.7"/>
+    <path d="M244 632 q-10 -18 4 -34" opacity="0.5"/>
+  </g>
+  <!-- small plant -->
+  <g stroke="#3DD6ED" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.9">
+    <path d="M600 760 v-46"/>
+    <path d="M600 724 q-34 -14 -40 -54 q34 6 40 40"/>
+    <path d="M600 712 q34 -14 40 -54 q-34 6 -40 40"/>
+  </g>
 </svg>

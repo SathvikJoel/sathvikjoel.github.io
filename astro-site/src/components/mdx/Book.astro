@@ -1,0 +1,101 @@
+---
+// A book reference — cover, title, author, and an optional description.
+// Inspired by Maggie Appleton's book-card (e.g. /metaphor-books, /now-2024-12).
+// With a description it lays out cover + text side by side; use `small` for a
+// compact, centred card (good for stacking several into a reading list).
+interface Props {
+  cover?: string
+  coverAlt?: string
+  title: string
+  author?: string
+  href?: string
+  small?: boolean
+}
+const { cover, coverAlt, title, author, href, small = false } = Astro.props
+const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).trim() !== ""
+---
+
+<div class:list={["book-card not-prose", small ? "is-small" : "", hasDesc ? "has-desc" : ""]}>
+  <div class:list={["book-cover", !cover && "is-placeholder"]}>
+    {
+      cover ? (
+        <img src={cover} alt={coverAlt ?? title} loading="lazy" decoding="async" />
+      ) : (
+        <svg viewBox="0 0 48 64" fill="none" aria-hidden="true">
+          <rect x="6" y="4" width="36" height="56" rx="2" stroke="currentColor" stroke-width="2" />
+          <line x1="14" y1="4" x2="14" y2="60" stroke="currentColor" stroke-width="1.5" />
+          <line x1="20" y1="18" x2="36" y2="18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          <line x1="20" y1="25" x2="33" y2="25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      )
+    }
+  </div>
+  <div class="book-meta">
+    {
+      href ? (
+        <a href={href} target="_blank" rel="noopener noreferrer" class="book-title-link">
+          <h3 class="book-title">{title}</h3>
+        </a>
+      ) : (
+        <h3 class="book-title">{title}</h3>
+      )
+    }
+    {author && <span class="book-author">{author}</span>}
+    <span class="book-rule" aria-hidden="true"></span>
+    {hasDesc && <div class="book-desc"><slot /></div>}
+  </div>
+</div>
+
+<style>
+  .book-card {
+    @apply mx-auto my-8 flex w-full max-w-md items-start gap-7;
+  }
+  .book-card.is-small {
+    @apply my-6 flex-col items-center gap-3 text-center;
+  }
+  .book-cover {
+    @apply flex-shrink-0 overflow-hidden rounded-md shadow-md;
+    width: 164px;
+  }
+  .book-card.is-small .book-cover {
+    width: 116px;
+  }
+  .book-cover :global(img) {
+    @apply m-0 block h-auto w-full rounded-md;
+  }
+  .book-cover.is-placeholder {
+    @apply flex aspect-[3/4] items-center justify-center rounded-md border border-clay/25 bg-clay/5 text-clay/45 shadow-none dark:border-white/15 dark:bg-white/[0.03] dark:text-white/30;
+  }
+  .book-cover.is-placeholder :global(svg) {
+    width: 50%;
+    height: auto;
+  }
+  .book-meta {
+    @apply flex flex-col items-start gap-2;
+  }
+  .book-card.is-small .book-meta {
+    @apply items-center;
+  }
+  .book-title-link {
+    @apply no-underline transition-colors;
+  }
+  .book-title {
+    @apply m-0 font-display text-2xl font-light leading-snug text-ink-light transition-colors dark:text-[#EAE8E5];
+    letter-spacing: -0.01em;
+  }
+  .book-title-link:hover .book-title {
+    @apply text-crimson dark:text-crimson-dark;
+  }
+  .book-author {
+    @apply font-serif text-base text-ink-light/65 dark:text-ink-dark/60;
+  }
+  .book-rule {
+    @apply my-1 block h-px w-10 bg-clay/40 dark:bg-white/25;
+  }
+  .book-desc {
+    @apply font-sans text-sm leading-relaxed text-ink-light/80 dark:text-ink-dark/75;
+  }
+  .book-desc :global(p) {
+    @apply m-0;
+  }
+</style>

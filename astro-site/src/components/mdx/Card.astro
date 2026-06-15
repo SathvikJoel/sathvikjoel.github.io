@@ -1,0 +1,63 @@
+---
+// A bordered "feature" card for highlighting a quote, neologism, definition, or
+// excerpt — with an optional title and a "From: <source>" attribution line.
+// Inspired by Maggie Appleton's styled-card (e.g. /neologisms, the "Brahmin Left").
+// Put any markdown inside; nest a <Tweet/> to feature a tweet.
+interface Props {
+  title?: string
+  align?: "left" | "center"
+  from?: string
+  fromHref?: string
+}
+const { title, align = "left", from, fromHref } = Astro.props
+---
+
+<div class:list={["styled-card depth-card not-prose", align === "center" && "is-center"]}>
+  {title && <h4 class="styled-card-title">{title}</h4>}
+  <div class="styled-card-body"><slot /></div>
+  {
+    from && (
+      <p class="styled-card-from">
+        From{" "}
+        {fromHref ? (
+          <a href={fromHref} target="_blank" rel="noopener noreferrer">
+            {from}
+          </a>
+        ) : (
+          <span>{from}</span>
+        )}
+      </p>
+    )
+  }
+</div>
+
+<style>
+  .styled-card {
+    @apply my-8 mx-auto flex max-w-2xl flex-col items-start gap-3 rounded-sm border border-clay/20 bg-surface-light p-6 text-left dark:border-white/15 dark:bg-surface-dark sm:p-7;
+  }
+  .styled-card.is-center {
+    @apply items-center text-center;
+  }
+  .styled-card-title {
+    @apply m-0 font-display text-ink-light dark:text-[#EAE8E5];
+    font-weight: 300;
+    font-size: 1.45rem;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+  .styled-card-body {
+    @apply text-ink-light/90 dark:text-ink-dark/90;
+  }
+  .styled-card-body :global(p) {
+    @apply m-0;
+  }
+  .styled-card-body :global(p + p) {
+    @apply mt-3;
+  }
+  .styled-card-from {
+    @apply m-0 mt-1 font-sans text-sm text-ink-light/55 dark:text-ink-dark/50;
+  }
+  .styled-card-from :global(a) {
+    @apply text-sage-light no-underline transition-colors hover:text-crimson dark:text-crimson-dark dark:hover:text-crimson-dark;
+  }
+</style>

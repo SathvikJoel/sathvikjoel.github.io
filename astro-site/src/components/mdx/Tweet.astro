@@ -1,0 +1,28 @@
+---
+// Embed a tweet / X post. Pass the full status URL. Renders the standard
+// embed which Twitter's widget upgrades into a full card; a plain link is the
+// no-JS fallback. Works on its own or nested inside a <Card/>.
+interface Props {
+  url: string
+  theme?: "dark" | "light"
+}
+const { url, theme = "dark" } = Astro.props
+---
+
+<div class="tweet-embed not-prose my-8">
+  <blockquote class="twitter-tweet" data-theme={theme} data-dnt="true">
+    <a href={url}>{url}</a>
+  </blockquote>
+</div>
+
+<script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<style>
+  .tweet-embed {
+    display: flex;
+    justify-content: center;
+  }
+  .tweet-embed :global(.twitter-tweet) {
+    margin-inline: auto;
+  }
+</style>

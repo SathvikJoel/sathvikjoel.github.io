@@ -4,7 +4,6 @@ description: "VISA chaos, Singapore wedding, and a lesson in not blindly trustin
 date: 2026-05-15T09:30:03.000Z
 topic: life
 tags: ["visa", "travel", "AI"]
-kind: essay
 math: true
 ---
 

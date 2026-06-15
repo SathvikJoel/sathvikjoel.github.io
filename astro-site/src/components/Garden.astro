@@ -6,9 +6,10 @@ import { TOPICS } from "@consts"
 type Props = {
   posts: CollectionEntry<"posts">[]
   showFilters?: boolean
+  single?: boolean
 }
 
-const { posts, showFilters = true } = Astro.props
+const { posts, showFilters = true, single = false } = Astro.props
 
 const count = (pred: (p: CollectionEntry<"posts">) => boolean) => posts.filter(pred).length
 
@@ -55,12 +56,17 @@ const groups = [
   </div>
 )}
 
-<div class="garden-grid columns-1 sm:columns-2 lg:columns-3 gap-4" data-garden>
-  {posts.map((post) => <PostCard entry={post} />)}
+<div class:list={["garden-grid gap-4", single ? "flex flex-col" : "columns-1 sm:columns-2 lg:columns-3"]} data-garden>
+  {posts.map((post) => <PostCard entry={post} column={single} />)}
 </div>
-<p class="garden-empty hidden font-serif text-xl italic text-ink-light/60 dark:text-ink-dark/60 mt-6" data-empty>
-  Nothing matches that combination yet — try widening your filters.
-</p>
+<div class="garden-empty hidden flex flex-col items-center text-center py-16" data-empty>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" class="size-9 text-sage dark:text-sage-dark opacity-70 mb-4" aria-hidden="true">
+    <path d="M12 22c0-6 2-9 6-11"/><path d="M12 22c0-6-2-9-6-11"/><path d="M12 22V8"/>
+    <path d="M12 8c0-3 2-5 5-5-1 3-2 5-5 5z"/><path d="M12 11c0-3-2-5-5-5 1 3 2 5 5 5z"/>
+  </svg>
+  <p class="font-display text-2xl font-light text-ink-light dark:text-ink-dark">This corner of the garden is bare</p>
+  <p class="font-serif text-lg italic text-ink-light/55 dark:text-ink-dark/55 mt-2">No writing has grown under that mix of filters — loosen them and wander back in.</p>
+</div>
 
 <style>
   .facet-toggle {
@@ -81,6 +87,8 @@ const groups = [
   .facet-dd.is-open .facet-chevron {
     @apply rotate-180;
   }
+  .filter-bar { position: relative; z-index: 40; }
+  .facet-dd.is-open { z-index: 50; }
   .facet-menu {
     @apply absolute left-0 top-[calc(100%+0.4rem)] z-30 min-w-[12rem] p-1.5 rounded-xl border border-clay/20 dark:border-white/15 bg-surface-light dark:bg-surface-dark shadow-lg;
   }
@@ -107,10 +115,28 @@ const groups = [
   .facet-option input:checked ~ .facet-check svg { @apply opacity-100; }
   .facet-text { @apply flex-1; }
   .facet-n { @apply text-[0.7em] opacity-50 tabular-nums; }
-  .post-card.filtered-out {
+  :global(.post-card.filtered-out) {
     display: none;
   }
-</style>
+
+  /* Staggered card reveal on load. The `reveal-js` class is added to <html>
+     by an inline head script BEFORE first paint (only when JS is on and motion
+     is allowed), so cards start hidden and never flash visible-then-hidden.
+     Without JS the class is absent and cards render normally. */
+  :global(html.reveal-js .garden-grid [data-card]) {
+    opacity: 0;
+    transform: translateY(18px);
+    will-change: opacity, transform;
+  }
+  :global(html.reveal-js .garden-grid [data-card].card-in) {
+    animation: cardRise 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  }
+  @keyframes cardRise {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }</style>
 
 <script>
   function initGarden() {
@@ -183,4 +209,29 @@ const groups = [
 
   initGarden()
   document.addEventListener("astro:after-swap", initGarden)
+
+  function revealCards() {
+    const grid = document.querySelector<HTMLElement>("[data-garden]")
+    if (!grid) return
+    // Only run when armed before paint (JS on + motion allowed).
+    if (!document.documentElement.classList.contains("reveal-js")) return
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>("[data-card]"))
+    // In a CSS multi-column (masonry) layout the DOM order fills column-by-column,
+    // so it doesn't match what the reader sees top-to-bottom. Order the reveal by
+    // each card's actual vertical position, grouping cards on the same visual row.
+    const measured = cards.map((card) => ({ card, top: card.getBoundingClientRect().top }))
+    measured.sort((a, b) => a.top - b.top)
+    const ROW_TOLERANCE = 24
+    let rowIndex = -1
+    let lastTop = -Infinity
+    measured.forEach(({ card, top }) => {
+      if (top - lastTop > ROW_TOLERANCE) rowIndex++
+      lastTop = top
+      card.style.animationDelay = `${Math.min(rowIndex, 14) * 90}ms`
+      card.classList.add("card-in")
+    })
+  }
+
+  revealCards()
+  document.addEventListener("astro:after-swap", revealCards)
 </script>

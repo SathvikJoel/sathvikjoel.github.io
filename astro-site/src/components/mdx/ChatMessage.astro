@@ -1,0 +1,78 @@
+---
+// One message inside a <Chat>. `side` places the bubble left (default) or right;
+// `from` shows a small name label and seeds the avatar initial. Colours follow the
+// side (left = sage, right = crimson) unless overridden with `accent`.
+interface Props {
+  from?: string
+  side?: "left" | "right"
+  accent?: "sage" | "crimson" | "gold"
+  avatar?: boolean
+}
+const { from, side = "left", accent, avatar = true } = Astro.props
+const initial = from ? from.trim().charAt(0).toUpperCase() : ""
+const tone = accent ?? (side === "right" ? "crimson" : "sage")
+---
+
+<div class:list={["chat-row", side === "right" ? "is-right" : "is-left"]}>
+  {avatar && initial && <span class:list={["chat-avatar", `tone-${tone}`]} aria-hidden="true">{initial}</span>}
+  <div class="chat-stack">
+    {from && <span class="chat-name">{from}</span>}
+    <div class:list={["chat-bubble", `tone-${tone}`]}><slot /></div>
+  </div>
+</div>
+
+<style>
+  .chat-row {
+    @apply flex items-end gap-2;
+  }
+  .chat-row.is-right {
+    @apply flex-row-reverse;
+  }
+  .chat-avatar {
+    @apply flex size-7 shrink-0 select-none items-center justify-center rounded-full font-sans text-xs font-semibold;
+  }
+  .chat-avatar.tone-sage {
+    @apply bg-sage-light/20 text-sage-light dark:bg-sage-dark/25 dark:text-sage-dark;
+  }
+  .chat-avatar.tone-crimson {
+    @apply bg-crimson/15 text-crimson dark:bg-crimson-dark/25 dark:text-crimson-dark;
+  }
+  .chat-avatar.tone-gold {
+    @apply bg-gold/20 text-gold;
+  }
+  .chat-stack {
+    @apply flex max-w-[80%] flex-col gap-1;
+  }
+  .is-right .chat-stack {
+    @apply items-end;
+  }
+  .chat-name {
+    @apply px-1 font-sans text-[0.68rem] uppercase tracking-[0.08em] text-ink-light/45 dark:text-ink-dark/45;
+  }
+  .chat-bubble {
+    @apply rounded-2xl px-3.5 py-2 font-sans text-[0.95rem] leading-snug text-ink-light/90 dark:text-ink-dark/90;
+  }
+  .chat-bubble :global(p) {
+    @apply m-0;
+  }
+  .chat-bubble :global(p + p) {
+    @apply mt-2;
+  }
+  /* Left bubbles get a flattened bottom-left corner, right bubbles bottom-right — the
+     classic "tail" toward the speaker's avatar. */
+  .is-left .chat-bubble {
+    @apply rounded-bl-md;
+  }
+  .is-right .chat-bubble {
+    @apply rounded-br-md;
+  }
+  .chat-bubble.tone-sage {
+    @apply bg-black/[0.05] dark:bg-white/[0.07];
+  }
+  .chat-bubble.tone-crimson {
+    @apply bg-crimson/10 text-ink-light dark:bg-crimson-dark/20 dark:text-ink-dark;
+  }
+  .chat-bubble.tone-gold {
+    @apply bg-gold/10;
+  }
+</style>

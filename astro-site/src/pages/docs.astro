@@ -1,0 +1,243 @@
+---
+import PageLayout from "@layouts/PageLayout.astro"
+
+const TITLE = "Docs"
+const DESCRIPTION = "The private writer's handbook for this site."
+---
+
+<PageLayout title={TITLE} description={DESCRIPTION}>
+  <div class="mx-auto max-w-6xl px-5 sm:px-8 pt-28 pb-24">
+    <!-- Lock screen -->
+    <section id="docs-lock" class="animate mx-auto max-w-md text-center py-10">
+      <div class="mx-auto mb-6 flex size-14 items-center justify-center rounded-2xl border border-clay/20 dark:border-white/15 bg-surface-light dark:bg-surface-dark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="size-7 text-sage dark:text-sage-dark" aria-hidden="true">
+          <rect x="4" y="11" width="16" height="9" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" />
+        </svg>
+      </div>
+      <h1 class="font-display text-3xl font-light text-ink-light dark:text-ink-dark">The handbook is locked</h1>
+      <p class="font-serif text-lg italic text-ink-light/60 dark:text-ink-dark/60 mt-2">
+        A private guide to writing and running the garden. Enter the passphrase to read it.
+      </p>
+
+      <form id="docs-form" class="mt-7 flex flex-col items-stretch gap-3">
+        <input
+          id="docs-pass"
+          type="password"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          placeholder="Passphrase"
+          class="w-full rounded-xl border border-clay/25 dark:border-white/20 bg-surface-light dark:bg-surface-dark px-4 py-2.5 font-sans text-base text-ink-light dark:text-ink-dark placeholder:text-ink-light/40 dark:placeholder:text-ink-dark/40 focus:border-crimson/60 focus:outline-none transition-colors"
+        />
+        <button
+          type="submit"
+          id="docs-submit"
+          class="rounded-xl bg-crimson dark:bg-crimson-dark px-4 py-2.5 font-sans text-base font-medium text-white hover:opacity-90 disabled:opacity-50 transition-opacity"
+        >
+          Unlock
+        </button>
+        <p id="docs-error" class="hidden font-sans text-sm text-crimson dark:text-crimson-dark">
+          That passphrase didn't work. Try again.
+        </p>
+      </form>
+    </section>
+
+    <!-- Docs app (revealed after unlock) -->
+    <section id="docs-app" class="hidden">
+      <header class="animate mb-10 flex items-center justify-between gap-4 border-b border-black/10 dark:border-white/15 pb-5">
+        <div>
+          <p class="font-sans text-xs uppercase tracking-[0.2em] text-sage dark:text-sage-dark">Handbook</p>
+          <h1 class="font-display text-3xl font-light text-ink-light dark:text-ink-dark mt-1">Docs</h1>
+        </div>
+        <button id="docs-lockbtn" class="group flex items-center gap-1.5 font-sans text-sm text-ink-light/55 dark:text-ink-dark/55 hover:text-crimson dark:hover:text-crimson-dark transition-colors">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+            <rect x="4" y="11" width="16" height="9" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" />
+          </svg>
+          Lock
+        </button>
+      </header>
+
+      <div class="grid grid-cols-1 md:grid-cols-[14rem_1fr] gap-10">
+        <nav id="docs-nav" class="md:sticky md:top-24 md:self-start flex md:flex-col gap-1 overflow-x-auto md:overflow-visible"></nav>
+        <article id="docs-content" class="prose dark:prose-invert max-w-none min-w-0 no-dropcap"></article>
+      </div>
+    </section>
+  </div>
+</PageLayout>
+
+<style>
+  /* Sidebar nav links */
+  #docs-nav :global(button) {
+    @apply text-left whitespace-nowrap md:whitespace-normal rounded-lg px-3 py-1.5 font-sans text-sm text-ink-light/65 dark:text-ink-dark/65 hover:bg-black/5 dark:hover:bg-white/10 hover:text-ink-light dark:hover:text-ink-dark transition-colors cursor-pointer;
+  }
+  #docs-nav :global(button.is-active) {
+    @apply bg-black/5 dark:bg-white/10 text-crimson dark:text-crimson-dark font-medium;
+  }
+  /* Tidy up the rendered markdown a touch (tables, code) */
+  #docs-content :global(table) {
+    @apply text-sm;
+  }
+  #docs-content :global(pre) {
+    @apply rounded-lg border border-black/10 dark:border-white/15;
+  }
+  #docs-content :global(:where(h1, h2, h3))::before {
+    content: none;
+  }
+</style>
+
+<script>
+  type Doc = { slug: string; label: string; title: string; html: string }
+  const CACHE_KEY = "docs:payload:v1"
+
+  function b64ToBytes(b64: string): ArrayBuffer {
+    const bin = atob(b64)
+    const out = new Uint8Array(bin.length)
+    for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i)
+    return out.buffer
+  }
+
+  async function deriveKey(password: string, salt: ArrayBuffer, iter: number) {
+    const base = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(password),
+      "PBKDF2",
+      false,
+      ["deriveKey"]
+    )
+    return crypto.subtle.deriveKey(
+      { name: "PBKDF2", salt, iterations: iter, hash: "SHA-256" },
+      base,
+      { name: "AES-GCM", length: 256 },
+      false,
+      ["decrypt"]
+    )
+  }
+
+  async function decryptDocs(password: string): Promise<Doc[]> {
+    const res = await fetch("/docs.enc.json", { cache: "no-store" })
+    if (!res.ok) throw new Error("bundle missing")
+    const bundle = await res.json()
+    const key = await deriveKey(password, b64ToBytes(bundle.salt), bundle.iter)
+    const plain = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv: b64ToBytes(bundle.iv) },
+      key,
+      b64ToBytes(bundle.ct)
+    )
+    const json = new TextDecoder().decode(plain)
+    return (JSON.parse(json).docs as Doc[]) ?? []
+  }
+
+  function initDocs() {
+    const lock = document.getElementById("docs-lock")
+    const app = document.getElementById("docs-app")
+    const form = document.getElementById("docs-form") as HTMLFormElement | null
+    const passEl = document.getElementById("docs-pass") as HTMLInputElement | null
+    const submit = document.getElementById("docs-submit") as HTMLButtonElement | null
+    const error = document.getElementById("docs-error")
+    const nav = document.getElementById("docs-nav")
+    const content = document.getElementById("docs-content")
+    const lockBtn = document.getElementById("docs-lockbtn")
+    if (!lock || !app || !form || !passEl || !nav || !content) return
+
+    let docs: Doc[] = []
+
+    function show(unlocked: boolean) {
+      lock!.classList.toggle("hidden", unlocked)
+      app!.classList.toggle("hidden", !unlocked)
+    }
+
+    function currentSlug(): string {
+      const h = location.hash.replace(/^#\//, "")
+      const slug = h.split("#")[0]
+      return slug || (docs[0]?.slug ?? "")
+    }
+
+    function render() {
+      const slug = currentSlug()
+      const doc = docs.find((d) => d.slug === slug) ?? docs[0]
+      if (!doc) return
+      // Sidebar
+      nav!.innerHTML = ""
+      for (const d of docs) {
+        const b = document.createElement("button")
+        b.textContent = d.label
+        b.dataset.slug = d.slug
+        if (d.slug === doc.slug) b.classList.add("is-active")
+        b.addEventListener("click", () => {
+          location.hash = `#/${d.slug}`
+        })
+        nav!.appendChild(b)
+      }
+      // Content
+      content!.innerHTML = doc.html
+      // Scroll to in-doc anchor if present (#/slug#anchor) else top of content
+      const anchor = location.hash.split("#")[2]
+      if (anchor) {
+        const target = content!.querySelector(`#${CSS.escape(anchor)}`)
+        if (target) {
+          target.scrollIntoView({ behavior: "instant" as ScrollBehavior, block: "start" })
+          return
+        }
+      }
+      content!.scrollIntoView({ behavior: "instant" as ScrollBehavior, block: "start" })
+    }
+
+    function unlockWith(list: Doc[]) {
+      docs = list
+      show(true)
+      if (!location.hash.startsWith("#/")) location.hash = `#/${docs[0]?.slug ?? ""}`
+      render()
+    }
+
+    // Try cached payload (same session) — avoids re-entering the passphrase.
+    try {
+      const cached = sessionStorage.getItem(CACHE_KEY)
+      if (cached) unlockWith(JSON.parse(cached) as Doc[])
+    } catch {}
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault()
+      error?.classList.add("hidden")
+      const pw = passEl.value
+      if (!pw) return
+      if (submit) {
+        submit.disabled = true
+        submit.textContent = "Unlocking…"
+      }
+      try {
+        const list = await decryptDocs(pw)
+        try {
+          sessionStorage.setItem(CACHE_KEY, JSON.stringify(list))
+        } catch {}
+        unlockWith(list)
+      } catch {
+        error?.classList.remove("hidden")
+        passEl.value = ""
+        passEl.focus()
+      } finally {
+        if (submit) {
+          submit.disabled = false
+          submit.textContent = "Unlock"
+        }
+      }
+    })
+
+    lockBtn?.addEventListener("click", () => {
+      try {
+        sessionStorage.removeItem(CACHE_KEY)
+      } catch {}
+      docs = []
+      history.replaceState(null, "", location.pathname)
+      show(false)
+      passEl.value = ""
+      passEl.focus()
+    })
+
+    window.addEventListener("hashchange", () => {
+      if (docs.length) render()
+    })
+  }
+
+  initDocs()
+  document.addEventListener("astro:page-load", initDocs)
+</script>

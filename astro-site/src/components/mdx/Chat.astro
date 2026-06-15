@@ -1,0 +1,59 @@
+---
+// A chat-application style conversation panel. Wrap a series of <ChatMessage> children.
+// Optional `title` renders a little window header (three dots + a label) for the app feel.
+//
+//   <Chat title="The Woods">
+//     <ChatMessage from="Narcissus">Is anyone here?</ChatMessage>
+//     <ChatMessage from="Echo" side="right">...here!</ChatMessage>
+//   </Chat>
+interface Props {
+  title?: string
+}
+const { title } = Astro.props
+---
+
+<div class="chat depth-card not-prose">
+  {
+    title && (
+      <div class="chat-header">
+        <span class="chat-dots" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </span>
+        <span class="chat-title">{title}</span>
+      </div>
+    )
+  }
+  <div class="chat-body"><slot /></div>
+</div>
+
+<style>
+  .chat {
+    @apply my-8 mx-auto w-full max-w-xl rounded-2xl border border-clay/20 bg-surface-light p-3 dark:border-white/15 dark:bg-surface-dark sm:p-4;
+  }
+  .chat-header {
+    @apply mb-3 flex items-center gap-3 border-b border-black/10 px-1 pb-2.5 dark:border-white/10;
+  }
+  .chat-dots {
+    @apply flex items-center gap-1.5;
+  }
+  .chat-dots i {
+    @apply block size-2.5 rounded-full bg-clay/30 dark:bg-white/20;
+  }
+  .chat-dots i:nth-child(1) {
+    @apply bg-crimson/50 dark:bg-crimson-dark/60;
+  }
+  .chat-dots i:nth-child(2) {
+    @apply bg-gold/60;
+  }
+  .chat-dots i:nth-child(3) {
+    @apply bg-sage-light/60 dark:bg-sage-dark/60;
+  }
+  .chat-title {
+    @apply font-sans text-xs uppercase tracking-[0.12em] text-ink-light/50 dark:text-ink-dark/45;
+  }
+  .chat-body {
+    @apply flex flex-col gap-2.5;
+  }
+</style>

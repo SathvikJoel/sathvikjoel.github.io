@@ -1,0 +1,37 @@
+---
+// A small labelled callout box for a note the reader should see before diving in
+// — an assumed audience, an epistemic-status line, a caveat, or any framing aside.
+// Inspired by Maggie Appleton's assumed-audience box (e.g. /tracking-humanity).
+interface Props {
+  label?: string
+}
+const { label = "Assumed Audience" } = Astro.props
+---
+
+<aside class="aside-box depth-card not-prose">
+  <p class="aside-label">{label}</p>
+  <div class="aside-body"><slot /></div>
+</aside>
+
+<style>
+  .aside-box {
+    @apply my-8 flex flex-col gap-2 rounded-sm border border-clay/20 bg-surface-light p-5 dark:border-white/15 dark:bg-surface-dark sm:p-6;
+  }
+  .aside-label {
+    @apply m-0 font-sans text-xs uppercase tracking-[0.08em] text-sage-light dark:text-sage-dark;
+  }
+  .aside-body {
+    @apply leading-relaxed text-ink-light/85 dark:text-ink-dark/85;
+    font-size: 1.15rem;
+    line-height: 1.6;
+  }
+  .aside-body :global(p) {
+    @apply m-0;
+  }
+  .aside-body :global(p + p) {
+    @apply mt-2;
+  }
+  .aside-body :global(a) {
+    @apply text-sage-light dark:text-crimson-dark;
+  }
+</style>

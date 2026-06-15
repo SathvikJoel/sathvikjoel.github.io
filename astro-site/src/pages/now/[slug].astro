@@ -1,0 +1,178 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content"
+import PageLayout from "@layouts/PageLayout.astro"
+import { formatDate } from "@lib/utils"
+import { mdxComponents } from "@components/mdx/registry"
+
+export async function getStaticPaths() {
+  const entries = (await getCollection("now"))
+    .filter((e) => !e.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+
+  return entries.map((entry, i) => ({
+    params: { slug: entry.slug },
+    props: {
+      entry,
+      newer: entries[i - 1] ?? null, // more recent
+      older: entries[i + 1] ?? null, // further back
+    },
+  }))
+}
+
+type Props = {
+  entry: CollectionEntry<"now">
+  newer: CollectionEntry<"now"> | null
+  older: CollectionEntry<"now"> | null
+}
+
+const { entry, newer, older } = Astro.props
+const { title, date } = entry.data
+const { Content } = await entry.render()
+---
+
+<PageLayout title={`Now — ${title}`} description={`What Sathvik Joel was focused on in ${title}.`} topGradient={true}>
+  <div class="now-wrap">
+    <div class="now-grid animate">
+      <aside class="now-side">
+        <a href="/now" class="breadcrumb-stream group" aria-label="Back to Now">
+          <svg class="bc-arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" aria-hidden="true">
+            <path d="M16 10H4m5-5l-5 5 5 5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="bc-stream">Now</span>
+        </a>
+        <time class="now-date" datetime={date.toISOString()}>{formatDate(date)}</time>
+      </aside>
+
+      <div class="now-main">
+        <h2 class="now-title font-display font-light text-ink-light dark:text-ink-dark">
+          {title}
+        </h2>
+        <article class="prose-post no-dropcap">
+          <Content components={mdxComponents} />
+        </article>
+
+        <nav class="now-pager" aria-label="Other now updates">
+          {older ? (
+            <a href={`/now/${older.slug}`} class="now-pager-link" rel="prev">
+              <span class="now-pager-dir">← Earlier</span>
+              <span class="now-pager-title">{older.data.title}</span>
+            </a>
+          ) : <span />}
+          {newer ? (
+            <a href={`/now/${newer.slug}`} class="now-pager-link now-pager-right" rel="next">
+              <span class="now-pager-dir">Later →</span>
+              <span class="now-pager-title">{newer.data.title}</span>
+            </a>
+          ) : <span />}
+        </nav>
+      </div>
+    </div>
+  </div>
+</PageLayout>
+
+<style>
+  .now-wrap {
+    @apply px-5 sm:px-8 pt-28 pb-24;
+  }
+  .now-grid {
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 42rem);
+    gap: 3rem;
+    max-width: 58rem;
+    margin: 0 auto;
+  }
+  @media (max-width: 767px) {
+    .now-grid {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      max-width: 42rem;
+    }
+  }
+  .now-side {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  @media (min-width: 768px) {
+    .now-side {
+      position: sticky;
+      top: 6rem;
+      align-self: start;
+      padding-top: 0.5rem;
+    }
+  }
+
+  .breadcrumb-stream {
+    @apply inline-flex items-center no-underline;
+  }
+  .bc-stream {
+    @apply font-sans text-crimson dark:text-crimson-dark;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+  .bc-arrow {
+    width: 0;
+    height: 0.85em;
+    opacity: 0;
+    color: #3dd6ed;
+    transform: translateX(4px);
+    transition: width 0.25s ease, opacity 0.25s ease, transform 0.25s ease,
+      margin-right 0.25s ease;
+  }
+  .breadcrumb-stream:hover .bc-arrow {
+    width: 0.85em;
+    opacity: 1;
+    transform: translateX(0);
+    margin-right: 0.4em;
+  }
+  .now-date {
+    @apply block font-sans text-ink-light/55 dark:text-ink-dark/55;
+    font-size: 0.85rem;
+  }
+  .now-title {
+    font-size: 1.9rem;
+    font-weight: 300;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.55rem;
+  }
+  .now-main .prose-post > :global(:first-child) {
+    margin-top: 0;
+  }
+  .now-pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    @apply border-t border-black/10 dark:border-white/10;
+  }
+  .now-pager-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    text-decoration: none;
+  }
+  .now-pager-right {
+    text-align: right;
+    margin-left: auto;
+  }
+  .now-pager-dir {
+    @apply font-sans text-ink-light/45 dark:text-ink-dark/45;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .now-pager-title {
+    @apply font-display text-ink-light/85 dark:text-ink-dark/85;
+    font-size: 1.15rem;
+    font-weight: 300;
+    transition: color 0.2s ease;
+  }
+  .now-pager-link:hover .now-pager-title {
+    @apply text-crimson dark:text-crimson-dark;
+  }
+</style>

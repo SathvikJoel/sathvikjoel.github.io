@@ -77,13 +77,6 @@ const awards = [
   { title: "MITACS Globalink Graduate Fellowship", year: "2023", detail: "Awarded for exceptional research during international internship." },
   { title: "CODS-COMAD 2023 Data Challenge — 2nd Place", year: "2023", detail: "Deep-learning solution for educational video prerequisite identification; presented at main conference." },
 ]
-
-const skills = [
-  { group: "Languages", items: "Python, JavaScript / TypeScript, C++, SQL" },
-  { group: "ML / AI", items: "PyTorch, Transformers, LangChain, RAG, RLHF / GRPO, Fine-tuning, Multi-Agent Systems" },
-  { group: "Tools & Frameworks", items: "React Native, Plotly Dash, Git, Linux, CUDA, Docker" },
-  { group: "Research Areas", items: "LLM Agents, Code Generation, Adversarial ML, Medical AI, NLP" },
-]
 ---
 
 <PageLayout title="Resume" description="Sathvik Joel — resume and CV.">
@@ -147,11 +140,6 @@ const skills = [
                   <span class="resume-when">{x.when}</span>
                 </div>
               </div>
-              <ul class="mt-3 flex flex-col gap-2 font-serif text-[1.02rem] leading-relaxed">
-                {x.points.map((p) => (
-                  <li class="resume-bullet">{p}</li>
-                ))}
-              </ul>
             </div>
           ))}
         </div>
@@ -185,18 +173,6 @@ const skills = [
           ))}
         </div>
       </section>
-
-      <section>
-        <h2 class="resume-h">Technical Skills</h2>
-        <dl class="flex flex-col gap-3">
-          {skills.map((s) => (
-            <div class="grid grid-cols-1 sm:grid-cols-[10rem_1fr] gap-1 sm:gap-4">
-              <dt class="font-sans text-sm uppercase tracking-wide text-sage dark:text-sage-dark">{s.group}</dt>
-              <dd class="font-serif text-[1.02rem] text-ink-light/90 dark:text-ink-dark/90">{s.items}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
     </div>
   </BottomLayout>
 </PageLayout>
@@ -222,12 +198,5 @@ const skills = [
   }
   .resume-when {
     @apply text-ink-light/50 dark:text-ink-dark/50 tabular-nums;
-  }
-  .resume-bullet {
-    @apply relative pl-5 text-ink-light/85 dark:text-ink-dark/85;
-  }
-  .resume-bullet::before {
-    content: "";
-    @apply absolute left-0 top-[0.7em] size-1.5 rounded-full bg-crimson dark:bg-crimson-dark;
   }
 </style>

@@ -1,27 +1,27 @@
 ---
-import { SITE, LINKS } from "@consts"
+import { LINKS } from "@consts"
 import { cn } from "@lib/utils"
-const { pathname } = Astro.url
-const subpath = pathname.match(/[^/]+/g)
 ---
 
 <header id="header" class="absolute top-0 w-full h-16 z-50 ">
   <div class="w-full h-full px-5 sm:px-8 flex items-center justify-between">
     <div class="flex gap-1 font-semibold">
-      <a href="/" class="flex items-center gap-2 text-current hover:text-crimson dark:hover:text-crimson-dark transition-colors duration-300 ease-in-out">
-        <img src="/favicon.svg" alt="" width="28" height="28" class="size-7 rounded-md" />
-        <div class="font-display text-xl font-semibold tracking-tight">
-          {SITE.TITLE}
-        </div>
+      <a href="/" class="brand group inline-flex items-center" aria-label="JoeLogs — home">
+        <svg class="brand-mark size-14" width="56" height="56" viewBox="34 16 90 90" aria-hidden="true" focusable="false">
+          <path class="stem" d="M84 34 L84 78 C 84 96, 62 100, 50 88" fill="none" stroke="#ECEAE6" stroke-width="9" stroke-linecap="round"/>
+          <g class="sprout sprout-a"><path class="gleaf" d="M84 56 C 95 48, 110 49, 116 58 C 109 67, 94 66, 84 56 Z" fill="#8FC15B"/></g>
+          <g class="sprout sprout-b"><path class="gleaf" d="M84 73 C 71 68, 58 72, 54 81 C 63 89, 79 83, 84 73 Z" fill="#6FA84A"/></g>
+          <path class="leaf leaf-1" d="M84 42 C 93 27, 110 22, 120 30 C 114 46, 97 50, 84 42 Z" fill="#FF6FB5"/>
+          <path class="leaf leaf-2" d="M84 58 C 69 46, 51 47, 45 58 C 55 70, 74 69, 84 58 Z" fill="#3DD6ED"/>
+        </svg>
       </a>
     </div>
 
-    <nav class="hidden md:flex items-center text-xs gap-6">
+    <nav class="hidden md:flex items-center text-xs gap-7">
       {
         LINKS.map((LINK) => {
-          const active = pathname === LINK.HREF || "/" + subpath?.[0] === LINK.HREF
           return (
-            <a href={LINK.HREF} class={cn("font-sans transition-colors duration-300 ease-in-out", active ? "text-crimson dark:text-crimson-dark" : "text-ink-light/65 dark:text-ink-dark/65 hover:text-crimson dark:hover:text-crimson-dark")}>
+            <a href={LINK.HREF} class="nav-link font-sans">
               {LINK.TEXT}
             </a>
           )
@@ -55,6 +55,142 @@ const subpath = pathname.match(/[^/]+/g)
 
   #header-drawer-button.open > #drawer-close {
     @apply block;
+  }
+
+  /* Top-nav links: muted by default; on hover they turn pink, lift a touch,
+     and reveal a blue underline bar. */
+  .nav-link {
+    position: relative;
+    color: rgb(60 60 60 / 0.65);
+    transition: color 0.25s ease, transform 0.25s ease;
+  }
+  :global(.dark) .nav-link {
+    color: rgb(201 198 194 / 0.65); /* ink.dark @ 65% */
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+    height: 2px;
+    border-radius: 2px;
+    background: #3dd6ed; /* seablue */
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.25s ease;
+  }
+  .nav-link:hover,
+  .nav-link:focus-visible {
+    color: #ff6fb5; /* crimson / pink */
+    transform: translateY(-1px);
+  }
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
+    transform: scaleX(1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-link,
+    .nav-link::after {
+      transition: none;
+    }
+    .nav-link:hover,
+    .nav-link:focus-visible {
+      transform: none;
+    }
+  }
+
+  /* Brand mark — a "J" vine. On hover two extra green leaves sprout from the
+     stem and all the leaves sway like a passing breeze; on leave the green
+     leaves smoothly retract back into the stem. */
+  .brand-mark {
+    flex: none;
+  }
+  .brand-mark .leaf {
+    transform-box: fill-box;
+  }
+  .brand-mark .leaf-1 {
+    transform-origin: 0% 80%; /* pivot at the leaf's base on the stem */
+  }
+  .brand-mark .leaf-2 {
+    transform-origin: 100% 50%;
+  }
+  .brand:is(:hover, .bloom) .leaf-1 {
+    animation: leafBreeze 2.4s ease-in-out infinite;
+  }
+  .brand:is(:hover, .bloom) .leaf-2 {
+    animation: leafBreeze 2.4s ease-in-out infinite;
+    animation-delay: -0.45s; /* slight phase offset so they sway organically */
+  }
+
+  /* The "J" stem breathes — a gentle scale pulse — while active. */
+  .brand-mark .stem {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .brand:is(:hover, .bloom) .stem {
+    animation: stemBreathe 2.6s ease-in-out infinite;
+  }
+
+  /* Sprouting green leaves — grow from their base, retract on hover-out. */
+  .brand-mark .sprout {
+    transform-box: fill-box;
+    transform: scale(0);
+    transition: transform 0.55s cubic-bezier(0.34, 1.25, 0.5, 1);
+  }
+  .brand-mark .sprout-a {
+    transform-origin: 0% 42%;
+  }
+  .brand-mark .sprout-b {
+    transform-origin: 100% 24%;
+  }
+  .brand:is(:hover, .bloom) .sprout {
+    transform: scale(1);
+  }
+  .brand:is(:hover, .bloom) .sprout-b {
+    transition-delay: 0.07s;
+  }
+  .brand-mark .gleaf {
+    transform-box: fill-box;
+  }
+  .brand-mark .sprout-a .gleaf {
+    transform-origin: 0% 42%;
+  }
+  .brand-mark .sprout-b .gleaf {
+    transform-origin: 100% 24%;
+  }
+  .brand:is(:hover, .bloom) .sprout-a .gleaf {
+    animation: leafBreeze 2.4s ease-in-out infinite;
+    animation-delay: 0.5s; /* start waving once it has grown in */
+  }
+  .brand:is(:hover, .bloom) .sprout-b .gleaf {
+    animation: leafBreeze 2.4s ease-in-out infinite;
+    animation-delay: 0.62s;
+  }
+
+  @keyframes leafBreeze {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(7deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-7deg); }
+  }
+  @keyframes stemBreathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(0.93); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .brand-mark .sprout {
+      transition: none;
+    }
+    .brand:is(:hover, .bloom) .sprout {
+      transform: scale(0);
+    }
+    .brand:is(:hover, .bloom) .leaf-1,
+    .brand:is(:hover, .bloom) .leaf-2,
+    .brand:is(:hover, .bloom) .gleaf,
+    .brand:is(:hover, .bloom) .stem {
+      animation: none;
+    }
   }
 </style>
 

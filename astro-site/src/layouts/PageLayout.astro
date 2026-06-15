@@ -1,6 +1,8 @@
 ---
 import "@fontsource-variable/fraunces"
 import "@fontsource-variable/fraunces/wght-italic.css"
+import "@fontsource-variable/eb-garamond"
+import "@fontsource-variable/eb-garamond/wght-italic.css"
 import "@fontsource/hedvig-letters-serif/400.css"
 import "@fontsource/lato/300.css"
 import "@fontsource/lato/400.css"
@@ -12,7 +14,7 @@ import BaseHead from "@components/BaseHead.astro"
 import Header from "@components/Header.astro"
 import Footer from "@components/Footer.astro"
 import Drawer from "@components/Drawer.astro"
-const { title, description } = Astro.props
+const { title, description, topGradient = false } = Astro.props
 import { SITE } from "@consts"
 ---
 
@@ -24,8 +26,8 @@ import { SITE } from "@consts"
   <body>
     <Header />
     <Drawer />
-    <main class="relative">
-      <div class="page-glow" aria-hidden="true"></div>
+    <main class="relative isolate">
+      {topGradient && <div class="page-glow" aria-hidden="true"></div>}
       <slot />
     </main>
     <Footer />

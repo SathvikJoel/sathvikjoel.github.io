@@ -1,21 +1,77 @@
 ---
+// A set-apart "side trip" the reader can open — same tidy accordion as Details,
+// but with a warmer accent so digressions feel distinct from plain disclosures.
+// Native <details>; supports an `anchor` id for deep links.
 interface Props {
   title: string
   anchor?: string
 }
 const { title, anchor } = Astro.props
 ---
-<details
-  id={anchor}
-  class="excursion group my-7 rounded-xl border border-sage-light/30 bg-surface-light/50 px-5 py-3 dark:border-sage-dark/30 dark:bg-surface-dark/40"
->
-  <summary
-    class="cursor-pointer list-none font-sans text-base font-semibold text-sage-light marker:hidden dark:text-sage-dark"
-  >
-    <span class="mr-1 inline-block transition-transform group-open:rotate-90">›</span>
-    {title}
+
+<details id={anchor} class="excursion not-prose">
+  <summary class="excursion-summary">
+    <span class="excursion-head">
+      <svg class="excursion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 6.75H7.75A2.25 2.25 0 0 0 5.5 9v0a2.25 2.25 0 0 0 2.25 2.25h8.5A2.25 2.25 0 0 1 18.5 13.5v0a2.25 2.25 0 0 1-2.25 2.25H6" />
+        <path d="M9.5 4.5L7 6.75l2.5 2.25M6.5 15l2.5 2.25L6.5 19.5" />
+      </svg>
+      <span class="excursion-title">{title}</span>
+    </span>
+    <span class="excursion-more">
+      <span class="excursion-more-text" data-closed="Read more" data-open="Show less"></span>
+      <svg class="excursion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m19.5 8.25l-7.5 7.5l-7.5-7.5" />
+      </svg>
+    </span>
   </summary>
-  <div class="excursion-body mt-3">
+  <div class="excursion-panel prose prose-lg dark:prose-invert">
     <slot />
   </div>
 </details>
+
+<style>
+  .excursion {
+    @apply my-6 rounded-lg shadow-sm;
+  }
+  .excursion-summary {
+    @apply flex cursor-pointer list-none flex-wrap items-center justify-between gap-2 rounded-lg border border-clay/30 border-l-4 border-l-clay bg-clay/[0.07] px-4 py-3 font-sans transition-colors marker:hidden hover:bg-clay/[0.12];
+  }
+  .excursion-summary::-webkit-details-marker {
+    display: none;
+  }
+  .excursion[open] .excursion-summary {
+    @apply rounded-b-none;
+  }
+  .excursion-head {
+    @apply flex items-center gap-2 text-sm font-semibold text-ink-light dark:text-ink-dark;
+  }
+  .excursion-icon {
+    @apply size-[1.15rem] shrink-0 text-clay-light dark:text-clay;
+  }
+  .excursion-more {
+    @apply flex shrink-0 items-center gap-1 text-xs text-ink-light/55 dark:text-ink-dark/55;
+  }
+  .excursion-more-text::before {
+    content: attr(data-closed);
+  }
+  .excursion[open] .excursion-more-text::before {
+    content: attr(data-open);
+  }
+  .excursion-chevron {
+    @apply size-3.5 transition-transform duration-300;
+  }
+  .excursion[open] .excursion-chevron {
+    @apply rotate-180;
+  }
+  .excursion-panel {
+    @apply rounded-b-lg border border-t-0 border-clay/30 bg-surface-light dark:bg-surface-dark;
+    padding: 1.9rem 2.4rem;
+  }
+  .excursion-panel > :global(:first-child) {
+    @apply mt-0;
+  }
+  .excursion-panel > :global(:last-child) {
+    @apply mb-0;
+  }
+</style>

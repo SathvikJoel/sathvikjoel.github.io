@@ -1,71 +1,97 @@
 ---
 import type { CollectionEntry } from "astro:content"
-import { formatDate, truncateText } from "@lib/utils"
+import { relativeDate } from "@lib/utils"
 import StageIcon from "@components/StageIcon.astro"
 
 type Props = {
   entry: CollectionEntry<"posts">
+  column?: boolean
 }
 
-const { entry } = Astro.props
-const { title, description, date, topic, kind, growthStage, cover, coverAlt, image, imageAlt } = entry.data
+const { entry, column = false } = Astro.props
+const { title, description, date, topic, growthStage, cover, coverAlt, image, imageAlt, tile } = entry.data
 const href = `/posts/${entry.slug}`
-const isNote = kind === "note"
-const isMicro = kind === "micro"
-const stage = growthStage ?? ""
+const stage = growthStage
 
-// Micro-posts have no formal title — show a stripped excerpt of the body instead.
-const microExcerpt = isMicro
-  ? truncateText(entry.body.replace(/[#>*_`~\-]/g, "").replace(/\[([^\]]*)\]\([^)]*\)/g, "$1").replace(/\s+/g, " ").trim(), 220)
-  : ""
+// Resolve the tile style, honouring an explicit `tile` override and falling back
+// gracefully when a forced style has no image to show.
+const tileMode = (() => {
+  if (tile === "plain") return "plain"
+  if (tile === "cover") return cover ? "cover" : image ? "image" : "plain"
+  if (tile === "image") return image ? "image" : cover ? "cover" : "plain"
+  return cover ? "cover" : image ? "image" : "plain" // auto
+})()
+const hasImage = tileMode !== "plain"
+// In the single-column stream variant we drop the redundant topic label (the
+// page already says "Life") and surface the growth stage instead.
+const framed = hasImage || column
 ---
 
 <a
   href={href}
-  class="post-card group flex flex-col p-4 mb-4 rounded-xl border border-clay/15 dark:border-white/10 bg-surface-light dark:bg-surface-dark/60 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 ease-out break-inside-avoid"
+  class:list={[
+    "post-card group flex flex-col p-4 mb-4 rounded-sm border transition-all duration-300 ease-out break-inside-avoid",
+    framed
+      ? "border-clay/20 dark:border-white/15 bg-surface-light dark:bg-surface-dark shadow-sm hover:shadow-md hover:-translate-y-0.5"
+      : "border-transparent hover:border-clay/20 dark:hover:border-white/15 hover:bg-surface-light dark:hover:bg-surface-dark hover:shadow-md hover:-translate-y-0.5",
+  ]}
   data-card
   data-topic={topic}
-  data-kind={kind}
   data-stage={stage}
 >
-  {cover && !isMicro && (
-    <div class="-mx-4 -mt-4 mb-3 overflow-hidden rounded-t-xl aspect-[16/10]">
+  {tileMode === "cover" && cover && (
+    <div class="-mx-4 -mt-4 mb-3 overflow-hidden rounded-t-sm aspect-[430/240]">
       <img src={cover} alt={coverAlt ?? title} loading="lazy" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500" />
     </div>
   )}
 
-  {isMicro && image && (
-    <div class="mb-3 overflow-hidden rounded-lg aspect-[4/5]">
-      <img src={image} alt={imageAlt ?? ""} loading="lazy" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500" />
+  {tileMode === "image" && image && (
+    <div class="mb-3 rounded-sm aspect-square relative overflow-hidden">
+      <img src={image} alt={imageAlt ?? title} loading="lazy" class="absolute inset-0 w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-500" />
     </div>
   )}
 
-  <div class="flex items-center gap-1.5 font-sans text-[0.72rem] uppercase tracking-wide text-ink-light/55 dark:text-ink-dark/55">
-    <span class="capitalize font-medium text-sage dark:text-sage-dark">{topic}</span>
-    <span class="opacity-40">·</span>
-    <span>{formatDate(date)}</span>
-    {isNote && stage && (
-      <StageIcon stage={stage} class="ml-auto size-4" />
-    )}
-  </div>
-
-  {isMicro ? (
-    <p class="font-serif text-[1.05rem] leading-relaxed text-ink-light/90 dark:text-ink-dark/90 mt-2 group-hover:text-crimson dark:group-hover:text-crimson-dark transition-colors duration-300">
-      {microExcerpt}
-    </p>
+  {tileMode !== "plain" ? (
+    <div>
+      <h3 class="font-display font-[350] text-xl leading-snug text-ink-light dark:text-white group-hover:text-crimson dark:group-hover:text-crimson-dark transition-colors duration-300">
+        {title}
+      </h3>
+      {tileMode === "image" && description && (
+        <p class="font-sans text-xs leading-relaxed text-ink-light/60 dark:text-ink-dark/60 mt-1.5 line-clamp-3">{description}</p>
+      )}
+      <div class="flex items-center gap-1.5 font-sans text-[0.72rem] uppercase tracking-wide text-ink-light/55 dark:text-ink-dark/55 mt-1.5">
+        {column ? (
+          <>
+            <span class="capitalize">{stage}</span>
+            <span class="opacity-40">·</span>
+            <span class="normal-case">{relativeDate(date)}</span>
+          </>
+        ) : (
+          <>
+            <span class="capitalize">{topic}</span>
+            <span class="opacity-40">·</span>
+            <StageIcon stage={stage} class="size-4 shrink-0" />
+            <span class="normal-case">{relativeDate(date)}</span>
+          </>
+        )}
+      </div>
+    </div>
   ) : (
-    <h3
-      class:list={[
-        "font-display leading-snug mt-1.5 text-ink-light dark:text-ink-dark group-hover:text-crimson dark:group-hover:text-crimson-dark transition-colors duration-300",
-        cover ? "text-2xl" : "text-xl",
-        isNote && "italic font-normal",
-      ]}
-    >
-      {title}
-    </h3>
-  )}
-
-  {description && !isMicro && (
-    <p class="font-sans text-sm leading-snug text-ink-light/60 dark:text-ink-dark/60 mt-1.5 line-clamp-3">{description}</p>
+    <div class="flex items-start gap-3">
+      <StageIcon stage={stage} class="size-7 shrink-0 mt-1" />
+      <div class="flex-1 min-w-0">
+        <h3 class="font-display font-[350] text-xl leading-snug text-ink-light dark:text-white group-hover:text-crimson dark:group-hover:text-crimson-dark transition-colors duration-300">
+          {title}
+        </h3>
+        {description && (
+          <p class="font-sans text-xs leading-relaxed text-ink-light/60 dark:text-ink-dark/60 mt-1.5 line-clamp-3">{description}</p>
+        )}
+        <div class="flex items-center gap-1.5 font-sans text-[0.72rem] uppercase tracking-wide text-ink-light/55 dark:text-ink-dark/55 mt-1.5">
+          <span class="capitalize">{column ? stage : topic}</span>
+          <span class="opacity-40">·</span>
+          <span class="normal-case">{relativeDate(date)}</span>
+        </div>
+      </div>
+    </div>
   )}
 </a>

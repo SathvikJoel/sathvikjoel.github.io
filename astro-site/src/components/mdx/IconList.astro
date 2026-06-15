@@ -1,0 +1,50 @@
+---
+// A styled list whose bullets are replaced with a small hand-drawn-feel icon.
+// Wrap a normal markdown list; each item gets a cyan marker.
+// Inspired by Maggie Appleton's "For example" lists (e.g. /2025-02-last-exam).
+// icon: "arrow" (default) | "leaf" | "spark" | "star"
+interface Props {
+  icon?: "arrow" | "leaf" | "spark" | "star"
+}
+const { icon = "arrow" } = Astro.props
+---
+
+<div class:list={["icon-list not-prose my-7", `icon-${icon}`]}>
+  <slot />
+</div>
+
+<style>
+  .icon-list :global(ul),
+  .icon-list :global(ol) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .icon-list :global(li) {
+    position: relative;
+    padding-left: 2.1rem;
+    line-height: 1.7;
+    color: theme(colors.ink.light / 92%);
+  }
+  :global(.dark) .icon-list :global(li) {
+    color: theme(colors.white);
+  }
+  .icon-list :global(li)::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.18em;
+    width: 1.35rem;
+    height: 1.35rem;
+    background-color: theme(colors.sage.dark);
+    -webkit-mask: var(--marker) center / contain no-repeat;
+    mask: var(--marker) center / contain no-repeat;
+  }
+  .icon-arrow { --marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8c5-2 12 0 14 7'/%3E%3Cpath d='M11 14l6 1 1-6'/%3E%3C/svg%3E"); }
+  .icon-leaf { --marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 19c0-8 5-13 14-14 1 9-4 15-14 14Z'/%3E%3Cpath d='M5 19c4-4 6-7 9-9'/%3E%3C/svg%3E"); }
+  .icon-spark { --marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpath d='M12 2c.6 5 2.4 6.9 8 8-5.6 1.1-7.4 3-8 8-.6-5-2.4-6.9-8-8 5.6-1.1 7.4-3 8-8Z'/%3E%3C/svg%3E"); }
+  .icon-star { --marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L12 17l-5.3 2.8 1-5.8L3.5 9.7l5.9-.9L12 3.5Z'/%3E%3C/svg%3E"); }
+</style>

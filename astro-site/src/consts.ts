@@ -25,9 +25,11 @@ export const SEARCH: Page = {
   DESCRIPTION: "Search all writing by keyword.",
 }
 
-// Streams — Tech / Life / Philosophy. Each is a feed you tend over time.
+// Streams — Tech / Life / Philosophy / Writings. Each is a feed you tend over time.
 // LAYOUT: "masonry" = 3-column previews (like Maggie's Notes);
-//         "feed"    = full posts stacked with separators (like her Smidgeons).
+//         "feed"    = full posts stacked with separators (like her Smidgeons);
+//         "column"  = single column of preview cards (one per row);
+//         "list"    = a dated index of short reads (like Steph Ango's writing list).
 export const TOPICS = [
   {
     KEY: "tech",
@@ -38,7 +40,7 @@ export const TOPICS = [
   {
     KEY: "life",
     LABEL: "Life",
-    LAYOUT: "feed",
+    LAYOUT: "column",
     BLURB: "Letters from the road — travel, exams, applications, and growing up.",
   },
   {
@@ -47,13 +49,19 @@ export const TOPICS = [
     LAYOUT: "masonry",
     BLURB: "Slow thoughts on how to think, live, and pay attention.",
   },
+  {
+    KEY: "writings",
+    LABEL: "Writings",
+    LAYOUT: "list",
+    BLURB: "Short reads — one small idea at a time.",
+  },
 ] as const
 
 // Links
 export const LINKS: Links = [
-  { TEXT: "Home", HREF: "/" },
+  { TEXT: "The Garden", HREF: "/" },
+  { TEXT: "Now", HREF: "/now" },
   { TEXT: "About", HREF: "/about" },
-  { TEXT: "Resume", HREF: "/resume" },
 ]
 
 // Socials

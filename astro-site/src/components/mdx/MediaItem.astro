@@ -9,7 +9,7 @@ interface Props {
 const { image, alt = "", href, flip = false } = Astro.props
 ---
 
-<div class:list={["media-item not-prose", flip && "sm:flip"]}>
+<div class:list={["media-item not-prose", flip && "flip"]}>
   <div class="media-body">
     {href ? <a href={href}><slot /></a> : <slot />}
   </div>
@@ -20,15 +20,15 @@ const { image, alt = "", href, flip = false } = Astro.props
 
 <style>
   .media-item {
-    @apply grid items-center gap-4 py-5 border-b border-black/10 dark:border-white/10;
+    @apply grid items-start gap-4 py-5 border-b border-black/10 dark:border-white/10;
     grid-template-columns: 1fr;
   }
   @media (min-width: 640px) {
     .media-item {
-      grid-template-columns: 1fr 11rem;
+      grid-template-columns: 1fr 13rem;
     }
     .media-item.flip {
-      grid-template-columns: 11rem 1fr;
+      grid-template-columns: 13rem 1fr;
     }
     .media-item.flip .media-body {
       order: 2;
@@ -37,8 +37,26 @@ const { image, alt = "", href, flip = false } = Astro.props
       order: 1;
     }
   }
+  /* On wide screens the text stays at the reading width while the image
+     bleeds out past the column — to the right for normal rows, mirrored to
+     the left for flipped rows. The bleed is capped to the same extent as
+     <ImageGrid>/<WideImage> (a centred min(92vw, 1080px) band). */
+  @media (min-width: 1024px) {
+    .media-item {
+      width: calc(50% + min(46vw, 540px));
+      column-gap: 2.5rem;
+      grid-template-columns: minmax(0, 28rem) 1fr;
+    }
+    .media-item.flip {
+      margin-left: calc(50% - min(46vw, 540px));
+      grid-template-columns: 1fr minmax(0, 28rem);
+    }
+  }
   .media-body {
-    @apply font-serif text-[1.05rem] leading-relaxed text-ink-light/90 dark:text-ink-dark/85;
+    @apply font-serif;
+    font-size: 1.2rem;
+    line-height: 1.62;
+    font-weight: 400;
   }
   .media-thumb :global(img) {
     @apply w-full rounded-lg m-0 object-cover;

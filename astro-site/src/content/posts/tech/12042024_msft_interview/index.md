@@ -3,8 +3,9 @@ title: "Microsoft Python Programming Interview Question"
 description: ""
 date: 2024-04-10T11:30:03.000Z
 topic: tech
+topGlow: false
 tags: ["python"]
-kind: essay
+draft: true
 math: true
 ---
 

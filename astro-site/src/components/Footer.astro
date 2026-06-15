@@ -25,13 +25,6 @@ import Container from "@components/Container.astro"
               {SITE.TITLE}
             </a>
           </div>
-          <div class="flex gap-2 justify-center sm:justify-end items-center">
-            <span class="relative flex h-3 w-3">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300"></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-            </span>
-            All systems normal
-          </div>
         </div>
       </Container>
     </section>
@@ -41,11 +34,12 @@ import Container from "@components/Container.astro"
         <div class="h-full grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div class="order-2 sm:order-1 flex flex-col items-center justify-center sm:items-start">
             <div class="legal flex gap-2">
-              <a href="/posts" class="text-current hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
-                Writing
-              </a> |
               <a href="/about" class="text-current hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
                 About
+              </a>
+              <span class="opacity-30">·</span>
+              <a href="/docs" class="text-current hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
+                Docs
               </a>
             </div>
             <div class="text-sm mt-2">
@@ -58,11 +52,6 @@ import Container from "@components/Container.astro"
               <a href="/search" aria-label={`Search ${SITE.TITLE}`} class="group size-10 rounded-full p-2.5 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/20 blend">
                 <svg class="size-full stroke-current group-hover:stroke-black group-hover:dark:stroke-white blend">
                   <use href="/ui.svg#search" />
-                </svg>
-              </a>
-              <a href="/rss.xml" target="_blank" aria-label={`RSS feed for ${SITE.TITLE}`} class="group size-10 rounded-full p-2.5 flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/20 blend">
-                <svg class="size-full stroke-current group-hover:stroke-black group-hover:dark:stroke-white blend">
-                  <use href="/ui.svg#rss" />
                 </svg>
               </a>
               {

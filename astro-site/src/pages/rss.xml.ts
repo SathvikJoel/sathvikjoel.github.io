@@ -7,7 +7,7 @@ type Context = {
 }
 
 export async function GET(context: Context) {
-  const posts = (await getCollection("posts")).filter((p) => !p.data.draft)
+  const posts = (await getCollection("posts")).filter((p) => !p.data.draft && !p.data.unlisted)
 
   posts.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
 

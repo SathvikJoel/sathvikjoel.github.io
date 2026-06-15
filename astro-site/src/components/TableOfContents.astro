@@ -1,6 +1,10 @@
 ---
-// Maggie-style table of contents: fixed in the left margin on wide screens,
-// hidden on narrower viewports where there is no gutter room.
+// Table of contents.
+//  - Narrow screens: rendered inline above the article (never disappears).
+//  - Wide screens (>=1280px), pinned posts: pinned in the left margin, open at the
+//    top of the page and smoothly collapsing as you scroll down.
+//  - Wide-column posts (pinned=false): rendered inline but collapsed by default, with
+//    a compact "Contents" toggle the reader can expand. It never reacts to scroll.
 interface Heading {
   depth: number
   slug: string
@@ -8,51 +12,122 @@ interface Heading {
 }
 interface Props {
   headings: Heading[]
+  accent?: string
+  pinned?: boolean
 }
-const { headings } = Astro.props
+const { headings, accent = "#FF6FB5", pinned = true } = Astro.props
 const items = headings.filter((h) => h.depth === 2 || h.depth === 3)
 const show = items.length >= 2
 ---
 
 {show && (
-  <nav class="toc" aria-label="Table of contents">
-    <p class="toc-label">Contents</p>
-    <ul class="toc-list">
-      {items.map((h) => (
-        <li class:list={["toc-item", h.depth === 3 && "toc-sub"]}>
-          <a href={`#${h.slug}`} data-toc-link={h.slug}>{h.text}</a>
-        </li>
-      ))}
-    </ul>
+  <nav class:list={["toc", pinned && "pinned", !pinned && "is-collapsed"]} aria-label="Table of contents">
+    <button type="button" class="toc-label" aria-expanded="true">
+      <svg class="toc-chevron" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" />
+      </svg>
+      <span>Contents</span>
+    </button>
+    <div class="toc-panel">
+      <ul class="toc-list">
+        {items.map((h) => (
+          <li class:list={["toc-item", h.depth === 3 && "toc-sub"]}>
+            <a href={`#${h.slug}`} data-toc-link={h.slug}>{h.text}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
   </nav>
 )}
 
-<style>
+<style define:vars={{ "toc-accent": accent }}>
+  /* Inline (narrow screens): sits above the article content. */
   .toc {
-    display: none;
+    display: block;
+    margin: 0 auto 2.5rem;
+    max-width: 38.5rem;
   }
-  /* Only show once there's gutter room beside the centred md column. */
+  /* On wide posts the TOC stays inline but shares the wide column so its left
+     edge lines up with the body. Keep the 920px in sync with `--wide-col`. */
+  .toc:not(.pinned) {
+    max-width: none;
+    width: min(94vw, 920px);
+    margin-left: calc(50% - min(94vw, 920px) / 2);
+    margin-right: auto;
+  }
+  /* Wide screens: pinned to the far-left edge of the page. Scrolls naturally
+     with the content, then sticks at the top and collapses (Maggie-style).
+     height:0 so it never pushes the article down; the calc() margin keeps the
+     left edge locked to ~1.75rem from the viewport at any width >=1280px. */
   @media (min-width: 1280px) {
-    .toc {
-      display: block;
-      position: fixed;
-      top: 7.5rem;
-      left: calc((100vw - 48rem) / 2 - 13.5rem);
+    .toc.pinned {
+      position: sticky;
+      top: 1.5rem;
+      align-self: start;
+      height: 0;
       width: 12rem;
-      max-height: 72vh;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      padding-right: 0.5rem;
+      max-width: none;
+      margin: 0 0 0 calc(0.5rem + 384px - 50vw);
     }
   }
   @media (min-width: 1536px) {
-    .toc {
-      left: calc((100vw - 48rem) / 2 - 15rem);
+    .toc.pinned {
       width: 13rem;
     }
   }
   .toc-label {
-    @apply font-sans text-[0.68rem] uppercase tracking-[0.15em] text-ink-light/45 dark:text-ink-dark/45 mb-3;
+    @apply font-sans text-ink-light/75 dark:text-ink-dark/75;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    user-select: none;
+    transition: color 0.2s ease;
+  }
+  .toc-label:hover {
+    @apply text-ink-light dark:text-ink-dark;
+  }
+  .toc-chevron {
+    width: 1.05rem;
+    height: 1.05rem;
+    flex: none;
+    color: #3dd6ed;
+    transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1);
+  }
+  .toc.is-collapsed .toc-chevron {
+    transform: rotate(-180deg);
+  }
+  /* Animated collapse wrapper. */
+  .toc-panel {
+    overflow: hidden;
+    max-height: 70vh;
+    opacity: 1;
+    margin-top: 0.85rem;
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.4s ease;
+  }
+  .toc.is-collapsed .toc-panel {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+  }
+  @media (min-width: 1280px) {
+    .toc.pinned .toc-panel {
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: none;
+    }
+    .toc.pinned .toc-panel::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+      display: none;
+    }
   }
   .toc-list {
     @apply flex flex-col gap-2 m-0 p-0 list-none border-l border-clay/15 dark:border-white/10;
@@ -67,17 +142,19 @@ const show = items.length >= 2
     @apply pl-7 text-[0.78rem];
   }
   .toc-item a:hover {
-    @apply text-ink-light dark:text-ink-dark;
-  }
-  .toc-item a.is-active {
-    @apply text-crimson dark:text-crimson-dark border-crimson dark:border-crimson-dark;
+    color: #3dd6ed;
   }
 </style>
 
 <script>
   function initToc() {
-    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]"))
-    if (!links.length) return
+    const toc = document.querySelector<HTMLElement>(".toc")
+    if (!toc) return
+    const label = toc.querySelector<HTMLButtonElement>(".toc-label")
+    const links = Array.from(toc.querySelectorAll<HTMLAnchorElement>("[data-toc-link]"))
+    if (!label || !links.length) return
+
+    // --- Scroll-spy: highlight the active section ---
     const bySlug = new Map(links.map((l) => [l.dataset.tocLink, l]))
     const headings = links
       .map((l) => document.getElementById(l.dataset.tocLink ?? ""))
@@ -103,6 +180,57 @@ const show = items.length >= 2
       { rootMargin: "-10% 0px -70% 0px", threshold: 0 }
     )
     headings.forEach((h) => observer.observe(h))
+
+    // --- Scroll naturally, collapse only once it sticks to the top (wide) ---
+    const mqWide = window.matchMedia("(min-width: 1280px)")
+    const isPinned = toc.classList.contains("pinned")
+    let userToggled = false
+
+    const setCollapsed = (collapsed: boolean) => {
+      toc.classList.toggle("is-collapsed", collapsed)
+      label.setAttribute("aria-expanded", String(!collapsed))
+    }
+
+    const stuckThreshold = () => {
+      const top = parseFloat(getComputedStyle(toc).top)
+      return (Number.isNaN(top) ? 24 : top) + 2
+    }
+
+    const applyScrollState = () => {
+      // Wide/unpinned TOC: starts collapsed and is toggled only by the reader.
+      // Never react to scroll, so it stays exactly where they left it.
+      if (!isPinned) return
+      // Non-wide on narrow screens: stays inline and open.
+      if (!mqWide.matches) {
+        setCollapsed(false)
+        return
+      }
+      if (userToggled) return
+      // Collapse only when the TOC has scrolled up to the sticky offset.
+      setCollapsed(toc.getBoundingClientRect().top <= stuckThreshold())
+    }
+
+    label.addEventListener("click", () => {
+      userToggled = true
+      setCollapsed(!toc.classList.contains("is-collapsed"))
+    })
+
+    let ticking = false
+    window.addEventListener(
+      "scroll",
+      () => {
+        userToggled = false
+        if (ticking) return
+        ticking = true
+        requestAnimationFrame(() => {
+          applyScrollState()
+          ticking = false
+        })
+      },
+      { passive: true }
+    )
+    mqWide.addEventListener("change", applyScrollState)
+    applyScrollState()
   }
 
   initToc()

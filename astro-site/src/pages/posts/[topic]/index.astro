@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content"
 import PageLayout from "@layouts/PageLayout.astro"
 import Garden from "@components/Garden.astro"
-import StreamFeed from "@components/StreamFeed.astro"
+import StreamList from "@components/StreamList.astro"
 import { TOPICS } from "@consts"
 
 export async function getStaticPaths() {
@@ -11,32 +11,75 @@ export async function getStaticPaths() {
 
 const { topic } = Astro.props
 const posts = (await getCollection("posts"))
-  .filter((p) => p.data.topic === topic.KEY && !p.data.draft)
+  .filter((p) => p.data.topic === topic.KEY && !p.data.draft && !p.data.unlisted)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 
-const isFeed = topic.LAYOUT === "feed"
-const wrap = isFeed ? "max-w-2xl" : "max-w-[1420px]"
+const isList = topic.LAYOUT === "list"
+const isColumn = topic.LAYOUT === "column"
+const wrap = isList || isColumn ? "max-w-2xl" : "max-w-[1420px]"
 ---
 
 <PageLayout title={`${topic.LABEL} — Writing`} description={topic.BLURB}>
-  <div class:list={["mx-auto px-5 sm:px-8 pt-28 pb-24", wrap]}>
+  <div class:list={["mx-auto pl-10 pr-5 sm:px-8 pt-28 pb-24", wrap]}>
     <header class="animate mb-12">
-      <a href="/" class="font-sans text-sm text-ink-light/60 dark:text-ink-dark/60 hover:text-crimson dark:hover:text-crimson-dark transition-colors">← All writing</a>
-      <h1 class="font-display text-4xl sm:text-5xl font-light text-ink-light dark:text-ink-dark mt-4">
-        <span class="count-badge" title={`${posts.length} posts`}>{posts.length}</span>{topic.LABEL}
-      </h1>
-      <p class="font-serif text-xl sm:text-2xl italic text-ink-light/75 dark:text-ink-dark/75 mt-4 max-w-2xl leading-relaxed">{topic.BLURB}</p>
+      <a href="/" class="stream-back" aria-label="Back to Garden">
+        <svg class="stream-back-arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" aria-hidden="true">
+          <path d="M11.5 5.5 7 10l4.5 4.5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span class="stream-back-label">Back to Garden</span>
+      </a>
+      <div class="stream-head relative mt-6">
+        <span class="count-badge" title={`${posts.length} posts`}>{posts.length}</span>
+        <h1 class="font-display text-5xl sm:text-7xl font-light text-ink-light dark:text-ink-dark leading-[1.04]">{topic.LABEL}</h1>
+        <p class="font-serif text-2xl sm:text-3xl text-ink-light/75 dark:text-ink-dark/75 mt-5 max-w-2xl leading-relaxed">{topic.BLURB}</p>
+      </div>
     </header>
 
-    {isFeed ? <StreamFeed posts={posts} /> : <Garden posts={posts} showFilters={false} />}
+    {isList ? <StreamList posts={posts} /> : isColumn ? <Garden posts={posts} showFilters={false} single={true} /> : <Garden posts={posts} showFilters={false} />}
   </div>
 </PageLayout>
 
 <style>
-  .count-badge {
-    @apply font-sans text-sm sm:text-base font-semibold text-crimson dark:text-crimson-dark;
-    vertical-align: super;
+  .stream-back {
+    @apply font-sans text-ink-light/55 dark:text-ink-dark/55;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: color 0.25s ease, transform 0.25s ease;
+  }
+  .stream-back:hover {
+    color: #3dd6ed;
+    transform: translateX(4px);
+  }
+  .stream-back-arrow {
+    width: 0;
+    height: 1em;
+    opacity: 0;
+    transform: translateX(5px);
+    transition: width 0.25s ease, opacity 0.25s ease, transform 0.25s ease,
+      margin-right 0.25s ease;
+  }
+  .stream-back:hover .stream-back-arrow {
+    width: 1em;
+    opacity: 1;
+    transform: translateX(0);
     margin-right: 0.3em;
+  }
+  /* Post count sits outdented in the left margin; title/description/list stay aligned. */
+  .count-badge {
+    @apply font-sans text-base sm:text-lg font-semibold text-crimson dark:text-crimson-dark;
+    position: absolute;
+    right: 100%;
+    margin-right: 0.55rem;
+    top: 0.9rem;
     line-height: 1;
+  }
+  @media (min-width: 640px) {
+    .count-badge {
+      margin-right: 0.85rem;
+      top: 1.6rem;
+    }
   }
 </style>

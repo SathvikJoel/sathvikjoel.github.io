@@ -23,6 +23,7 @@
 
 html {
   overflow-y: scroll;
+  overscroll-behavior-y: none;
   color-scheme: light;
   background-color: theme(colors.paper.light);
   font-family: theme(fontFamily.sans);
@@ -52,6 +53,22 @@ main {
   @apply bg-paper-light dark:bg-paper-dark;
 }
 
+/* Whitish top glow on blog post pages — uniform down to just before the body
+   starts, then a quick fade that finishes exactly where the body begins. */
+.page-glow {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 540px;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.12) 72%,
+    transparent 100%
+  );
+}
+
 h1, h2, h3, h4, h5, h6, .page-heading {
   @apply font-display;
   font-optical-sizing: auto;
@@ -70,30 +87,16 @@ header {
   @apply bg-transparent;
 }
 
-/* Ambient gradient at the top of every page (in lieu of cover images). */
-.page-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 22rem;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(58% 80% at 16% 0%, rgba(255, 111, 181, 0.16), transparent 60%),
-    radial-gradient(55% 85% at 84% 0%, rgba(61, 214, 237, 0.12), transparent 60%),
-    linear-gradient(to bottom, rgba(169, 140, 230, 0.08), transparent 80%);
-  -webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent);
-  mask-image: linear-gradient(to bottom, #000 30%, transparent);
-}
+/* Ambient gradient removed — pages start on clean black. */
 
 article {
-  @apply prose dark:prose-invert max-w-full pb-12;
+  @apply prose dark:prose-invert pb-12;
+  max-width: 38.5rem;
+  margin-inline: auto;
   font-family: theme(fontFamily.serif);
-  font-variation-settings: "opsz" 100;
   font-size: 1.2rem;
-  line-height: 1.78;
-  font-weight: 300;
+  line-height: 1.62;
+  font-weight: 400;
   --tw-prose-body: theme(colors.ink.light / 92%);
   --tw-prose-headings: theme(colors.ink.light);
   --tw-prose-links: theme(colors.sage.light);
@@ -113,17 +116,87 @@ article {
   --tw-prose-code: theme(colors.gold.DEFAULT);
 }
 
+/* Card depth — modelled on Maggie Appleton's styled-card shadow, tuned for a pure-black
+   canvas: a soft drop shadow for lift plus a faint inset top highlight (a "lit edge")
+   so the raised surface still reads against #000 where a plain shadow would vanish. */
+.depth-card {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 4px 16px rgba(0, 0, 0, 0.45),
+    0 14px 34px -10px rgba(0, 0, 0, 0.55);
+}
+
 article :is(h1, h2, h3, h4) {
   @apply font-display;
-  letter-spacing: -0.005em;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+}
+
+/* Maggie-style weight ladder: H1 substantial, H2 big & thin, H3 light. */
+article h1 {
+  font-weight: 500;
+  font-size: 2.8rem;
+  line-height: 1.15;
+  margin-top: 3.67rem;
+  margin-bottom: 1.83rem;
+}
+
+article h2 {
+  font-style: normal;
   font-weight: 300;
+  font-size: 1.9rem;
+  line-height: 1.25;
+  margin-top: 2.44rem;
+  margin-bottom: 1.22rem;
+}
+
+article h3 {
+  font-weight: 400;
+  font-size: 1.45rem;
+  line-height: 1.35;
+  margin-top: 1.83rem;
+  margin-bottom: 1.22rem;
+}
+
+/* Drop cap on the opening paragraph.
+   Default = float fallback (older browsers). Modern browsers use `initial-letter`,
+   which aligns the cap's top to the first line's cap-height and its baseline to the
+   second line — neat, with no overhang above the text. */
+article:not(.no-dropcap) > p:first-of-type::first-letter {
+  float: left;
+  font-family: theme(fontFamily.display);
+  font-weight: 400;
+  font-size: 3.1em;
+  line-height: 0.78;
+  padding-right: 0.12em;
+  margin-top: 0.04em;
+  /* Fraunces parametric axes: full display optical size with soft, slightly wonky
+     character so the initial reads as a decorative drop cap, not just a big letter. */
+  font-variation-settings: "opsz" 144, "wght" 460, "SOFT" 60, "WONK" 1;
+}
+@supports (initial-letter: 2) or (-webkit-initial-letter: 2) {
+  article:not(.no-dropcap) > p:first-of-type::first-letter {
+    -webkit-initial-letter: 2;
+    initial-letter: 2;
+    float: none;
+    font-size: inherit;
+    line-height: inherit;
+    margin-top: 0;
+    padding-right: 0;
+    margin-right: 0.18em;
+  }
 }
 
 article :is(strong, b) {
-  font-weight: 560;
+  font-weight: 600;
+}
+
+.dark article :is(strong, b) {
+  color: inherit;
 }
 
 article a {
+  font-weight: inherit;
   text-decoration-color: theme(colors.crimson.dark / 45%);
   text-underline-offset: 3px;
   transition: text-decoration-color 0.2s ease;
@@ -245,3 +318,22 @@ article img {
   opacity: 0;
   transform: translateY(10px);
 } */
+/**
+ * Code-heavy posts: `width: wide` (front matter) swaps the narrow reading column
+ * for a wider, shared measure so prose AND code sit at the same generous width.
+ * The `.wide-col` band is centred in the viewport (escaping the md container) but
+ * stays narrow enough to clear the pinned table of contents on the left.
+ * Standard posts are unaffected.
+ */
+.wide-col {
+  --wide-col: min(94vw, 920px);
+  max-width: none;
+  width: var(--wide-col);
+  margin-left: calc(50% - var(--wide-col) / 2);
+  margin-right: auto;
+}
+
+.expressive-code {
+  margin-top: 1.6rem;
+  margin-bottom: 1.6rem;
+}

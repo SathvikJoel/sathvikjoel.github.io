@@ -3,8 +3,8 @@ title: "Best 10 months, POSCO GYP Program"
 description: "Sharing my enriching experience as a POSCO GYP Scholor at POSTECH, South Korea"
 date: 2024-04-11T11:30:03.000Z
 topic: life
+topGlow: false
 tags: ["gyp"]
-kind: essay
 math: true
 ---
 

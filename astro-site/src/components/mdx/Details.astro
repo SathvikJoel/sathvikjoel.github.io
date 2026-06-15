@@ -1,17 +1,79 @@
 ---
+// A collapsible disclosure styled as a tidy accordion: a header bar with a
+// plus-circle, a "Read more / Show less" hint, and a panel that opens below.
+// Native <details> — works without JS and stays accessible.
+// Inspired by Maggie Appleton's accordion (e.g. /gastown).
 interface Props {
   title: string
 }
 const { title } = Astro.props
 ---
-<details
-  class="group my-4 rounded-lg border border-ink-light/15 px-4 py-2 dark:border-ink-dark/15"
->
-  <summary class="cursor-pointer list-none font-sans font-medium marker:hidden">
-    <span class="mr-1 inline-block transition-transform group-open:rotate-90">›</span>
-    {title}
+
+<details class="disclosure not-prose">
+  <summary class="disclosure-summary">
+    <span class="disclosure-head">
+      <svg class="disclosure-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0a9 9 0 0 1 18 0" />
+      </svg>
+      <span class="disclosure-title">{title}</span>
+    </span>
+    <span class="disclosure-more">
+      <span class="disclosure-more-text" data-closed="Read more" data-open="Show less"></span>
+      <svg class="disclosure-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m19.5 8.25l-7.5 7.5l-7.5-7.5" />
+      </svg>
+    </span>
   </summary>
-  <div class="mt-2">
+  <div class="disclosure-panel prose prose-lg dark:prose-invert">
     <slot />
   </div>
 </details>
+
+<style>
+  .disclosure {
+    @apply my-6 rounded-sm shadow-sm;
+  }
+  .disclosure-summary {
+    @apply flex cursor-pointer list-none flex-wrap items-center justify-between gap-2 rounded-sm border border-sage-dark/30 border-l-4 border-l-sage-dark bg-sage-dark/[0.07] px-4 py-3 font-sans transition-colors marker:hidden hover:bg-sage-dark/[0.12];
+  }
+  .disclosure-summary::-webkit-details-marker {
+    display: none;
+  }
+  .disclosure[open] .disclosure-summary {
+    @apply rounded-b-none;
+  }
+  .disclosure-head {
+    @apply flex items-center gap-2 text-sm font-medium text-ink-light dark:text-ink-dark;
+  }
+  .disclosure-icon {
+    @apply size-[1.15rem] shrink-0 text-sage-light transition-transform duration-300 dark:text-sage-dark;
+  }
+  .disclosure[open] .disclosure-icon {
+    @apply rotate-45;
+  }
+  .disclosure-more {
+    @apply flex shrink-0 items-center gap-1 text-xs text-ink-light/55 dark:text-ink-dark/55;
+  }
+  .disclosure-more-text::before {
+    content: attr(data-closed);
+  }
+  .disclosure[open] .disclosure-more-text::before {
+    content: attr(data-open);
+  }
+  .disclosure-chevron {
+    @apply size-3.5 transition-transform duration-300;
+  }
+  .disclosure[open] .disclosure-chevron {
+    @apply rotate-180;
+  }
+  .disclosure-panel {
+    @apply rounded-b-sm border border-t-0 border-sage-dark/30 bg-surface-light dark:bg-surface-dark;
+    padding: 1.9rem 2.4rem;
+  }
+  .disclosure-panel > :global(:first-child) {
+    @apply mt-0;
+  }
+  .disclosure-panel > :global(:last-child) {
+    @apply mb-0;
+  }
+</style>

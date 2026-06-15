@@ -19,3 +19,9 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+
+# Private docs password (never commit)
+.docs-password
+
+# Generated encrypted docs bundle (rebuilt by prebuild/predev)
+public/docs.enc.json

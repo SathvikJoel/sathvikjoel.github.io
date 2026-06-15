@@ -25,14 +25,7 @@ const related = getRelated(post, all, backlinks, 3)
           {backlinks.map((p) => (
             <a href={`/posts/${p.slug}`} class="conn-card group">
               <span class="conn-emoji">
-                {p.data.kind === "note" && p.data.growthStage ? (
-                  <StageIcon stage={p.data.growthStage} class="size-4" />
-                ) : (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="size-4 opacity-60">
-                    <path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1" />
-                    <path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1" />
-                  </svg>
-                )}
+                <StageIcon stage={p.data.growthStage} class="size-4" />
               </span>
               <span class="min-w-0">
                 <span class="conn-title">{p.data.title}</span>
@@ -50,7 +43,6 @@ const related = getRelated(post, all, backlinks, 3)
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {related.map((p) => (
             <a href={`/posts/${p.slug}`} class="conn-card group">
-              <span class="conn-emoji capitalize text-[0.62rem] tracking-wide opacity-60 not-italic font-sans">{p.data.topic}</span>
               <span class="min-w-0">
                 <span class="conn-title">{p.data.title}</span>
                 {p.data.description && <span class="conn-desc">{p.data.description}</span>}

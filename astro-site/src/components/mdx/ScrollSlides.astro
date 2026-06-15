@@ -1,0 +1,156 @@
+---
+// Scroll-synced presentation: a pinned slide panel beside running notes.
+// Wrap a sequence of <Slide> children. As each slide's notes scroll past the
+// middle of the viewport, the matching slide crossfades into the sticky panel.
+// Collapses to a simple stacked image-then-notes flow on mobile (and with JS off).
+// Inspired by Maggie Appleton's /zero-alignment.
+//   slidesOn: which side the pinned slides sit on — "left" (default) or "right".
+interface Props {
+  slidesOn?: "left" | "right"
+}
+const { slidesOn = "left" } = Astro.props
+---
+
+<section class:list={["scrolly-section not-prose", slidesOn === "right" && "slides-right"]} data-scrolly>
+  <div class="scrolly-images" aria-hidden="true">
+    <div class="image-stack"></div>
+  </div>
+  <div class="scrolly-notes"><slot /></div>
+</section>
+
+<script>
+  function initScrolly(section: HTMLElement) {
+    const slides = Array.from(section.querySelectorAll<HTMLElement>(".scrolly-slide"))
+    const stack = section.querySelector<HTMLElement>(".image-stack")
+    if (!slides.length || !stack) return
+
+    slides.forEach((s, i) => {
+      const img = document.createElement("img")
+      img.src = s.dataset.image || ""
+      img.alt = s.dataset.alt || ""
+      img.loading = "lazy"
+      img.decoding = "async"
+      img.className = "scrolly-img" + (i === 0 ? " active" : "")
+      stack.appendChild(img)
+    })
+
+    const imgs = Array.from(stack.children) as HTMLElement[]
+    const setActive = (idx: number) =>
+      imgs.forEach((im, i) => im.classList.toggle("active", i === idx))
+
+    section.setAttribute("data-ready", "true")
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            const idx = slides.indexOf(e.target as HTMLElement)
+            if (idx >= 0) setActive(idx)
+          }
+        })
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+    )
+    slides.forEach((s) => io.observe(s))
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-scrolly]").forEach(initScrolly)
+</script>
+
+<!-- Styles are global because the sticky slide images are created in the client
+     script at runtime and so never receive Astro's scoped-style attribute. All
+     selectors are namespaced under .scrolly-section to avoid leaking. -->
+<style is:global>
+  .scrolly-section {
+    margin-block: 2.5rem;
+  }
+
+  /* Mobile-first: pinned panel hidden; each slide's image shows inline. */
+  .scrolly-section .scrolly-images {
+    display: none;
+  }
+  .scrolly-section .scrolly-inline-img {
+    display: block;
+    width: 100%;
+    margin: 0 auto 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid theme(colors.clay.DEFAULT / 20%);
+    box-shadow: theme(boxShadow.sm);
+  }
+  .dark .scrolly-section .scrolly-inline-img {
+    border-color: theme(colors.white / 15%);
+  }
+  .scrolly-section .scrolly-note > p:first-child {
+    margin-top: 0;
+  }
+  .scrolly-section .scrolly-note > p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 1024px) {
+    /* Break out of the narrow article column to a wider, viewport-centred band
+       so the slides have room to breathe. */
+    .scrolly-section[data-ready] {
+      --scrolly-w: min(1400px, calc(100vw - 4rem));
+      width: var(--scrolly-w);
+      margin-left: calc(50% - var(--scrolly-w) / 2);
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    .scrolly-section[data-ready].slides-right {
+      grid-template-columns: 2fr 3fr;
+    }
+    .scrolly-section[data-ready] .scrolly-images {
+      order: 0;
+      display: flex;
+      position: sticky;
+      top: 4rem;
+      height: calc(100vh - 8rem);
+      align-items: center;
+      justify-content: center;
+    }
+    .scrolly-section[data-ready].slides-right .scrolly-images {
+      order: 1;
+    }
+    .scrolly-section[data-ready].slides-right .scrolly-notes {
+      order: 0;
+    }
+    .scrolly-section[data-ready] .image-stack {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+    }
+    .scrolly-section[data-ready] .scrolly-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0;
+      border-radius: 0.5rem;
+      border: 1px solid theme(colors.white / 12%);
+      box-shadow: 0 18px 40px -12px rgb(0 0 0 / 0.6);
+      transition: opacity 0.5s ease;
+    }
+    .scrolly-section[data-ready] .scrolly-img.active {
+      opacity: 1;
+    }
+    .scrolly-section[data-ready] .scrolly-note {
+      min-height: 82vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .scrolly-section[data-ready] .scrolly-inline-img {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scrolly-section .scrolly-img {
+      transition: none !important;
+    }
+  }
+</style>

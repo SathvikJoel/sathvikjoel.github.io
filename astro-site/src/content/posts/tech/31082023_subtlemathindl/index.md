@@ -1,11 +1,12 @@
 ---
-title: "FlashAttention: Before flash"
-description: ""
+title: "The Math Behind FlashAttention"
+description: "A focused walk through the mathematical subtleties of FlashAttention — the online-softmax trick and IO-aware tiling that make exact attention fast on GPUs."
 date: 2023-08-30T11:30:03.000Z
 topic: tech
+topGlow: false
 tags: ["llm", "math"]
-kind: essay
 math: true
+width: wide
 ---
 
 In this blog I delve into the intricate mathematical subtilities that abound in Flash Attention I recently came across. The primary aim is to unravel these mathematical complexities, offering readers a key to unlocking a deeper comprehension of the complete paper. The focus of this blog remains exclusively on the mathematical nuances, tailored to resonate with those who possess a keen mathematical acumen. 

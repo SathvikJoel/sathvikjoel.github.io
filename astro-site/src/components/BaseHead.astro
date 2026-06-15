@@ -27,17 +27,25 @@ const { title, description, image = "/open-graph.jpg" } = Astro.props
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
+<meta property="og:site_name" content="JoeLogs" />
+<meta property="og:locale" content="en_US" />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:image:width" content="2400" />
+<meta property="og:image:height" content="1260" />
+<meta property="og:image:alt" content="JoeLogs — the digital garden of Sathvik Joel" />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:site" content="@JoelSathvik" />
+<meta property="twitter:creator" content="@JoelSathvik" />
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
+<meta property="twitter:image:alt" content="JoeLogs — the digital garden of Sathvik Joel" />
 
 <!-- Sitemap -->
 <link rel="sitemap" href="/sitemap-index.xml" />
@@ -46,6 +54,15 @@ const { title, description, image = "/open-graph.jpg" } = Astro.props
 <link rel="alternate" type="application/rss+xml" title={title} href={`${Astro.site}rss.xml`}/>
 
 <!-- Global Scripts -->
+<script is:inline>
+  // Arm the homepage card reveal before first paint so cards never flash
+  // visible-then-hidden. Only when JS is on and motion is allowed.
+  try {
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("reveal-js")
+    }
+  } catch (e) {}
+</script>
 <script is:inline src="/js/animate.js"></script>
 <script defer is:inline src="/js/copy.js"></script>
 

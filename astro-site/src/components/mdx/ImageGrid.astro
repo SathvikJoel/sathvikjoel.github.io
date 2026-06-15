@@ -1,0 +1,42 @@
+---
+// Lay two (or more) images side by side, each with its OWN caption below.
+// Children are <Figure> elements. Collapses to a single column on mobile.
+// Inspired by Maggie Appleton's side-by-side image grids (e.g. /glitter-devs).
+interface Props {
+  cols?: number
+}
+const { cols = 2 } = Astro.props
+---
+
+<div
+  class:list={[
+    "image-grid not-prose my-8 grid items-start gap-x-5 gap-y-3",
+    cols >= 3 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-1 sm:grid-cols-2",
+  ]}
+>
+  <slot />
+</div>
+
+<style>
+  /* Break out wider than the text column, like <WideImage>, so the pair of
+     images bleeds symmetrically past the reading measure. */
+  .image-grid {
+    width: min(92vw, 1080px);
+    margin-left: 50%;
+    transform: translateX(-50%);
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+  /* Strip the per-figure margins so the grid controls spacing, and let each
+     image fill its column while keeping its own natural aspect ratio. */
+  .image-grid :global(figure) {
+    margin: 0;
+  }
+  .image-grid :global(img) {
+    width: 100%;
+    margin: 0;
+  }
+  .image-grid :global(figcaption) {
+    margin-top: 0.6rem;
+  }
+</style>

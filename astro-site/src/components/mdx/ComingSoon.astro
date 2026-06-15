@@ -6,23 +6,46 @@ interface Props {
 const { note = "This one's still growing — check back soon." } = Astro.props
 ---
 
-<div class="coming-soon not-prose">
-  <span class="coming-soon-icon">🌱</span>
+<div class="coming-soon depth-card not-prose">
+  <span class="coming-soon-icon" aria-hidden="true">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="24" cy="24" r="22" class="cs-ring" stroke-width="1" />
+      <path d="M15 37c0-10 4-15 18-16" class="cs-stem" />
+      <path d="M33 21c-7 1-10-2-11-8 6-1 10 2 11 8Z" class="cs-leaf" />
+      <path d="M16 31c5 0 8-2 9-6-5-1-8 1-9 6Z" class="cs-leaf" />
+      <path d="M30 11.5l1 2 2 1-2 1-1 2-1-2-2-1 2-1Z" class="cs-spark" />
+    </svg>
+  </span>
   <h3 class="coming-soon-title">Coming Soon</h3>
   <p class="coming-soon-note">{note}</p>
 </div>
 
 <style>
   .coming-soon {
-    @apply my-12 py-10 px-6 text-center rounded-xl border border-dashed border-sage/40 dark:border-sage-dark/40 bg-sage/[0.04] dark:bg-sage-dark/[0.06];
+    @apply my-10 mx-auto flex max-w-2xl flex-col items-center gap-2 rounded-sm border border-clay/20 bg-surface-light px-6 py-10 text-center dark:border-white/15 dark:bg-surface-dark;
   }
   .coming-soon-icon {
-    @apply block text-3xl mb-2;
+    @apply mb-1 block text-sage-light dark:text-sage-dark;
+  }
+  .coming-soon-icon svg {
+    @apply h-12 w-12;
+  }
+  .cs-ring {
+    @apply opacity-25;
+    stroke-dasharray: 3 5;
+  }
+  .cs-leaf {
+    @apply fill-sage-light/15 dark:fill-sage-dark/15;
+  }
+  .cs-spark {
+    @apply fill-sage-light dark:fill-sage-dark;
+    stroke: none;
   }
   .coming-soon-title {
-    @apply font-display text-2xl font-light text-ink-light dark:text-ink-dark m-0;
+    @apply m-0 font-display text-[1.45rem] font-light leading-snug text-ink-light dark:text-[#EAE8E5];
+    letter-spacing: -0.01em;
   }
   .coming-soon-note {
-    @apply font-sans text-sm text-ink-light/60 dark:text-ink-dark/55 mt-2 mb-0;
+    @apply font-sans text-sm text-ink-light/60 dark:text-ink-dark/55 mt-1 mb-0;
   }
 </style>
