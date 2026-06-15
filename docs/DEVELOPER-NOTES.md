@@ -148,6 +148,31 @@ Key `posts` fields whose behavior isn't obvious from the name:
   doesn't 404 and fall back to a stale cached icon. If you change the brand mark, regenerate
   **all** of those files, not just the SVG.
 
+## Open Graph / social share cards
+
+Every post page ships a per-post **1200×630** OG image so links shared to WhatsApp / X /
+Discord / iMessage always render a large, branded preview at the exact size platforms want.
+
+- **`scripts/build-og.mjs`** runs as a **`predev`/`prebuild` hook** and writes one
+  `public/og/<topic>/<slug>.jpg` per post. Two card styles, chosen automatically:
+  - posts **with** `cover`/`image` → the art is *contained* (never cropped) and centered on
+    the dark `#161618` canvas;
+  - posts **without** art → an auto-generated **title card** (post title in Fraunces, topic
+    eyebrow in Lato, J-vine wordmark). The typography is the design — no illustration needed.
+- **`public/og/` is gitignored** (like `docs.enc.json`) — it is a build artifact, regenerated
+  on every dev/build. Do not commit it.
+- **Fonts are vendored as TTF under `scripts/og-fonts/`** (Fraunces + Lato) and loaded via a
+  scoped `FONTCONFIG_FILE` the script writes at runtime. This is why the title cards render
+  identically on CI: they do **not** depend on system fonts, and `@fontsource` ships woff2
+  only (which librsvg/freetype can't reliably read). If you change the display/UI font, drop
+  the matching `.ttf` into `scripts/og-fonts/` and update the `font-family` names in the SVG.
+- **Wiring:** `[topic]/[slug].astro` always sets `image={'/og/' + post.slug + '.jpg'}` and
+  passes it (plus `imageAlt`) to `PageLayout` → `BaseHead`, which emits `og:image` +
+  `twitter:image` at a hardcoded 1200×630. Non-post pages (home, streams) fall back to the
+  static `public/open-graph.jpg` (also 1200×630).
+- Topic → accent colour for title cards lives in the `ACCENT` map in `build-og.mjs`
+  (tech=sage, life=gold, philosophy=purple, writings=clay).
+
 ## The encrypted `/docs` system
 
 The `/docs` route is a **password-gated writer handbook**, encrypted at build time:

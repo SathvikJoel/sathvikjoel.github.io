@@ -145,3 +145,16 @@ shows.
 - Want a picture **inside the body** of a post (with a caption, side by side, or
   full-width)? → that's not a cover or image — use a building block from the
   [Writing toolkit](./components.md) instead.
+
+## Share previews (when you post a link)
+
+You don't have to do anything for this. Every post automatically gets its own **1200×630
+share card** — the picture WhatsApp / X / Discord / iMessage show when you paste the link.
+
+- If the post has a **`cover` or `image`**, the card frames that art on the dark canvas.
+- If the post has **no picture at all**, the card is built from the **title** (set in our
+  Fraunces heading font) with the topic name and the JoeLogs mark. It still looks designed —
+  so a text-only post shares just as cleanly as an illustrated one.
+
+These cards are regenerated on every deploy; there's nothing to commit or maintain.
+

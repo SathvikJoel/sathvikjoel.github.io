@@ -19,7 +19,7 @@ export async function getStaticPaths() {
 
 type Props = CollectionEntry<"posts">
 const post = Astro.props
-const { title, description, date, topic, growthStage, lastTended, tags, width, dropCap, topGlow, cover, coverAlt, image, imageAlt } = post.data
+const { title, description, date, topic, growthStage, lastTended, tags, width, dropCap, topGlow, coverAlt, imageAlt } = post.data
 const { Content, headings } = await post.render()
 
 // All posts (used by Connections for backlinks). Unlisted posts are excluded so
@@ -29,9 +29,9 @@ const allPosts = (await getCollection("posts")).filter((p) => !p.data.unlisted)
 const breadcrumbStage = growthStage
 
 // Per-post Open Graph card: scripts/build-og.mjs generates /og/<slug>.jpg (1200×630)
-// for any post with cover/illustration art. Posts without art use the site default.
-const hasArt = Boolean(cover || image)
-const ogImage = hasArt ? `/og/${post.slug}.jpg` : undefined
+// for EVERY post — an illustration card when the post has cover/image art, otherwise an
+// auto-generated title card. So every post page gets its own branded share image.
+const ogImage = `/og/${post.slug}.jpg`
 const ogImageAlt = coverAlt || imageAlt || `${title} — JoeLogs`
 ---
 
