@@ -12,15 +12,59 @@ Both are optional. A post with neither simply shows as a clean text tile.
 
 ## Where picture files go
 
-Keep a post's pictures alongside it, then point to them with an address that starts
-with a slash. A good home for them is:
+Pictures don't live next to the post's `index.md` — they live in the **`public/`**
+folder, in a path that mirrors the post. (The text lives in `src/content/posts/...`;
+the pictures live in `public/posts/...`.)
 
 ```
 public/posts/<stream>/<post-name>/my-picture.jpg
+public/posts/<stream>/<post-name>/images/diagram.jpg   ← an images/ subfolder is fine
 ```
 
-You then refer to that file as `/posts/<stream>/<post-name>/my-picture.jpg` in the
-front matter.
+You then refer to that file from the post with a slash-prefixed address that mirrors
+the path — `/posts/<stream>/<post-name>/my-picture.jpg`. **This is the same for all
+three kinds of picture:** the `cover`, the square tile `image`, and any in-body
+picture (`<Figure src="/posts/.../images/diagram.jpg">`). They all live under
+`public/posts/...` and are referenced by their `/posts/...` address.
+
+> An image placed *next to* the `index.md` in `src/content/` will **not** load — a
+> `/posts/...` link only resolves to files under `public/`. Keep text in
+> `src/content/`, pictures in `public/`.
+
+## Optimize pictures before (or after) you add them
+
+Images in `public/` are served **exactly as-is** — Astro does **not** resize or
+compress them. A photo straight from a camera or an AI tool is often 3–13 MB, which
+loads slowly on mobile and hurts the Lighthouse score. There's a one-time script that
+fixes this **in place** without changing any file names or front-matter paths:
+
+```bash
+node scripts/optimize-images.mjs
+```
+
+What it does:
+
+- scans `public/posts/` for pictures larger than ~400 KB,
+- caps the longest side to 2000 px (never upscales),
+- re-encodes in the **same format** (`.jpg` stays `.jpg`, `.png` stays `.png`) with
+  good compression — so every `cover:` / `image:` / in-body link keeps working,
+- only overwrites a file when the result is genuinely smaller.
+
+Typical savings are **70–90%** with no visible quality loss. Originals are tracked in
+git, so you can always restore one with `git checkout -- <path-to-image>`.
+
+Handy variations:
+
+```bash
+node scripts/optimize-images.mjs --dry          # preview the savings, write nothing
+node scripts/optimize-images.mjs --min 800      # only touch files over 800 KB
+node scripts/optimize-images.mjs --max 1600     # cap the longest side to 1600 px
+node scripts/optimize-images.mjs public/posts/life/my-trip/harbour.jpg   # one file
+```
+
+**Workflow:** drop your full-res pictures into the post folder, run
+`node scripts/optimize-images.mjs`, eyeball the results, then commit. Re-running it is
+safe — already-small files are skipped.
 
 ## `cover` — make a post stand out on the homepage
 

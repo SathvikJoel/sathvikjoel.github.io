@@ -7,14 +7,24 @@ freely in Markdown.
 
 ## Where posts live
 
-Posts are kept inside the content folder, grouped by stream:
+A post is **two mirrored folders** that share the same `<stream>/<post-name>` path: the
+**text** lives in the content folder, and the **pictures** live in the public folder.
 
 ```
-content/posts/<stream>/<post-name>/index.md
+src/content/posts/<stream>/<post-name>/index.md     ← the post TEXT (this file)
+public/posts/<stream>/<post-name>/                   ← the post's PICTURES & files
 ```
 
-For example, a Life post might live at `content/posts/life/my-trip/index.md`. Giving
-each post its own folder keeps its pictures and files tidy in one place.
+For example, a Life post's writing lives at `src/content/posts/life/my-trip/index.md`,
+and its photos live at `public/posts/life/my-trip/...` (e.g. a `cover.png` and an
+`images/` subfolder). You then link to a picture with a slash-prefixed address that
+mirrors that path — `/posts/life/my-trip/cover.png`. See
+[Covers & images](./covers-and-images.md) for the details.
+
+> **Why two folders?** Anything under `public/` is published at the site root exactly
+> as-is, which is what lets `/posts/...` image links resolve. An image placed *next to*
+> the `index.md` in `src/content/` will **not** be found by a `/posts/...` link — it
+> would 404. Keep text in `src/content/`, pictures in `public/`.
 
 - Use **`index.md`** for an ordinary post.
 - Use **`index.mdx`** if you want to use any of the building blocks from the
