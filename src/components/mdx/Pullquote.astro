@@ -1,12 +1,14 @@
 ---
-// A large, prominent pull-quote for emphasis.
+// A large, prominent pull-quote for emphasis. Pass `mini` for a smaller, tighter
+// variant (e.g. a question or aside) that still keeps the quote styling.
 interface Props {
   cite?: string
+  mini?: boolean
 }
-const { cite } = Astro.props
+const { cite, mini = false } = Astro.props
 ---
 
-<figure class="pullquote not-prose">
+<figure class:list={["pullquote not-prose", mini && "pullquote-mini"]}>
   <blockquote>
     <slot />
   </blockquote>
@@ -20,7 +22,16 @@ const { cite } = Astro.props
   .pullquote blockquote {
     @apply font-display text-2xl sm:text-3xl font-light italic leading-snug text-ink-light dark:text-ink-dark m-0;
   }
+  .pullquote-mini {
+    @apply my-6;
+  }
+  .pullquote-mini blockquote {
+    @apply text-lg sm:text-xl leading-snug;
+  }
   .pullquote-cite {
     @apply font-sans not-italic text-sm text-ink-light/55 dark:text-ink-dark/55 mt-4;
+  }
+  .pullquote-mini .pullquote-cite {
+    @apply mt-2;
   }
 </style>
