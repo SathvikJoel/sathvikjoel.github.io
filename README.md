@@ -1,87 +1,62 @@
-![Astro Sphere Lighthouse Score](_astrosphere.jpg)
+# JoeLogs
 
-Astro Sphere is a static, minimalist, lightweight, lightning fast portfolio and blog theme based on my personal website.
+The personal site and digital garden of **Sathvik Joel** — essays and field notes on
+tech, life, philosophy, and whatever else is growing. Live at
+**[sathvikjoel.github.io](https://sathvikjoel.github.io)**.
 
-It is primarily Astro, Tailwind and Typescript, with a very small amount of SolidJS for stateful components.
+It's a dark, illustrated "digital garden" (in the spirit of Maggie Appleton's site), built
+with **Astro**, **Tailwind**, and **TypeScript**, with a sprinkle of SolidJS for the few
+stateful bits. It was migrated from a Hugo + PaperMod blog in June 2026; the old Hugo site
+is preserved on the **`hugo-old`** branch.
 
-## 🚀 Deploy your own
+## Project shape
 
-[![Deploy with Vercel](_deploy_vercel.svg)](https://vercel.com/new/clone?repository-url=https://github.com/markhorn-dev/astro-sphere)  [![Deploy with Netlify](_deploy_netlify.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/markhorn-dev/astro-sphere)
+```
+src/
+  components/        UI + MDX components (cards, ScrollSlides, StageIcon, …)
+  content/
+    posts/<stream>/  blog posts (tech, life, fun, philosophy, writings)
+    now/             dated "now" snapshots
+  pages/             routes (home, streams, posts, now, about, resume, search, RSS)
+  styles/            global CSS + Tailwind layer
+public/              static assets served as-is (post images, icons, og/, resume.pdf)
+scripts/             build-time scripts (encrypted /docs, OG card generation)
+docs/                the writing handbook (also served, password-gated, at /docs)
+.agents/             contributor/agent notes (see deployment.md)
+```
 
-## 📋 Features
+## Writing & contributing docs
 
-- ✅ 100/100 Lighthouse performance
-- ✅ Responsive
-- ✅ Accessible
-- ✅ SEO-friendly
-- ✅ Typesafe
-- ✅ Minimal style
-- ✅ Light/Dark Theme
-- ✅ Animated UI
-- ✅ Tailwind styling
-- ✅ Auto generated sitemap
-- ✅ Auto generated RSS Feed
-- ✅ Markdown support
-- ✅ MDX Support (components in your markdown)
-- ✅ Searchable content (posts and projects)
-- ✅ Code Blocks - copy to clipboard
+The full handbook lives in **[`docs/`](./docs/README.md)** and is also served as a
+password-gated section of the live site at `/docs`. Start there for how to write posts,
+add covers/images, use the component toolkit, build annotated talks, and update the
+`/now` page. Engineering specifics live in
+[`docs/DEVELOPER-NOTES.md`](./docs/DEVELOPER-NOTES.md), and the deploy mechanics in
+[`.agents/deployment.md`](./.agents/deployment.md).
 
-## 💯 Lighthouse score
-![Astro Sphere Lighthouse Score](_lighthouse.png)
+## Commands
 
-## 🕊️ Lightweight
-All pages under 100kb (including fonts)
+Run from the repo root (`DOCS_PASSWORD` gates the `/docs` handbook; a value is only needed
+to view those pages locally):
 
-## ⚡︎ Fast
-Rendered in ~40ms on localhost
+| Command                                       | Action                                            |
+| :-------------------------------------------- | :------------------------------------------------ |
+| `npm install`                                 | Install dependencies                              |
+| `DOCS_PASSWORD='garden-test' npm run dev`     | Start the dev server                              |
+| `DOCS_PASSWORD='garden-test' npm run build`   | Type-check (`astro check`) + build to `./dist/`   |
+| `npm run preview`                             | Preview the production build locally              |
+| `npm run lint` / `npm run lint:fix`           | Run / auto-fix ESLint                             |
 
-## 📄 Configuration
+## Deployment
 
-The blog posts on the demo serve as the documentation and configuration.
+Push to **`main`** and the **[`.github/workflows/gh-pages.yml`](./.github/workflows/gh-pages.yml)**
+workflow builds the site with Astro and deploys `./dist` to GitHub Pages. See
+[`.agents/deployment.md`](./.agents/deployment.md) for details (manual runs, the
+`DOCS_PASSWORD` secret, and auth).
 
-## 💻 Commands
+## License
 
-All commands are run from the root of the project, from a terminal:
-
-Replace npm with your package manager of choice. `npm`, `pnpm`, `yarn`, `bun`, etc
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run dev:network`     | Starts dev server on local network               |
-| `npm run sync`            | Generates TypeScript types for all Astro modules.|
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run preview:network` | Starts preview server on local network           |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-| `npm run lint`            | Run ESLint                                       |
-| `npm run lint:fix`        | Auto-fix ESLint issues                           |
-
-## 🗺️ Roadmap
-
-A few features I plan to implement
-- ⬜ Article Pages - Table of Contents
-- ⬜ Article Pages - Share on social media
-
-## ✨ Acknowledgement
-
-Theme inspired by [Paco Coursey](https://paco.me/), [Lee Robinson](https://leerob.io/) and [Hayden Bleasel](https://www.haydenbleasel.com/)
-
-## 🏛️ License
-
-MIT
-
-# 1.0.1 Update
-
-Added ability to run dev and preview on local network.
-added npm run dev:network
-added npm run preview:network
-
-Added slightly more particle density in both light and dark mode.
-
-Added subtle dark mode star and meteor animations.
-
-Removed eslint config
-
+This site is a heavily rewritten fork of the MIT-licensed
+[AstroSphere](https://github.com/markhorn-dev/astro-sphere) template; the original license
+is retained in [`LICENSE`](./LICENSE). Site **content** (posts, images, and writing) is ©
+Sathvik Joel and not covered by that license.

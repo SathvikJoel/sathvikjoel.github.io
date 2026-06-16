@@ -13,11 +13,9 @@ internal reference, **not** part of the published writer handbook (see "The encr
 ## Origin & overall shape
 
 - This site is a **fork of the AstroSphere template**, heavily rewritten into a
-  Maggie-Appleton-style "digital garden." Leftover template files still sit at the repo
-  **root** and are intentionally kept (the root `README.md` references them):
-  `_astrosphere.jpg`, `_deploy_netlify.svg`, `_deploy_vercel.svg`, `_lighthouse.png`.
-  Don't mistake them for site assets — they're documentation images for the template's
-  own README. (Astro ignores files prefixed with `_`, so they are never built.)
+  Maggie-Appleton-style "digital garden." The root `README.md` describes this site (not
+  the template); the original template's promo README and its `_*.jpg/_*.svg/_*.png`
+  images have been removed. The template's MIT `LICENSE` is retained at the root.
 - The previous incarnation of this site was a **Hugo + PaperMod** blog. It still exists
   on the `hugo-old` branch. Any documentation or instinct that mentions Hugo, PaperMod,
   `config.yml`, `layouts/`, `static/`, or Google-Fonts `<link>` tags is **stale** — none
