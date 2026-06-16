@@ -44,6 +44,12 @@ export const TOPICS = [
     BLURB: "Letters from the road — travel, exams, applications, and growing up.",
   },
   {
+    KEY: "fun",
+    LABEL: "Fun",
+    LAYOUT: "column",
+    BLURB: "Off the clock — the random things I think about for the fun of it.",
+  },
+  {
     KEY: "philosophy",
     LABEL: "Philosophy",
     LAYOUT: "masonry",

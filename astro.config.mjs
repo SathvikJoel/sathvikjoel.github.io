@@ -54,6 +54,8 @@ export default defineConfig({
     "/tags": "/",
     "/categories": "/",
     "/about": "/",
+    "/posts/life/12222025_kora": "/posts/fun/12222025_kora",
+    "/posts/life/29052026_greek": "/posts/fun/29052026_greek",
   },
   markdown: {
     remarkPlugins: [remarkMath],

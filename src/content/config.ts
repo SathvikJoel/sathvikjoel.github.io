@@ -11,7 +11,7 @@ const posts = defineCollection({
       required_error: "Every post needs a `description` (SEO + social share previews).",
     }).min(1, "`description` must not be empty — it powers meta description and OG cards."),
     date: z.coerce.date(),
-    topic: z.enum(["tech", "life", "philosophy", "writings"]),
+    topic: z.enum(["tech", "life", "fun", "philosophy", "writings"]),
     tags: z.array(z.string()).default([]),
     // Growth stage — the "stage" axis every post carries (garden metaphor).
     // An unmarked post is treated as a finished, evergreen piece.
