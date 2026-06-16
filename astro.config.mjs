@@ -44,6 +44,17 @@ const hiddenFragments = hiddenPostFragments()
 // https://astro.build/config
 export default defineConfig({
   site: "https://sathvikjoel.github.io",
+  // Legacy URLs from the old Hugo site that Google still has indexed. They 404'd
+  // after the Astro rebuild (a 404 lingers in the index for weeks and can outrank
+  // the homepage), so we forward them to live pages to consolidate ranking signal.
+  // Astro emits a static meta-refresh + canonical page for each on GitHub Pages.
+  redirects: {
+    "/archives": "/",
+    "/archive": "/",
+    "/tags": "/",
+    "/categories": "/",
+    "/about": "/",
+  },
   markdown: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],
