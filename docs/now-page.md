@@ -5,8 +5,9 @@ It's modelled on [Maggie Appleton's /now](https://maggieappleton.com/now) and th
 [nownownow.com](https://nownownow.com/about) movement started by Derek Sivers.
 
 It is **separate from your blog posts**: now updates live in their own collection, so they
-never show up in the garden homepage, the RSS feed, search, or any stream. They live only
-under `/now`.
+stay out of the RSS feed, search, and the sitemap, and they carry no growth stage. They
+*do* appear as tiles on the garden homepage (with a blue clock state icon and a **Now**
+filter option), but their full timeline lives at `/now`.
 
 ## How it's structured
 

@@ -51,9 +51,13 @@ internal reference, **not** part of the published writer handbook (see "The encr
 Schemas live in `src/content/config.ts`. There are **two** collections:
 
 - **`posts`** — the garden. Rich schema (see below).
-- **`now`** — dated "what I'm focused on" snapshots, deliberately kept **separate** so
-  they never appear in the garden, RSS, search, or connections. They live only under
-  `/now`. A `now` entry's `title` is the month label, e.g. `"January 2026"`.
+- **`now`** — dated "what I'm focused on" snapshots. Kept as a **separate collection**
+  (own schema, own `/now` stream page) and kept out of **RSS, search, the sitemap, and
+  connections**. They *do* surface on the **homepage garden** as plain tiles, though:
+  `index.astro` merges `now` entries with `posts` and sorts by date, `PostCard` renders a
+  `now` entry (detected via `entry.collection === "now"`) with a **clock state icon**
+  instead of a growth stage, a `Now` label, and a `/now/<slug>` link, and `Garden` adds a
+  **"Now"** topic facet. A `now` entry's `title` is the month label, e.g. `"January 2026"`.
 
 Key `posts` fields whose behavior isn't obvious from the name:
 

@@ -1,8 +1,9 @@
 ---
 // Custom hand-drawn growth-stage icons (no emoji, no icon library).
 // Sprout → budding plant → leafy tree. Each sways gently when its card is hovered.
+// `now` is a special non-growth state used by "Now" snapshots — a blue clock.
 type Props = {
-  stage: "seedling" | "budding" | "evergreen" | string
+  stage: "seedling" | "budding" | "evergreen" | "now" | string
   class?: string
 }
 const { stage, class: className = "" } = Astro.props
@@ -11,11 +12,13 @@ const tint: Record<string, string> = {
   seedling: "text-sage dark:text-sage-dark",
   budding: "text-gold",
   evergreen: "text-clay dark:text-clay-dark",
+  now: "text-sage dark:text-sage-dark",
 }
 const label: Record<string, string> = {
   seedling: "Seedling",
   budding: "Budding",
   evergreen: "Evergreen",
+  now: "Now",
 }
 ---
 
@@ -53,6 +56,12 @@ const label: Record<string, string> = {
       <path d="M12 3.5C7.4 3.5 5.4 7.3 6.7 10.2 4.9 12.2 6.4 15.4 9.2 14.9 10.2 16.6 13.8 16.6 14.8 14.9 17.6 15.4 19.1 12.2 17.3 10.2 18.6 7.3 16.6 3.5 12 3.5Z" fill="currentColor" fill-opacity="0.12" />
       <path d="M12 8V14" stroke-opacity="0.5" />
       <path d="M9.5 10.5 12 12l2.5-1.5" stroke-opacity="0.5" />
+    </>
+  )}
+  {stage === "now" && (
+    <>
+      <circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity="0.1" />
+      <path d="M12 7.5v4.8l3.4 2" />
     </>
   )}
 </svg>

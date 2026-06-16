@@ -24,6 +24,13 @@ Every stream automatically gets its own page at `/posts/<key>` — for example,
 | **Philosophy** | `/posts/philosophy` | Masonry | Slow thoughts on how to think, live, and pay attention. |
 | **Writings** | `/posts/writings` | List | Short reads — one small idea at a time. |
 
+> **Now is a stream too.** The *Now* page (`/now`) is its own kind of stream — dated
+> "what I'm up to" snapshots rather than posts. Its entries appear as tiles on the
+> homepage and can be filtered with the **Now** option in the stream filter, but they
+> carry **no growth stage** (their state icon is a blue clock instead), and the stream
+> page stays the timeline at `/now`. Now entries live in `src/content/now/` (one file per
+> month) — they are not regular posts and don't take a `topic`.
+
 ## The three stream styles
 
 The **layout** decides how a stream page presents its posts. Three styles are

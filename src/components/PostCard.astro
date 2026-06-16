@@ -4,14 +4,29 @@ import { relativeDate } from "@lib/utils"
 import StageIcon from "@components/StageIcon.astro"
 
 type Props = {
-  entry: CollectionEntry<"posts">
+  entry: CollectionEntry<"posts"> | CollectionEntry<"now">
   column?: boolean
 }
 
 const { entry, column = false } = Astro.props
-const { title, description, date, topic, growthStage, cover, coverAlt, image, imageAlt, tile } = entry.data
-const href = `/posts/${entry.slug}`
-const stage = growthStage
+const isNow = entry.collection === "now"
+
+// "Now" snapshots live in their own collection and lack post fields (topic, stage,
+// covers). They surface in the garden as plain tiles with a clock state icon and link
+// to /now rather than /posts. Every post-only field falls back to a safe default.
+const title = entry.data.title
+const date = entry.data.date
+const description = entry.collection === "posts" ? entry.data.description : undefined
+const topic = entry.collection === "posts" ? entry.data.topic : "now"
+const cover = entry.collection === "posts" ? entry.data.cover : undefined
+const coverAlt = entry.collection === "posts" ? entry.data.coverAlt : undefined
+const image = entry.collection === "posts" ? entry.data.image : undefined
+const imageAlt = entry.collection === "posts" ? entry.data.imageAlt : undefined
+const tile = entry.collection === "posts" ? entry.data.tile : undefined
+const href = isNow ? `/now/${entry.slug}` : `/posts/${entry.slug}`
+// Drives the little state icon + label. Now entries show a clock instead of a growth
+// stage and carry no stage for the stage filter (data-stage stays empty).
+const stage = isNow ? "now" : entry.collection === "posts" ? entry.data.growthStage : "now"
 
 // Resolve the tile style, honouring an explicit `tile` override and falling back
 // gracefully when a forced style has no image to show.
@@ -37,7 +52,7 @@ const framed = hasImage || column
   ]}
   data-card
   data-topic={topic}
-  data-stage={stage}
+  data-stage={isNow ? "" : stage}
 >
   {tileMode === "cover" && cover && (
     <div class="-mx-4 -mt-4 mb-3 overflow-hidden rounded-t-sm aspect-[430/240]">

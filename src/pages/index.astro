@@ -4,9 +4,13 @@ import PageLayout from "@layouts/PageLayout.astro"
 import Garden from "@components/Garden.astro"
 import { SITE } from "@consts"
 
-const all = (await getCollection("posts"))
+const posts = (await getCollection("posts"))
   .filter((p) => !p.data.draft && !p.data.unlisted)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+const nowEntries = (await getCollection("now")).filter((e) => !e.data.draft)
+// "Now" is a stream: its snapshots share the garden grid (and the filter bar) with
+// posts, sorted together by date. They keep their own /now stream page and stay out
+// of RSS/search/sitemap.
+const all = [...posts, ...nowEntries].sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 ---
 
 <PageLayout title="JoeLogs — The digital garden of Sathvik Joel" description={SITE.DESCRIPTION} bareTitle>

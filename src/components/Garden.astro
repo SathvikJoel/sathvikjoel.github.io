@@ -4,25 +4,30 @@ import PostCard from "@components/PostCard.astro"
 import { TOPICS } from "@consts"
 
 type Props = {
-  posts: CollectionEntry<"posts">[]
+  posts: (CollectionEntry<"posts"> | CollectionEntry<"now">)[]
   showFilters?: boolean
   single?: boolean
 }
 
 const { posts, showFilters = true, single = false } = Astro.props
 
-const count = (pred: (p: CollectionEntry<"posts">) => boolean) => posts.filter(pred).length
+const count = (pred: (p: CollectionEntry<"posts"> | CollectionEntry<"now">) => boolean) =>
+  posts.filter(pred).length
 
-const topicFacets = TOPICS.map((t) => ({
-  value: t.KEY,
-  label: t.LABEL,
-  n: count((p) => p.data.topic === t.KEY),
-}))
+const topicFacets = [
+  ...TOPICS.map((t) => ({
+    value: t.KEY,
+    label: t.LABEL,
+    n: count((p) => p.collection === "posts" && p.data.topic === t.KEY),
+  })),
+  // "Now" is a stream too — its snapshots live in the `now` collection (no topic field).
+  { value: "now", label: "Now", n: count((p) => p.collection === "now") },
+]
 
 const stageFacets = [
-  { value: "seedling", label: "Seedling", n: count((p) => p.data.growthStage === "seedling") },
-  { value: "budding", label: "Budding", n: count((p) => p.data.growthStage === "budding") },
-  { value: "evergreen", label: "Evergreen", n: count((p) => p.data.growthStage === "evergreen") },
+  { value: "seedling", label: "Seedling", n: count((p) => p.collection === "posts" && p.data.growthStage === "seedling") },
+  { value: "budding", label: "Budding", n: count((p) => p.collection === "posts" && p.data.growthStage === "budding") },
+  { value: "evergreen", label: "Evergreen", n: count((p) => p.collection === "posts" && p.data.growthStage === "evergreen") },
 ]
 
 const groups = [
