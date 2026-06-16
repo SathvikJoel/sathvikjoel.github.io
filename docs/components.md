@@ -182,91 +182,28 @@ its own or nested inside a `Card`.
 
 ## Annotated talks
 
-### Scroll-synced presentation
-
 Turn a slide deck into an *annotated talk*: on a wide screen the slides stay pinned on one
 side while your notes scroll past on the other, crossfading to the matching slide. On a
 phone each slide simply sits above its note. Native scroll + a tiny script — nothing to
 configure, and it respects reduced-motion settings.
 
-Export your slides as images into `public/posts/<topic>/<slug>/slides/`, then wrap one
-`Slide` per slide inside `ScrollSlides`. Each `Slide` carries its image and the running
-notes beside it.
-
 ```mdx
 <ScrollSlides>
-  <Slide image="/posts/tech/my-talk/slides/01.png" alt="Title slide">
+  <Slide image="/posts/tech/my-talk/slides/slide-01.png" alt="Title slide">
     What I said while this slide was up. **Markdown works here.**
   </Slide>
-  <Slide image="/posts/tech/my-talk/slides/02.png" alt="The problem">
+  <Slide image="/posts/tech/my-talk/slides/slide-02.png" alt="The problem">
     The notes for the second slide…
   </Slide>
 </ScrollSlides>
 ```
 
-Pass `slidesOn="right"` to pin the deck on the right instead of the left. There's a live
-example in the **"Exposing Weak Links in Multi-Agent Systems"** post in the Tech stream.
+Pass `slidesOn="right"` to pin the deck on the right instead of the left.
 
-### From a PDF deck + notes to an annotated talk
-
-This is the repeatable recipe for turning a slides PDF and a notes file into the post
-above. You only need two inputs: the **deck as a PDF** and your **per-slide notes**.
-
-**1. Make the post folder.** Follow the usual `DDMMYYYY_shortname` convention:
-
-```
-src/content/posts/<topic>/<DDMMYYYY_shortname>/index.mdx   ← the post
-public/posts/<topic>/<DDMMYYYY_shortname>/                 ← the assets
-```
-
-**2. Drop your inputs** into the public asset folder, e.g.:
-
-```
-public/posts/tech/15062026_weaklinks/talk.pdf
-public/posts/tech/15062026_weaklinks/notes.txt
-```
-
-Write `notes.txt` with **one block per slide, in order**. A simple `Slide N: <heading>`
-line followed by the spoken notes works well — the heading becomes the slide's `alt`
-text and the rest becomes the scrolling note.
-
-**3. Export the PDF pages to images** with `pdftoppm` (from poppler-utils, already
-available in this repo's tooling). Run from the asset folder:
-
-```bash
-cd public/posts/tech/15062026_weaklinks
-pdftoppm -png -r 200 talk.pdf slides/slide      # -> slides/slide-1.png, slide-2.png, …
-# zero-pad single digits so they sort correctly:
-cd slides && for f in slide-?.png; do mv "$f" "$(echo "$f" | sed -E 's/slide-([0-9])\.png/slide-0\1.png/')"; done
-```
-
-`-r 200` is a good resolution for crisp 16:9 slides. The images land in a `slides/`
-subfolder named `slide-01.png`, `slide-02.png`, ….
-
-**4. Write the post.** Add the front matter, an intro paragraph or two for context, then
-one `<Slide>` per page — pairing each `slide-0N.png` with that slide's note from your
-notes file:
-
-```mdx
-<ScrollSlides>
-  <Slide image="/posts/tech/15062026_weaklinks/slides/slide-01.png" alt="Title slide">
-    The notes you spoke over slide one. **Markdown** and lists work here.
-  </Slide>
-  <Slide image="/posts/tech/15062026_weaklinks/slides/slide-02.png" alt="The problem">
-    …and so on, one Slide per page.
-  </Slide>
-</ScrollSlides>
-
-You can also [download the full deck (PDF)](/posts/tech/15062026_weaklinks/talk.pdf).
-```
-
-**5. Preview and ship.** Run the dev server (or `npm run build`) and check the post: the
-deck should pin and crossfade as the notes scroll. Keeping `talk.pdf` in the folder gives
-readers a downloadable copy; `notes.txt` can stay as a source reference or be removed.
-
-> **Tip:** the slide count and note count must match — one `<Slide>` per PDF page. If a
-> page has no commentary, give it a short caption anyway so the crossfade has something to
-> show.
+For the **full recipe** — folder layout, the exact `pdftoppm` command to convert a PDF deck
+into slide images, front matter (cover + pushpin stage icon), and shipping — see the
+dedicated [Annotated talks](./annotated-talks.md) page. There's a live example in the
+**"Using Agents and Skills"** post in the Tech stream.
 
 ---
 

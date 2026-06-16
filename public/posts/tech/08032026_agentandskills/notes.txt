@@ -1,0 +1,65 @@
+**Slide 1**
+We’re kicking off by outlining the transition from manual coding to fully agent-driven workflows, specifically tailored for our research environments.
+
+**Slide 2**
+Starting with the "Why" by looking at extreme industry examples; it's crucial to understand that 100% automated code generation is already a reality for some developers.
+
+**Slide 3**
+Moving from individual anecdotes to team-scale evidence, highlighting that zero human-written code is actively hitting production environments, not just acting as a prototype.
+
+**Slide 4**
+Now we pivot from standard software engineering to automated AI research loops, demonstrating how agents can independently iterate on training scripts and hyperparameters.
+
+**Slide 5**
+Transitioning from industry benchmarks to our ground-level reality, setting up the practical roadmap for how we adopt these tools individually and as a unified team.
+
+**Slide 6**
+Sharing my initial friction points with early CLI agents; a look at the limitations of rate limits and interface constraints before optimizing the workflow.
+
+**Slide 7**
+The core psychological shift: stepping back from the keyboard to act as a reviewer and orchestrator, which is essential for scaling up to multiple parallel sessions.
+
+**Slide 8**
+A look at the brittleness of our old manual pipelines, specifically the heavy cognitive load of tracking complex CLI arguments for model inference tasks.
+
+**Slide 9**
+Contrasting the old way with agent-generated scripts; demonstrating how delegating the boilerplate results in highly structured, reproducible baselines for our training and evaluation runs.
+
+**Slide 10**
+A critical paradigm shift for the team: our primary human value is moving away from writing syntax toward system design and documenting our knowledge.
+
+**Slide 11**
+Pivoting to the live terminal demo, where we break down the exact tmux setups and CLI strategies needed to comfortably multiplex these tools.
+
+**Slide 12**
+Addressing the operational overhead of running persistent agents; without strict naming conventions and bookkeeping, the cognitive load simply shifts from coding to agent management.
+
+**Slide 13**
+Introducing the necessity of git worktrees; isolating agent tasks is non-negotiable to prevent catastrophic state collisions across our repository.
+
+**Slide 14**
+*(Continued emphasis on worktrees)* Reinforcing that healthy, isolated git hygiene is the backbone of parallel agent execution.
+
+**Slide 15**
+Shifting focus to "Skills"—the mechanism we use to inject domain-specific logic and context without overflowing the agent's active memory window.
+
+**Slide 16**
+Covering the technical mechanics of skill deployment, distinguishing between repository-level skills for the team and local profile skills for personal use.
+
+**Slide 17**
+Walking through a concrete example with an evaluation skill, highlighting how to manage state persistence when an agent inevitably needs to context-switch or time out.
+
+**Slide 18**
+Emphasizing that skills are living infrastructure; the long-term goal is to have the agents themselves refine and expand these tools autonomously.
+
+**Slide 19**
+Moving from active capabilities (skills) to passive guardrails (custom instructions), ensuring the AI respects our specific repo architectures and coding conventions by default.
+
+**Slide 20**
+A warning against prompt pollution; detailing how to use scoping parameters to apply specific instructions only where they are actually needed.
+
+**Slide 21**
+Wrapping up with the central thesis: by treating our agent instructions and skills as shared infrastructure, we compound our research velocity as a team.
+
+**Slide 22**
+Opening the floor for discussion and troubleshooting terminal setups.

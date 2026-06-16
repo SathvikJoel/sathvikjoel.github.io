@@ -27,7 +27,9 @@ Read these in order if you're new, or jump straight to what you need:
    illustrated tiles.
 4. **[Writing toolkit](./components.md)** — the special building blocks you can drop
    into a post: sidenotes, pull quotes, image grids, callouts, and more.
-5. **[The Now page](./now-page.md)** — how the `/now` page works and how to add a new
+5. **[Annotated talks](./annotated-talks.md)** — turn a slide deck (PDF) + notes into a
+   scroll-synced talk post, including the exact PDF-to-images command.
+6. **[The Now page](./now-page.md)** — how the `/now` page works and how to add a new
    dated *now* update.
 
 ## The 30-second version

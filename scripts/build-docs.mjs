@@ -28,6 +28,7 @@ const MANIFEST = [
   { file: "writing-posts.md", slug: "writing-posts", label: "Writing a post" },
   { file: "covers-and-images.md", slug: "covers-and-images", label: "Covers & images" },
   { file: "components.md", slug: "components", label: "Writing toolkit" },
+  { file: "annotated-talks.md", slug: "annotated-talks", label: "Annotated talks" },
 ]
 
 // Map a source filename (as used in intra-doc links) to its slug, so we can rewrite
