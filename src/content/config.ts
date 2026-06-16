@@ -69,6 +69,9 @@ const now = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
+    // Optional one-liner shown ONLY on the homepage tile (not on the /now page).
+    // Lets a Now snapshot read well in the garden grid without changing the page.
+    description: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 })

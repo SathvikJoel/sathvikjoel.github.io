@@ -16,7 +16,7 @@ const isNow = entry.collection === "now"
 // to /now rather than /posts. Every post-only field falls back to a safe default.
 const title = entry.data.title
 const date = entry.data.date
-const description = entry.collection === "posts" ? entry.data.description : undefined
+const description = entry.data.description
 const topic = entry.collection === "posts" ? entry.data.topic : "now"
 const cover = entry.collection === "posts" ? entry.data.cover : undefined
 const coverAlt = entry.collection === "posts" ? entry.data.coverAlt : undefined

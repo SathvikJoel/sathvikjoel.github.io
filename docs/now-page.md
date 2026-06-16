@@ -42,6 +42,7 @@ Whatever you like — these pages support the same components as blog posts
 | --- | --- | --- |
 | `title` | yes | The month label, e.g. `"June 2026"`. Shown as the heading / timeline node. |
 | `date` | yes | Sorts updates (newest at the top of the timeline). **Use the `+05:30` IST offset** (the build drops future-dated entries — same rule as posts). |
+| `description` | no | A one-line summary shown **only on the homepage tile** (Now updates surface in the garden grid). It is *not* shown on the `/now` page itself — that page keeps its own generic meta. Handy so the tile reads well. |
 | `draft` | no | Set `true` to keep an update out of the build while you write it. |
 
 The newest `date` sits at the top of the timeline; everything else stacks below it in
