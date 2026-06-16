@@ -1,6 +1,6 @@
 ---
 title: "Microsoft Python Programming Interview Question"
-description: ""
+description: "A Microsoft research-fellow interview question that hinges on Python generators — the concepts you need and a worked solution."
 date: 2024-04-10T11:30:03.000Z
 topic: tech
 topGlow: false

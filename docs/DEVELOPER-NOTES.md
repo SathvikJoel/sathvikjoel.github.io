@@ -73,15 +73,35 @@ Key `posts` fields whose behavior isn't obvious from the name:
   Writing toolkit, linked only from the private `/docs`).
 - **CRITICAL:** `getStaticPaths` in `src/pages/posts/[topic]/[slug].astro` maps **every**
   post to a page — it does **not** filter `draft` or `unlisted`. Astro content collections
-  don't auto-exclude drafts either. So **a draft post still builds a fully public page at
-  its URL**; `draft`/`unlisted` only remove it from *listings*. Don't assume a draft is
-  private — it isn't, if someone has the link.
-- **The visibility filter is duplicated inline in every listing surface**, not centralized.
+  don't auto-exclude drafts either. So **a draft post still builds a page at its URL**;
+  `draft`/`unlisted` only remove it from *listings*. Don't assume a draft is fully private —
+  the HTML exists if someone has the link.
+- **Search engines are kept out, though:** draft/unlisted post pages emit
+  `<meta name="robots" content="noindex, nofollow">` (via `noindex={draft || unlisted}`
+  threaded `[slug].astro` → `PageLayout` → `BaseHead`), and their URLs are **excluded from
+  `sitemap-0.xml`**. The sitemap exclusion lives in `astro.config.mjs`: `hiddenPostFragments()`
+  reads every post's frontmatter with `gray-matter` at config load and drops any `draft`/`unlisted`
+  slug from the sitemap `filter`. (The `filter` only gets a URL string, so it can't see post data —
+  hence the separate frontmatter read. Keep this in sync if you change how visibility works.)
+- **The listing visibility filter is duplicated inline in every listing surface**, not centralized.
   Grep shows it in `index.astro`, `posts/[topic]/index.astro`, `rss.xml.ts`,
   `search/index.astro` (all `!draft && !unlisted`), and the slug page's `allPosts`
   (`!unlisted` only, for connections). **If you add a new page that lists posts, you must
   re-add this filter yourself** — there is no shared `getVisiblePosts()` helper. This is
   the single easiest thing to forget.
+
+## Front-matter guards enforced at build time
+
+The build fails loudly (rather than shipping broken output) on these:
+
+- **`description` is required + non-empty** (`src/content/config.ts`). It powers the
+  `<meta name="description">`, the OG/Twitter card, and search snippets, so an empty one used
+  to ship silently. Adding a post without one now fails `astro check`/build.
+- **Post folder depth + topic match** (`getStaticPaths` in `[slug].astro`). A post must live
+  exactly one level deep — `posts/<topic>/<folder>/index.md(x)` → slug `<topic>/<folder>` — and
+  its frontmatter `topic` **must equal** its `<topic>` folder. The slug is split into exactly two
+  segments to build the URL; a deeper folder or a folder/`topic` mismatch would silently route to
+  the wrong address, so both now `throw` during the build.
 
 ## Streams (`TOPICS`) coupling
 
@@ -173,6 +193,23 @@ Discord / iMessage always render a large, branded preview at the exact size plat
   static `public/open-graph.jpg` (also 1200×630).
 - Topic → accent colour for title cards lives in the `ACCENT` map in `build-og.mjs`
   (tech=sage, life=gold, philosophy=purple, writings=clay).
+
+### Per-page metadata type: og:type, article meta, JSON-LD
+
+`BaseHead.astro` is the single source of head metadata, with a few props threaded through
+`PageLayout`:
+
+- **`type`** (`"website"` default | `"article"`) controls `og:type`. `[slug].astro` passes
+  `type="article"`; everything else stays `"website"`. On articles, `BaseHead` also emits
+  `article:published_time` / `article:modified_time` (from the post `date` / `lastTended`) and
+  one `article:tag` per tag.
+- **`noindex`** → `<meta name="robots" content="noindex, nofollow">` (see the draft/unlisted note above).
+- **JSON-LD** is built **inside `BaseHead`**, not passed in: a site-wide `@graph` of `WebSite` +
+  `Person` (author + `SOCIALS` as `sameAs`), and on articles an extra `BlogPosting` node
+  (headline, dates, `image` = the OG card, `keywords`, author/publisher `@id` references). The
+  page never constructs schema objects — just set `type="article"` and pass the timestamps/keywords.
+  `headline` is derived by stripping the `| JoeLogs` suffix from the `<title>`, so don't pass a
+  separate bare title.
 
 ## The encrypted `/docs` system
 

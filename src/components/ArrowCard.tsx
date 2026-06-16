@@ -1,8 +1,8 @@
 import { relativeDate, truncateText } from "@lib/utils"
-import type { CollectionEntry } from "astro:content"
+import type { SearchItem } from "@components/Search"
 
 type Props = {
-  entry: CollectionEntry<"posts">
+  entry: SearchItem
   pill?: boolean
 }
 

@@ -3,7 +3,7 @@ import { type CollectionEntry, getCollection } from "astro:content"
 import PageLayout from "@layouts/PageLayout.astro"
 import TopLayout from "@layouts/TopLayout.astro"
 import BottomLayout from "@layouts/BottomLayout.astro"
-import { formatDate, relativeDate, readingTime } from "@lib/utils"
+import { relativeDate, readingTime } from "@lib/utils"
 import Connections from "@components/Connections.astro"
 import { mdxComponents } from "@components/mdx/registry"
 import StageIcon from "@components/StageIcon.astro"
@@ -12,14 +12,30 @@ import TableOfContents from "@components/TableOfContents.astro"
 export async function getStaticPaths() {
   const posts = await getCollection("posts")
   return posts.map((post) => {
-    const [topic, slug] = post.slug.split("/")
+    const parts = post.slug.split("/")
+    // Convention guard: posts must live exactly one folder deep under a topic,
+    // i.e. src/content/posts/<topic>/<folder>/index.mdx → slug "<topic>/<folder>".
+    // Anything else would silently route to the wrong URL, so fail the build loudly.
+    if (parts.length !== 2) {
+      throw new Error(
+        `Post "${post.slug}" must live at posts/<topic>/<folder>/index.mdx ` +
+          `(slug "<topic>/<folder>"), but its slug has ${parts.length} segment(s).`
+      )
+    }
+    const [topic, slug] = parts
+    if (topic !== post.data.topic) {
+      throw new Error(
+        `Post "${post.slug}" sits in the "${topic}" folder but has frontmatter ` +
+          `topic "${post.data.topic}". The folder and the topic field must match.`
+      )
+    }
     return { params: { topic, slug }, props: post }
   })
 }
 
 type Props = CollectionEntry<"posts">
 const post = Astro.props
-const { title, description, date, topic, growthStage, lastTended, tags, width, dropCap, topGlow, coverAlt, imageAlt, ogImageAlt } = post.data
+const { title, description, date, topic, growthStage, lastTended, tags, width, dropCap, topGlow, coverAlt, imageAlt, ogImageAlt, draft, unlisted } = post.data
 const { Content, headings } = await post.render()
 
 // All posts (used by Connections for backlinks). Unlisted posts are excluded so
@@ -35,7 +51,7 @@ const ogImage = `/og/${post.slug}.jpg`
 const ogAlt = ogImageAlt || coverAlt || imageAlt || `${title} — JoeLogs`
 ---
 
-<PageLayout title={title} description={description} topGradient={topGlow} image={ogImage} imageAlt={ogAlt}>
+<PageLayout title={title} description={description} topGradient={topGlow} image={ogImage} imageAlt={ogAlt} noindex={draft || unlisted} type="article" publishedTime={date.toISOString()} modifiedTime={lastTended ? lastTended.toISOString() : undefined} keywords={tags}>
   <TopLayout>
     <div class:list={["animate", width === "wide" && "wide-col"]}>
       <a href={`/posts/${topic}`} class="breadcrumb-stream group" aria-label={`Back to the ${topic} stream`}>

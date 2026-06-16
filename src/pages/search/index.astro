@@ -1,14 +1,25 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content";
+import { getCollection } from "astro:content";
 import PageLayout from "@layouts/PageLayout.astro";
 import TopLayout from "@layouts/TopLayout.astro";
 import BottomLayout from "@layouts/BottomLayout.astro";
 import Search from "@components/Search";
+import type { SearchItem } from "@components/Search";
 import { SEARCH } from "@consts";
 
 const posts = (await getCollection("posts")).filter((post) => !post.data.draft && !post.data.unlisted);
 
-const data = posts as CollectionEntry<"posts">[];
+// Only hand the search island the fields it indexes/renders — never the raw body.
+const data: SearchItem[] = posts.map((post) => ({
+  slug: post.slug,
+  data: {
+    title: post.data.title,
+    description: post.data.description,
+    tags: post.data.tags,
+    topic: post.data.topic,
+    date: post.data.date,
+  },
+}));
 ---
 
 <PageLayout title={SEARCH.TITLE} description={SEARCH.DESCRIPTION}>

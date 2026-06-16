@@ -6,9 +6,40 @@ import solidJs from "@astrojs/solid-js"
 import remarkMath from "remark-math"
 import rehypeKatex from "rehype-katex"
 import expressiveCode from "astro-expressive-code"
+import { readdirSync, readFileSync } from "node:fs"
+import { join, relative } from "node:path"
+import matter from "gray-matter"
 
 const monoFont =
   '"JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace'
+
+// Walk src/content/posts and collect the URL fragments of every draft/unlisted
+// post so the sitemap integration can drop them. We read frontmatter directly
+// (the sitemap `filter` only receives a URL string, not the post data) so the
+// exclusion stays in sync with the content instead of a hardcoded list.
+function hiddenPostFragments() {
+  const root = "src/content/posts"
+  const fragments = []
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name)
+      if (entry.isDirectory()) {
+        walk(full)
+      } else if (entry.name === "index.md" || entry.name === "index.mdx") {
+        const { data } = matter(readFileSync(full, "utf8"))
+        if (data.draft || data.unlisted) {
+          // slug = folder path relative to the posts root, e.g. "tech/12032024_forest"
+          const slug = relative(root, dir).split(/[\\/]/).join("/")
+          fragments.push(`/posts/${slug}`)
+        }
+      }
+    }
+  }
+  walk(root)
+  return fragments
+}
+
+const hiddenFragments = hiddenPostFragments()
 
 // https://astro.build/config
 export default defineConfig({
@@ -44,9 +75,12 @@ export default defineConfig({
     }),
     mdx(),
     sitemap({
-      // Keep unlisted/private pages out of the public sitemap so search engines
-      // don't index them. The toolkit is reachable only via the /docs handbook.
-      filter: (page) => !page.includes("/posts/tech/toolkit"),
+      // Keep draft/unlisted/private pages out of the public sitemap so search
+      // engines don't index them. Draft + unlisted post URLs are derived from
+      // frontmatter above; the toolkit is reachable only via the /docs handbook.
+      filter: (page) =>
+        !page.includes("/posts/tech/toolkit") &&
+        !hiddenFragments.some((fragment) => page.includes(fragment)),
     }),
     solidJs(),
     tailwind({ applyBaseStyles: false }),

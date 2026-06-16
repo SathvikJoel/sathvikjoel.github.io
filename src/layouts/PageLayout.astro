@@ -14,14 +14,14 @@ import BaseHead from "@components/BaseHead.astro"
 import Header from "@components/Header.astro"
 import Footer from "@components/Footer.astro"
 import Drawer from "@components/Drawer.astro"
-const { title, description, topGradient = false, image, imageAlt, bareTitle = false } = Astro.props
+const { title, description, topGradient = false, image, imageAlt, bareTitle = false, noindex = false, type = "website", publishedTime, modifiedTime, keywords } = Astro.props
 import { SITE } from "@consts"
 ---
 
 <!doctype html>
 <html lang="en" class="dark">
   <head>
-    <BaseHead title={bareTitle ? title : `${title} | ${SITE.TITLE}`} description={description} image={image} imageAlt={imageAlt} />
+    <BaseHead title={bareTitle ? title : `${title} | ${SITE.TITLE}`} description={description} image={image} imageAlt={imageAlt} noindex={noindex} type={type} publishedTime={publishedTime} modifiedTime={modifiedTime} keywords={keywords} />
   </head>
   <body>
     <Header />

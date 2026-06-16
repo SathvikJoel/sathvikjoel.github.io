@@ -4,13 +4,24 @@ import Fuse from "fuse.js"
 import ArrowCard from "@components/ArrowCard"
 import SearchBar from "@components/SearchBar"
 
+// Slim projection of a post — only the fields the search island actually needs.
+// Sending full CollectionEntry objects would ship every post's raw `body` to the
+// browser (hundreds of KB of Markdown the client never uses).
+export type SearchItem = {
+  slug: string
+  data: Pick<
+    CollectionEntry<"posts">["data"],
+    "title" | "description" | "tags" | "topic" | "date"
+  >
+}
+
 type Props = {
-  data: CollectionEntry<"posts">[]
+  data: SearchItem[]
 }
 
 export default function Search({ data }: Props) {
   const [query, setQuery] = createSignal("")
-  const [results, setResults] = createSignal<CollectionEntry<"posts">[]>([])
+  const [results, setResults] = createSignal<SearchItem[]>([])
 
   const fuse = new Fuse(data, {
     keys: ["slug", "data.title", "data.description", "data.tags"],

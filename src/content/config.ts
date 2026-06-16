@@ -4,7 +4,12 @@ const posts = defineCollection({
   type: "content",
   schema: z.object({
     title: z.string(),
-    description: z.string().default(""),
+    // Required: powers the <meta description>, OG/Twitter share cards, and search
+    // snippets. A missing/empty one used to silently ship an empty meta tag, so the
+    // schema now fails the build instead. Keep it ~50–160 chars.
+    description: z.string({
+      required_error: "Every post needs a `description` (SEO + social share previews).",
+    }).min(1, "`description` must not be empty — it powers meta description and OG cards."),
     date: z.coerce.date(),
     topic: z.enum(["tech", "life", "philosophy", "writings"]),
     tags: z.array(z.string()).default([]),

@@ -46,10 +46,26 @@ export function relativeDate(date: Date, now: Date = new Date()): string {
   return `${d} day${d === 1 ? "" : "s"} ago`
 }
 
-export function readingTime(html: string) {
-  const textOnly = html.replace(/<[^>]+>/g, "")
-  const wordCount = textOnly.split(/\s+/).length
-  const readingTimeMinutes = ((wordCount / 200) + 1).toFixed()
+// Estimate reading time from a post's raw MDX source. The body is Markdown/MDX,
+// not HTML, so we strip the things that aren't prose the reader actually reads:
+// code fences, inline code, JSX/HTML tags, MDX import/export lines, and Markdown
+// punctuation. Counting those (especially fenced code and component markup) would
+// badly inflate the word count.
+export function readingTime(markdown: string) {
+  const prose = markdown
+    .replace(/^---\n[\s\S]*?\n---/, "")        // frontmatter (defensive)
+    .replace(/```[\s\S]*?```/g, "")             // fenced code blocks
+    .replace(/`[^`]*`/g, "")                    // inline code
+    .replace(/^(?:import|export)\s.*$/gm, "")  // MDX import/export statements
+    .replace(/<[^>]+>/g, " ")                   // JSX / HTML tags
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")       // images
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")   // links → keep the link text
+    .replace(/[#>*_~`|=-]/g, " ")               // Markdown punctuation
+    .replace(/\$\$[\s\S]*?\$\$/g, "")           // block math
+    .replace(/\$[^$]*\$/g, "")                  // inline math
+
+  const wordCount = prose.split(/\s+/).filter(Boolean).length
+  const readingTimeMinutes = Math.max(1, Math.round(wordCount / 200))
   return `${readingTimeMinutes} min read`
 }
 

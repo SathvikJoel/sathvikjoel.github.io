@@ -31,6 +31,13 @@ mirrors that path — `/posts/life/my-trip/cover.png`. See
   [Writing toolkit](./components.md). (`.mdx` is just Markdown that also understands
   those blocks.)
 
+> **One folder deep, always.** A post must live at exactly
+> `src/content/posts/<stream>/<post-name>/index.md(x)` — one stream folder, then one
+> post folder, then the file. Don't nest a post inside extra sub-folders: the post URL
+> is built from that `<stream>/<post-name>` path, so a deeper folder would route to the
+> wrong address. The build **fails loudly** if a post isn't exactly one level deep, or
+> if its `topic` doesn't match its `<stream>` folder.
+
 ## The front matter
 
 The settings block is written between two lines of `---` at the very top of the file:
@@ -52,8 +59,8 @@ growthStage: evergreen
 | --- | --- | --- |
 | `title` | **Yes** | The headline of the post. |
 | `date` | **Yes** | When it was published. Controls ordering and the "x ago" label. |
-| `topic` | **Yes** | Which [stream](./streams.md) the post belongs to. |
-| `description` | Optional | A one-line summary shown under the title, on tiles, and in search/social previews. |
+| `topic` | **Yes** | Which [stream](./streams.md) the post belongs to. **Must match the post's folder** (a post in `posts/life/...` must have `topic: life`) — the build fails if they disagree. |
+| `description` | **Yes** | A one-line summary shown under the title, on tiles, and in search/social previews. Required: it powers the SEO meta description and the OG/Twitter share card, so the build **fails** if it's missing or empty. Aim for ~50–160 characters. |
 | `tags` | Optional | Labels for cross-cutting themes. They don't make pages, just describe the post. |
 | `growthStage` | Optional | The post's maturity: `seedling`, `budding`, or `evergreen`. Defaults to `evergreen` (see below). |
 | `lastTended` | Optional | The date you last revised the post; shown as "last tended …". |
