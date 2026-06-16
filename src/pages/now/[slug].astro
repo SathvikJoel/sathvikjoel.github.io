@@ -142,6 +142,12 @@ const { Content } = await entry.render()
   .now-main .prose-post > :global(:first-child) {
     margin-top: 0;
   }
+  /* The global `article` rule centres the prose (margin-inline: auto) inside its box.
+     In this two-column layout that pushes the body ~1.75rem right of the title, which
+     fills the column from the left. Left-align the prose so its edge matches the title. */
+  .now-main .prose-post {
+    margin-inline: 0;
+  }
   .now-pager {
     display: flex;
     justify-content: space-between;
