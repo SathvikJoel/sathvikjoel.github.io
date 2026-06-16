@@ -65,6 +65,7 @@ Key `posts` fields whose behavior isn't obvious from the name:
 | --- | --- |
 | `topic` | A `z.enum(["tech","life","fun","philosophy","writings"])`. **Must stay in lockstep with `TOPICS` in `src/consts.ts`** — the streams are derived from `TOPICS`, but the schema enum is a separate hardcoded list. Adding a stream means editing **both**. |
 | `growthStage` | `seedling` / `budding` / `evergreen`, default **`evergreen`** (an unmarked post is treated as finished). Drives the stage icon/word. |
+| `stageIcon` | Optional path (e.g. `/icons/comet.svg`) that overrides the **displayed** stage glyph only — stage name, label, filtering, and ordering are untouched. `StageIcon.astro` renders an `<img src>` (no `currentColor` tint, so the file supplies its own colour) instead of the built-in inline SVG. Threaded through every `StageIcon` call site (PostCard ×2, Connections, breadcrumb in `posts/[topic]/[slug].astro`, StreamFeed). Custom icons live in **`public/icons/`** (SVG preferred, transparent PNG ok). |
 | `width` | `"wide"` adds the `.wide-col` class on the article, widening the column for code-heavy posts. Pure presentation. |
 | `tile` + `cover` + `image` | The homepage tile style is **resolved in `PostCard.astro`**, not the schema. `tile: auto` → cover banner if `cover` set, else square `image`, else plain text. A forced style with a missing picture falls back gracefully. See `covers-and-images.md`. |
 | `draft` vs `unlisted` | **Different meanings — see next section.** |

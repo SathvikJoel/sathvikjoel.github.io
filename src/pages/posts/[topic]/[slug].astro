@@ -35,7 +35,7 @@ export async function getStaticPaths() {
 
 type Props = CollectionEntry<"posts">
 const post = Astro.props
-const { title, description, date, topic, growthStage, lastTended, tags, width, dropCap, topGlow, coverAlt, imageAlt, ogImageAlt, draft, unlisted } = post.data
+const { title, description, date, topic, growthStage, stageIcon, lastTended, tags, width, dropCap, topGlow, coverAlt, imageAlt, ogImageAlt, draft, unlisted } = post.data
 const { Content, headings } = await post.render()
 
 // All posts (used by Connections for backlinks). Unlisted posts are excluded so
@@ -59,7 +59,7 @@ const ogAlt = ogImageAlt || coverAlt || imageAlt || `${title} — JoeLogs`
           <path d="M16 10H4m5-5l-5 5 5 5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
         <span class="bc-stream">{topic}</span>
-        <StageIcon stage={breadcrumbStage} class="size-4 mx-2" />
+        <StageIcon stage={breadcrumbStage} src={stageIcon} class="size-4 mx-2" />
         <span class="bc-stage">{growthStage}</span>
       </a>
       <h1 class="font-display text-4xl sm:text-5xl font-light text-black dark:text-white mt-6 leading-tight">

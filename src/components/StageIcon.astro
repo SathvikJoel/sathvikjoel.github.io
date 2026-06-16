@@ -2,11 +2,14 @@
 // Custom hand-drawn growth-stage icons (no emoji, no icon library).
 // Sprout → budding plant → leafy tree. Each sways gently when its card is hovered.
 // `now` is a special non-growth state used by "Now" snapshots — a blue clock.
+// Pass `src` (a path to an SVG/PNG in /public) to override the built-in glyph with a
+// custom image; the stage name/label is unchanged, only the picture differs.
 type Props = {
   stage: "seedling" | "budding" | "evergreen" | "now" | string
+  src?: string
   class?: string
 }
-const { stage, class: className = "" } = Astro.props
+const { stage, src, class: className = "" } = Astro.props
 
 const tint: Record<string, string> = {
   seedling: "text-sage dark:text-sage-dark",
@@ -22,6 +25,15 @@ const label: Record<string, string> = {
 }
 ---
 
+{src ? (
+  <img
+    src={src}
+    alt={`${label[stage] ?? stage} stage`}
+    loading="lazy"
+    decoding="async"
+    class:list={["stage-icon origin-bottom group-hover:animate-sway object-contain", className]}
+  />
+) : (
 <svg
   viewBox="0 0 24 24"
   fill="none"
@@ -65,6 +77,7 @@ const label: Record<string, string> = {
     </>
   )}
 </svg>
+)}
 
 <style>
   .stage-icon {

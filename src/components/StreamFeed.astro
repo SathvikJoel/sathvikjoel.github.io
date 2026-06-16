@@ -22,7 +22,7 @@ const rendered = await Promise.all(
       <header class="mb-4">
         <div class="flex items-center gap-2 font-sans text-[0.72rem] uppercase tracking-wide opacity-55">
           <time class="normal-case">{relativeDate(post.data.date)}</time>
-          <StageIcon stage={post.data.growthStage} class="size-4" />
+          <StageIcon stage={post.data.growthStage} src={post.data.stageIcon} class="size-4" />
         </div>
         <h2 class="font-display text-2xl sm:text-3xl leading-tight mt-1 text-black dark:text-white">
           <a href={`/posts/${post.slug}`} class="hover:text-crimson dark:hover:text-crimson-dark transition-colors">{post.data.title}</a>

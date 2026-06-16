@@ -23,6 +23,7 @@ const coverAlt = entry.collection === "posts" ? entry.data.coverAlt : undefined
 const image = entry.collection === "posts" ? entry.data.image : undefined
 const imageAlt = entry.collection === "posts" ? entry.data.imageAlt : undefined
 const tile = entry.collection === "posts" ? entry.data.tile : undefined
+const stageIcon = entry.collection === "posts" ? entry.data.stageIcon : undefined
 const href = isNow ? `/now/${entry.slug}` : `/posts/${entry.slug}`
 // Drives the little state icon + label. Now entries show a clock instead of a growth
 // stage and carry no stage for the stage filter (data-stage stays empty).
@@ -85,7 +86,7 @@ const framed = hasImage || column
           <>
             <span class="capitalize">{topic}</span>
             <span class="opacity-40">·</span>
-            <StageIcon stage={stage} class="size-4 shrink-0" />
+            <StageIcon stage={stage} src={stageIcon} class="size-4 shrink-0" />
             <span class="normal-case">{relativeDate(date)}</span>
           </>
         )}
@@ -93,7 +94,7 @@ const framed = hasImage || column
     </div>
   ) : (
     <div class="flex items-start gap-3">
-      <StageIcon stage={stage} class="size-7 shrink-0 mt-1" />
+      <StageIcon stage={stage} src={stageIcon} class="size-7 shrink-0 mt-1" />
       <div class="flex-1 min-w-0">
         <h3 class="font-display font-[350] text-xl leading-snug text-ink-light dark:text-white group-hover:text-crimson dark:group-hover:text-crimson-dark transition-colors duration-300">
           {title}

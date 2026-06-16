@@ -16,6 +16,12 @@ const posts = defineCollection({
     // Growth stage — the "stage" axis every post carries (garden metaphor).
     // An unmarked post is treated as a finished, evergreen piece.
     growthStage: z.enum(["seedling", "budding", "evergreen"]).default("evergreen"),
+    // Optional custom stage icon — a path to an image in `public/` (SVG recommended,
+    // PNG works) shown in place of the built-in growth-stage icon. The stage itself
+    // (seedling/budding/evergreen) and all logic stay the same; this only swaps the
+    // glyph. Best kept in `public/icons/` (e.g. "/icons/comet.svg"). The image carries
+    // its own colour — make it readable on the dark background.
+    stageIcon: z.string().optional(),
     lastTended: z.coerce.date().optional(),
     draft: z.boolean().default(false),
     // Unlisted: the post still builds at its URL (so it can be linked directly,

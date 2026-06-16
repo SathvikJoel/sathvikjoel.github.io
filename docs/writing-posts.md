@@ -63,6 +63,7 @@ growthStage: evergreen
 | `description` | **Yes** | A one-line summary shown under the title, on tiles, and in search/social previews. Required: it powers the SEO meta description and the OG/Twitter share card, so the build **fails** if it's missing or empty. Aim for ~50–160 characters. |
 | `tags` | Optional | Labels for cross-cutting themes. They don't make pages, just describe the post. |
 | `growthStage` | Optional | The post's maturity: `seedling`, `budding`, or `evergreen`. Defaults to `evergreen` (see below). |
+| `stageIcon` | Optional | Path to a custom icon shown in place of the built-in stage glyph (e.g. `/icons/comet.svg`). The stage itself is unchanged — this only swaps the picture. See [Custom stage icon](#custom-stage-icon). |
 | `lastTended` | Optional | The date you last revised the post; shown as "last tended …". |
 | `cover` | Optional | A picture that restyles the post's homepage tile. See [Covers & images](./covers-and-images.md). |
 | `image` | Optional | A contained illustration shown inside any post's card tile (ideal for transparent art). See [Covers & images](./covers-and-images.md). |
@@ -93,6 +94,31 @@ breadcrumb, and in the stream feeds, and you can **filter the homepage by stage*
 
 Posts can also carry **`lastTended`** — the date you last revised it — shown to the
 reader as "last tended …". It's handy for notes you grow over time.
+
+## Custom stage icon
+
+By default each stage uses its built-in hand-drawn glyph (the sprout / plant / tree).
+If you want a different picture for a particular post — say a comet for a fast-moving
+idea — set **`stageIcon`** to the path of an image you've dropped in `public/icons/`:
+
+```yaml
+growthStage: seedling
+stageIcon: /icons/comet.svg
+```
+
+This is **purely cosmetic**: the stage stays `seedling` (or whichever you set), and all
+filtering, labels, and ordering behave exactly the same. Only the icon picture changes.
+
+**What file to provide:**
+
+- **Prefer an SVG** — it stays crisp at every size, is tiny, and scales without blur.
+- A transparent **PNG** also works; export it square at ~48–64 px.
+- The icon **carries its own colour** (it is *not* tinted like the built-in stages), so
+  pick colours that read well on the **dark background** — light or accent-coloured strokes.
+- Keep it square (a `0 0 24 24` viewBox for SVG is ideal) so it lines up with the others.
+
+**Where to put it:** drop the file in **`public/icons/`** and reference it with a leading
+slash, e.g. a file at `public/icons/comet.svg` is referenced as `/icons/comet.svg`.
 
 ## A note on dates
 
@@ -165,6 +191,8 @@ For example: ` ```python title="model.py" {3} wrap `
 - [ ] The `date` ends in `+05:30`.
 - [ ] `draft` is removed or set to `false`.
 - [ ] You've set a `growthStage` (or left it off to mean evergreen).
+- [ ] (Optional) If you want a bespoke stage glyph, you've added `stageIcon` pointing at
+      a file in `public/icons/`.
 - [ ] If it's code-heavy, you've set `width: wide`.
 - [ ] If you want it to shine on the homepage, you've added a
       [cover](./covers-and-images.md).

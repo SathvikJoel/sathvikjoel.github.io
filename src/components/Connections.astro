@@ -25,7 +25,7 @@ const related = getRelated(post, all, backlinks, 3)
           {backlinks.map((p) => (
             <a href={`/posts/${p.slug}`} class="conn-card group">
               <span class="conn-emoji">
-                <StageIcon stage={p.data.growthStage} class="size-4" />
+                <StageIcon stage={p.data.growthStage} src={p.data.stageIcon} class="size-4" />
               </span>
               <span class="min-w-0">
                 <span class="conn-title">{p.data.title}</span>
