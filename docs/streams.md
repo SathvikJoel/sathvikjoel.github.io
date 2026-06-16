@@ -19,7 +19,8 @@ Every stream automatically gets its own page at `/posts/<key>` — for example,
 | Stream | Address | Style | What lives here |
 | --- | --- | --- | --- |
 | **Tech** | `/posts/tech` | Masonry | Machine learning, math, and the craft of building software. |
-| **Life** | `/posts/life` | Feed | Travel, exams, applications, and growing up. |
+| **Life** | `/posts/life` | Column | Travel, exams, applications, and growing up. |
+| **Fun** | `/posts/fun` | Column | The random things I think about for the fun of it. |
 | **Philosophy** | `/posts/philosophy` | Masonry | Slow thoughts on how to think, live, and pay attention. |
 | **Writings** | `/posts/writings` | List | Short reads — one small idea at a time. |
 
@@ -34,11 +35,11 @@ A multi-column grid of cards, like a pinboard. Cards vary in height and flow aro
 each other. This is the richest, most visual style — best for streams where posts have
 covers, images, or a mix of lengths. It's the same look as the homepage garden.
 
-### Feed *(Life)*
+### Column *(Life, Fun)*
 
-Full posts stacked one after another in a single narrow column, separated by dividers.
-The reader can take in whole pieces without clicking through. Best for longer, more
-personal writing meant to be read in sequence.
+A single column of preview cards, one per row, in a narrow centred width. Calmer than
+masonry and easy to scan top-to-bottom. Best for personal writing you want read more or
+less in order, without the busyness of a multi-column grid.
 
 ### List *(Writings)*
 
@@ -69,7 +70,7 @@ feed. A post can only be in one stream at a time.
 A new stream needs two things and then its page builds itself:
 
 1. **Add it to the site's stream list.** Give it a `key`, a `label`, a `blurb`, and
-   pick one of the three layout styles (`masonry`, `feed`, or `list`).
+   pick one of the three layout styles (`masonry`, `column`, or `list`).
 2. **Allow the new key as a `topic`** so posts are permitted to use it.
 
 Once both are done, the stream page appears at `/posts/<key>`, and any post whose

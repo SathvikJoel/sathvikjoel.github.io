@@ -59,7 +59,7 @@ Key `posts` fields whose behavior isn't obvious from the name:
 
 | Field | Gotcha |
 | --- | --- |
-| `topic` | A `z.enum(["tech","life","philosophy","writings"])`. **Must stay in lockstep with `TOPICS` in `src/consts.ts`** — the streams are derived from `TOPICS`, but the schema enum is a separate hardcoded list. Adding a stream means editing **both**. |
+| `topic` | A `z.enum(["tech","life","fun","philosophy","writings"])`. **Must stay in lockstep with `TOPICS` in `src/consts.ts`** — the streams are derived from `TOPICS`, but the schema enum is a separate hardcoded list. Adding a stream means editing **both**. |
 | `growthStage` | `seedling` / `budding` / `evergreen`, default **`evergreen`** (an unmarked post is treated as finished). Drives the stage icon/word. |
 | `width` | `"wide"` adds the `.wide-col` class on the article, widening the column for code-heavy posts. Pure presentation. |
 | `tile` + `cover` + `image` | The homepage tile style is **resolved in `PostCard.astro`**, not the schema. `tile: auto` → cover banner if `cover` set, else square `image`, else plain text. A forced style with a missing picture falls back gracefully. See `covers-and-images.md`. |
@@ -107,7 +107,7 @@ The build fails loudly (rather than shipping broken output) on these:
 
 - `src/consts.ts` `TOPICS` is the source of truth for stream metadata: `KEY`, `LABEL`,
   `BLURB`, and **`LAYOUT`** (`"masonry"` | `"column"` | `"list"` | `"feed"`). The KEY must
-  equal the post `topic`. Current mapping: tech/philosophy = `masonry`, life = `column`,
+  equal the post `topic`. Current mapping: tech/philosophy = `masonry`, life/fun = `column`,
   writings = `list`.
 - `StreamFeed.astro` exists but is **unused** (the `"feed"` layout isn't wired up anywhere
   live). Don't assume it's on a code path.
@@ -192,7 +192,7 @@ Discord / iMessage always render a large, branded preview at the exact size plat
   `twitter:image` at a hardcoded 1200×630. Non-post pages (home, streams) fall back to the
   static `public/open-graph.jpg` (also 1200×630).
 - Topic → accent colour for title cards lives in the `ACCENT` map in `build-og.mjs`
-  (tech=sage, life=gold, philosophy=purple, writings=clay).
+  (tech=sage, life=gold, fun=green, philosophy=purple, writings=clay).
 
 ### Per-page metadata type: og:type, article meta, JSON-LD
 

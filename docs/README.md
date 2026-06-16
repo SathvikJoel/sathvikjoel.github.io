@@ -7,7 +7,7 @@ no code, just how things work and how to use them.
 ## What this site is
 
 The site is a **digital garden**. Instead of a flat list of blog posts, writing is
-organised into **streams** (Tech, Life, Philosophy, Writings). Each stream is a living
+organised into **streams** (Tech, Life, Fun, Philosophy, Writings). Each stream is a living
 collection you tend over time, and each has its own page and visual style.
 
 Every piece of writing also has a **growth stage** — is it a fresh 🌱 seedling, a 🌿

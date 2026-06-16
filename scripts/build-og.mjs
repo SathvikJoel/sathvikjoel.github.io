@@ -44,6 +44,7 @@ const PAD = 48 // breathing room around contained art
 const ACCENT = {
   tech: "#3DD6ED", // sage
   life: "#F0C27B", // gold
+  fun: "#74C69D", // green
   philosophy: "#A98CE6", // purple
   writings: "#FF9A8A", // clay
 }
