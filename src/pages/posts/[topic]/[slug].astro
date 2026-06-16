@@ -19,7 +19,7 @@ export async function getStaticPaths() {
 
 type Props = CollectionEntry<"posts">
 const post = Astro.props
-const { title, description, date, topic, growthStage, lastTended, tags, width, dropCap, topGlow, coverAlt, imageAlt } = post.data
+const { title, description, date, topic, growthStage, lastTended, tags, width, dropCap, topGlow, coverAlt, imageAlt, ogImageAlt } = post.data
 const { Content, headings } = await post.render()
 
 // All posts (used by Connections for backlinks). Unlisted posts are excluded so
@@ -29,13 +29,13 @@ const allPosts = (await getCollection("posts")).filter((p) => !p.data.unlisted)
 const breadcrumbStage = growthStage
 
 // Per-post Open Graph card: scripts/build-og.mjs generates /og/<slug>.jpg (1200×630)
-// for EVERY post — an illustration card when the post has cover/image art, otherwise an
-// auto-generated title card. So every post page gets its own branded share image.
+// for EVERY post — an explicit ogImage, else cover/image art, else an auto title card.
+// So every post page gets its own branded share image at /og/<slug>.jpg.
 const ogImage = `/og/${post.slug}.jpg`
-const ogImageAlt = coverAlt || imageAlt || `${title} — JoeLogs`
+const ogAlt = ogImageAlt || coverAlt || imageAlt || `${title} — JoeLogs`
 ---
 
-<PageLayout title={title} description={description} topGradient={topGlow} image={ogImage} imageAlt={ogImageAlt}>
+<PageLayout title={title} description={description} topGradient={topGlow} image={ogImage} imageAlt={ogAlt}>
   <TopLayout>
     <div class:list={["animate", width === "wide" && "wide-col"]}>
       <a href={`/posts/${topic}`} class="breadcrumb-stream group" aria-label={`Back to the ${topic} stream`}>

@@ -28,6 +28,12 @@ const posts = defineCollection({
     featured: z.boolean().default(false),
     cover: z.string().optional(),
     coverAlt: z.string().optional(),
+    // Explicit Open Graph / social share image (1200×630 recommended). When set, this exact
+    // image is used as the post's share card — use it for a hand-made / Midjourney card.
+    // Priority for the generated /og/<slug>.jpg card (see scripts/build-og.mjs):
+    //   ogImage  →  cover / image (framed art card)  →  auto title card (last fallback).
+    ogImage: z.string().optional(),
+    ogImageAlt: z.string().optional(),
     // How the homepage/stream tile is rendered:
     //   "auto"  (default) — cover banner if `cover` is set, else square `image`, else plain text
     //   "cover" — force the wide cropped cover banner (needs `cover`)

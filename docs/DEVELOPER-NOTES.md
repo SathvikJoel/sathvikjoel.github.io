@@ -154,11 +154,12 @@ Every post page ships a per-post **1200×630** OG image so links shared to Whats
 Discord / iMessage always render a large, branded preview at the exact size platforms want.
 
 - **`scripts/build-og.mjs`** runs as a **`predev`/`prebuild` hook** and writes one
-  `public/og/<topic>/<slug>.jpg` per post. Two card styles, chosen automatically:
-  - posts **with** `cover`/`image` → the art is *contained* (never cropped) and centered on
-    the dark `#161618` canvas;
-  - posts **without** art → an auto-generated **title card** (post title in Fraunces, topic
-    eyebrow in Lato, J-vine wordmark). The typography is the design — no illustration needed.
+  `public/og/<topic>/<slug>.jpg` per post. Card chosen by priority:
+  1. explicit **`ogImage`** front-matter → used full-bleed at 1200×630 (cover-fit), for a
+     hand-made / Midjourney card;
+  2. `cover`/`image` art → *contained* (never cropped), centered on the dark `#161618` canvas;
+  3. neither → an auto-generated **title card** (title in Fraunces, topic eyebrow in Lato,
+     J-vine wordmark). The typography is the design — no illustration needed.
 - **`public/og/` is gitignored** (like `docs.enc.json`) — it is a build artifact, regenerated
   on every dev/build. Do not commit it.
 - **Fonts are vendored as TTF under `scripts/og-fonts/`** (Fraunces + Lato) and loaded via a

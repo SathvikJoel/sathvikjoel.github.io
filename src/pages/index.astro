@@ -9,7 +9,7 @@ const all = (await getCollection("posts"))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 ---
 
-<PageLayout title="Home" description={SITE.DESCRIPTION}>
+<PageLayout title="JoeLogs — The digital garden of Sathvik Joel" description={SITE.DESCRIPTION} bareTitle>
   <div class="mx-auto max-w-[1420px] px-5 sm:px-8 pt-28 pb-24">
     <!-- Compact header -->
     <header class="animate max-w-2xl mx-auto text-center mb-12">

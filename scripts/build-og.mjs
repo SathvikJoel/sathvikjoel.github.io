@@ -2,12 +2,14 @@
 // WhatsApp / X / Discord / iMessage / etc. always show a large, on-brand preview at
 // the exact dimensions every platform expects.
 //
-// Two card styles, chosen per post:
-//   • Posts WITH cover/illustration art  → the art is *contained* (never cropped) and
-//     centered on a dark, on-brand canvas, so it reads as an intentional framed card.
-//   • Posts WITHOUT art                  → an auto-generated TITLE card: the post title
-//     set in Fraunces with a topic eyebrow + the J-vine wordmark, on the same canvas.
-//     The typography is the design — no illustration needed.
+// Two card styles, chosen per post by priority:
+//   1. Explicit `ogImage` front-matter → used full-bleed at 1200×630 (e.g. a hand-made
+//      or Midjourney card). This wins over everything.
+//   2. Posts with `cover`/`image` art  → the art is *contained* (never cropped) and
+//      centered on a dark, on-brand canvas, so it reads as an intentional framed card.
+//   3. Posts with neither             → an auto-generated TITLE card: the post title set
+//      in Fraunces with a topic eyebrow + the J-vine wordmark, on the same canvas.
+//      The typography is the design — no illustration needed.
 //
 // Fonts: Fraunces (display) + Lato (UI) are vendored as TTF under scripts/og-fonts and
 // rendered through a scoped fontconfig, so text renders identically on CI without
@@ -121,6 +123,18 @@ function fitTitle(title, maxWidth, maxLines) {
 
 // ---- Card builders -------------------------------------------------------
 
+// Explicit ogImage: use the author-supplied card full-bleed at exactly 1200×630.
+// (Cover-fit so a correctly-sized 1.91:1 image is untouched; an off-ratio one is centered-cropped.)
+async function buildBleedCard(artPath, outPath) {
+  const buf = await sharp(readFileSync(artPath))
+    .resize(WIDTH, HEIGHT, { fit: "cover", position: "centre" })
+    .jpeg({ quality: 86, mozjpeg: true })
+    .toBuffer()
+  mkdirSync(dirname(outPath), { recursive: true })
+  writeFileSync(outPath, buf)
+  return buf.length
+}
+
 async function buildArtCard(artPath, outPath) {
   const art = await sharp(readFileSync(artPath))
     .resize(WIDTH - PAD * 2, HEIGHT - PAD * 2, { fit: "inside", withoutEnlargement: false })
@@ -179,6 +193,7 @@ async function buildTitleCard({ title, topic }, outPath) {
 async function main() {
   setupFonts()
   const files = findPosts(postsDir)
+  let og = 0
   let art = 0
   let text = 0
   for (const file of files) {
@@ -189,6 +204,19 @@ async function main() {
     const slug = relative(postsDir, dirname(file)).split(/[\\/]/).join("/")
     const topic = data.topic || slug.split("/")[0]
     const outPath = join(outDir, `${slug}.jpg`)
+
+    // Priority: explicit ogImage (full-bleed) → cover/image (framed art) → title card.
+    const explicitRef = data.ogImage
+    if (explicitRef) {
+      const p = join(publicDir, String(explicitRef).replace(/^\//, ""))
+      if (existsSync(p)) {
+        const size = await buildBleedCard(p, outPath)
+        og++
+        console.log(`[build-og] og    ${slug}.jpg  (${(size / 1024).toFixed(0)} KB)`)
+        continue
+      }
+      console.warn(`[build-og] missing ogImage for ${relative(root, file)}: ${explicitRef} — falling back`)
+    }
 
     // Prefer the wide cover; fall back to the square tile illustration.
     const artRef = data.cover || data.image
@@ -208,7 +236,7 @@ async function main() {
     text++
     console.log(`[build-og] title ${slug}.jpg  (${(size / 1024).toFixed(0)} KB)`)
   }
-  console.log(`[build-og] generated ${art + text} card(s) -> public/og/  (${art} art, ${text} title)`)
+  console.log(`[build-og] generated ${og + art + text} card(s) -> public/og/  (${og} og, ${art} art, ${text} title)`)
 }
 
 main().catch((err) => {
