@@ -2,9 +2,9 @@
 // A styled list whose bullets are replaced with a small hand-drawn-feel icon.
 // Wrap a normal markdown list; each item gets a cyan marker.
 // Inspired by Maggie Appleton's "For example" lists (e.g. /2025-02-last-exam).
-// icon: "arrow" (default) | "leaf" | "spark" | "star"
+// icon: "arrow" (default) | "leaf" | "spark" | "star" | "clock" | "alert-circle"
 interface Props {
-  icon?: "arrow" | "leaf" | "spark" | "star"
+  icon?: "arrow" | "leaf" | "spark" | "star" | "clock" | "alert-circle"
 }
 const { icon = "arrow" } = Astro.props
 ---
@@ -47,4 +47,6 @@ const { icon = "arrow" } = Astro.props
   .icon-leaf { --marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 19c0-8 5-13 14-14 1 9-4 15-14 14Z'/%3E%3Cpath d='M5 19c4-4 6-7 9-9'/%3E%3C/svg%3E"); }
   .icon-spark { --marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpath d='M12 2c.6 5 2.4 6.9 8 8-5.6 1.1-7.4 3-8 8-.6-5-2.4-6.9-8-8 5.6-1.1 7.4-3 8-8Z'/%3E%3C/svg%3E"); }
   .icon-star { --marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L12 17l-5.3 2.8 1-5.8L3.5 9.7l5.9-.9L12 3.5Z'/%3E%3C/svg%3E"); }
+  .icon-clock { --marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7v5l3.5 2'/%3E%3C/svg%3E"); }
+  .icon-alert-circle { --marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7.5v5.5'/%3E%3Cpath d='M12 16.5v.4'/%3E%3C/svg%3E"); }
 </style>
