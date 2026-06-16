@@ -1,152 +1,77 @@
 # Copilot Instructions
 
-This file documents conventions and structure of this repository for use by AI agents and contributors.
-
-This site was migrated from Hugo to **Astro** in June 2026. The Astro project lives
-at the **repository root**. The original hand-built Hugo + PaperMod site is preserved
-on the **`hugo-old`** branch.
-
----
-
-## Tech stack & structure
-
-- **Framework:** [Astro](https://astro.build/) (static output), Tailwind CSS, TypeScript,
-  with a little SolidJS for stateful components. Content is Markdown / MDX.
-- **Key folders:**
-  - `src/pages/` — routes (`index.astro`, `about.astro`, `resume.astro`, `now/`,
-    `posts/[topic]/[slug].astro`, `search/`, `404.astro`, `rss.xml.ts`, etc.).
-  - `src/content/posts/<topic>/<slug>/index.md(x)` — blog posts.
-  - `src/content/now/` — dated "Now" snapshots (separate collection; kept out of the
-    garden, RSS, and search).
-  - `src/content/config.ts` — content collection schemas (frontmatter validation).
-  - `src/components/` — UI + `src/components/mdx/` custom MDX components.
-  - `src/consts.ts` — site config: `TOPICS` (streams), nav `LINKS`, `SOCIALS`.
-  - `public/` — static assets served at the site root (e.g. `public/resume.pdf` -> `/resume.pdf`).
-  - `docs/` — the private writer handbook (see below).
-  - `scripts/build-docs.mjs` — encrypts `docs/` into `public/docs.enc.json` at build time.
-
-## Build, dev & preview
-
-```bash
-npm install                                              # first time only
-DOCS_PASSWORD='garden-test' npm run dev -- --port 4399   # dev server
-DOCS_PASSWORD='garden-test' npm run build                # production build -> dist/
-npm run preview                                          # preview the built site
-```
-
-- `npm run build` runs `astro check` (type check) then `astro build`. A `prebuild`
-  step (`build-docs.mjs`) regenerates the encrypted docs bundle first.
-- Restart the dev server after editing `src/content/config.ts` (stale styles otherwise).
+Working conventions for AI agents and contributors on this site (an **Astro**
+digital garden deployed to GitHub Pages). This file holds *how we work* — the
+detailed reference lives in the docs (see the map at the bottom). Don't duplicate
+that reference here; link to it.
 
 ---
 
-## Streams (topics)
+## Keep the docs in sync — this is the #1 convention
 
-Blog "streams" are defined in `src/consts.ts` -> `TOPICS`, each with a `KEY`, route, and
-`LAYOUT`:
+The docs must stay **consistent with the codebase at all times**. After *any*
+change, deliberately evaluate whether it affects the documentation and update the
+relevant file **in the same change** (same commit/PR). Some changes need no doc
+edit — that's fine, but make the call on purpose, don't skip it.
 
-- `masonry` — multi-column preview cards (e.g. **tech**, **philosophy**).
-- `column` — single-column framed cards (e.g. **life**).
-- `list` — compact text list (e.g. **writings**).
+Rules of thumb for where a change lands:
 
-A post's `topic` frontmatter field must match a topic `KEY`.
+- New/changed **MDX component or card**, or a changed prop/attribute → `docs/components.md`.
+- New **stream**, layout, or changed **frontmatter field / validation** →
+  `docs/streams.md` and/or `docs/writing-posts.md`, plus the `topic` enum note in
+  `docs/DEVELOPER-NOTES.md`.
+- New **build step, script, route, OG behaviour, or guard** → `docs/DEVELOPER-NOTES.md`.
+- Anything that changes **how writers write** or **how the site builds/deploys** → docs.
 
-## Writing a post
+The `docs/` handbook is encrypted into `public/docs.enc.json` at build time, so doc
+edits only reach the live `/docs` page after a rebuild + deploy.
 
-Create `src/content/posts/<topic>/<slug>/index.mdx` (use `.mdx` to use custom
-components; `.md` is fine for plain prose). Frontmatter is validated by
-`src/content/config.ts`. Common fields:
+## Build and verify before pushing
 
-```yaml
-title: "My post"
-description: "One-line summary."
-date: 2026-05-29T14:15:03+05:30
-topic: tech
-tags: ["meta"]
-growthStage: evergreen        # seedling | budding | evergreen
-draft: false                  # true hides the post everywhere
-unlisted: false               # see below
-```
+- Always run a clean build before committing: `DOCS_PASSWORD='garden-test' npm run build`
+  (runs `astro check` then `astro build`; **type errors fail the build**). It must
+  finish with 0 errors.
+- `DOCS_PASSWORD` is required for every local dev/build (it keys the `/docs` bundle).
 
-### `draft` vs `unlisted`
+## Deploy
 
-- **`draft: true`** — the post is filtered out of the homepage, stream indexes,
-  search, RSS, and related-post connections. Use for work in progress.
-- **`unlisted: true`** — the post still **builds and is reachable by URL**, but is
-  excluded from the homepage, stream indexes, search, RSS, related posts, and the
-  sitemap. Use for pages you want to link to privately. The **Writing toolkit**
-  (`/posts/tech/toolkit/`) uses this pattern and is linked only from the `/docs`
-  handbook. The sitemap exclusion lives in `astro.config.mjs` (`sitemap.filter`).
+- **`main` is production.** Pushing to `main` auto-deploys via
+  `.github/workflows/gh-pages.yml`; there is no staging branch. Verify the run is
+  green after pushing. (Manual trigger + details: `.agents/deployment.md`.)
 
-### Post date / timezone convention
+## Hard conventions (details in the docs)
 
-Always write the frontmatter `date` with the IST offset `+05:30` so the timestamp
-matches the local clock used to write it:
-
-```yaml
-date: 2026-05-29T14:15:03+05:30
-```
-
-Unlike the old Hugo build (which dropped future-dated posts), Astro renders posts
-regardless of date — but a correct timestamp keeps the relative-date display and the
-homepage/stream **sort order** accurate.
+- **Adding a stream edits two separate lists:** `TOPICS` in `src/consts.ts` **and** the
+  `topic` enum in `src/content/config.ts`. Keep them in lockstep, then update the stream docs.
+- **Posts that use components must be `.mdx`.** In a `.md` file, `<Component>` renders as
+  raw HTML and silently does nothing.
+- **A post folder's topic segment must match its `topic` frontmatter** (`posts/fun/...`
+  ⇒ `topic: fun`) — the build throws otherwise. Mirror the same path under
+  `public/posts/<topic>/<slug>/` for that post's images.
+- **Frontmatter `date` uses the IST offset `+05:30`** so timestamps match local time and
+  homepage/stream sort order stays correct.
+- **`description` frontmatter is required** (non-empty) — the schema fails the build without it.
+- When a post URL changes (e.g. moved to another stream), add a redirect from the old
+  path in `astro.config.mjs` to preserve inbound links.
+- **Don't commit junk:** editor swap files, OS artifacts (Windows `*:Zone.Identifier`),
+  or the `dist/` build output.
 
 ---
 
-## Resume
+## Where the documentation lives
 
-The resume PDF lives at `public/resume.pdf` and is served at:
+- `docs/` — the **writer handbook** (overview, streams, writing posts, covers & images,
+  components toolkit). Encrypted and served at `/docs`.
+- `docs/DEVELOPER-NOTES.md` — the **engineering reference**: architecture, build/deploy,
+  OG cards, frontmatter guards, `TOPICS` coupling, dark-only theme, fonts, and other gotchas.
+- `.agents/deployment.md` — deploy specifics and manual-trigger commands.
 
-```
-https://sathvikjoel.github.io/resume.pdf
-```
+## Project shape (quick map)
 
-There is also a styled HTML resume page at `/resume` (`src/pages/resume.astro`).
+Astro (static output) + Tailwind + TypeScript, a little SolidJS; content is Markdown/MDX.
 
-### How to update the resume
-
-Overwrite the file, then commit and push:
-
-```bash
-cp /path/to/new_resume.pdf public/resume.pdf
-```
-
-**Do not rename the file** — `/resume.pdf` is linked from `src/pages/resume.astro`. If
-you must rename it, update that reference (and any nav/button links).
-
----
-
-## Private docs handbook
-
-`docs/*.md` is a writer handbook (how to write posts, use components, etc.). At build
-time `scripts/build-docs.mjs` encrypts it (AES-256-GCM) into `public/docs.enc.json`;
-the plaintext never ships to `dist/`. The `/docs` page unlocks it in the browser with a
-password.
-
-- The password comes from the **`DOCS_PASSWORD`** env var (or a local
-  `.docs-password` file). If unset, the build falls back to the default `garden`.
-- In CI, `DOCS_PASSWORD` is read from a **repo secret** (see Deployment).
-
----
-
-## Deployment
-
-The site is built with Astro and deployed to GitHub Pages by
-`.github/workflows/gh-pages.yml` (**Deploy Astro site to Pages**), which:
-
-1. Triggers on every **push to `main`** (and via **workflow_dispatch**).
-2. Runs `npm ci` then `npm run build`.
-3. Uploads `./dist` and deploys it to GitHub Pages.
-
-To trigger a manual deploy:
-
-```bash
-gh workflow run gh-pages.yml --repo SathvikJoel/sathvikjoel.github.io --ref main
-gh run list --workflow=gh-pages.yml --repo SathvikJoel/sathvikjoel.github.io --limit 3
-```
-
-The build reads `DOCS_PASSWORD` from a repo secret
-(**Settings -> Secrets and variables -> Actions**). If unset, the docs are still
-encrypted with the default password `garden`.
-
-See `.agents/deployment.md` for more detail.
+- `src/pages/` — routes (`index`, `about`, `resume`, `now/`, `posts/[topic]/[slug]`, `search/`, `404`, `rss.xml.ts`).
+- `src/content/posts/<topic>/<slug>/index.md(x)` — blog posts · `src/content/now/` — "Now" snapshots.
+- `src/content/config.ts` — collection schemas · `src/components/` (+ `mdx/`) — UI & MDX components.
+- `src/consts.ts` — `TOPICS`, nav `LINKS`, `SOCIALS` · `public/` — static assets · `scripts/` — build hooks.
+- Full architecture and rationale: `docs/DEVELOPER-NOTES.md`.

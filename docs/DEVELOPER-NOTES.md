@@ -258,6 +258,8 @@ The `/docs` route is a **password-gated writer handbook**, encrypted at build ti
 - The styled resume page (`src/pages/resume.astro`) is **hand-authored HTML** built from
   data arrays in that file. The downloadable PDF is a **separate file** at
   `public/resume.pdf`. They can drift — update **both** when resume content changes.
+- **Don't rename `public/resume.pdf`** — it's served at `/resume.pdf` and linked from
+  `resume.astro` (and any nav/buttons). Renaming means updating those references too.
 
 ## Misc build/deploy facts
 
