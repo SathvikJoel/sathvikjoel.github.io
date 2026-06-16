@@ -95,9 +95,10 @@ Two conventions worth keeping for talks:
 
 - **Make the first slide the cover.** Set `cover` to `slide-01.png` and `tile: cover` so
   the post leads with its title slide on the homepage. See [Covers & images](./covers-and-images.md).
-- **Use the pushpin stage icon.** Set `stageIcon: /icons/talk.svg` so every talk carries a
-  little pinned-note glyph instead of the default growth-stage icon. This is purely the
+- **Use the paperclip stage icon.** Set `stageIcon: /icons/talk.svg` so every talk carries a
+  little blue paperclip glyph instead of the default growth-stage icon. This is purely the
   icon — the stage stays `evergreen`. See [the custom stage icon notes](./writing-posts.md#custom-stage-icon).
+  (A gold `pushpin.svg` also lives in `public/icons/` if you'd prefer a pin.)
 
 Pass `slidesOn="right"` on `<ScrollSlides>` to pin the deck on the right instead of the left.
 

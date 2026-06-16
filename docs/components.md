@@ -201,7 +201,7 @@ configure, and it respects reduced-motion settings.
 Pass `slidesOn="right"` to pin the deck on the right instead of the left.
 
 For the **full recipe** — folder layout, the exact `pdftoppm` command to convert a PDF deck
-into slide images, front matter (cover + pushpin stage icon), and shipping — see the
+into slide images, front matter (cover + paperclip stage icon), and shipping — see the
 dedicated [Annotated talks](./annotated-talks.md) page. There's a live example in the
 **"Using Agents and Skills"** post in the Tech stream.
 
