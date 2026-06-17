@@ -185,6 +185,19 @@ Add these after the language on the opening fence:
 
 For example: ` ```python title="model.py" {3} wrap `
 
+## Linking to a section
+
+You can deep-link to any heading or block — in the same post or another one.
+
+- **Headings** are anchored automatically: `## Why we publish` is reachable at
+  `#why-we-publish`. Link with `[text](#why-we-publish)` in the same post, or
+  `[text](/posts/tech/my-post/#why-we-publish)` from another.
+- **Any block** can get a short, stable, custom id by ending it with an Obsidian-style
+  caret marker, e.g. `We cleaned the data in three passes. ^cleaning`, then linked as
+  `[see how](#cleaning)`. Keep each caret id unique within a post.
+
+Full rules and examples live in the [writing toolkit](./components.md#cross-references-block--heading-links).
+
 ## Publishing checklist
 
 - [ ] The post is in the right stream folder, with a `title`, `date`, and `topic`.

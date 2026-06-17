@@ -154,6 +154,28 @@ The build fails loudly (rather than shipping broken output) on these:
   process JSX). This is enforced by convention, not the build — a component tag in a `.md`
   file silently renders as text.
 
+## Block references: the `^id` remark plugin
+
+- **`src/plugins/remark-block-id.mjs`** (wired into `markdown.remarkPlugins` in
+  `astro.config.mjs`, after `remarkMath`) adds Obsidian-style block anchors. A trailing
+  `^some-id` on a **paragraph, heading, list item, or blockquote** is stripped from the text
+  and set as that block's `id` via `data.hProperties.id`. Marker regex: `/\s*\^([A-Za-z0-9_-]+)\s*$/`
+  on the block's last text node only.
+- It runs in **remark (mdast)**, so the id is present before Astro's heading-slug rehype
+  pass — and Astro **respects an existing id**, so a caret on a heading cleanly overrides the
+  auto-slug (verified: `### X ^foo` → `id="foo"`, not `id="x"`).
+- **Headings without a caret** still get Astro's automatic slug id (text → lowercased,
+  hyphenated; duplicates suffixed `-1`, `-2` in document order by github-slugger).
+- The plugin does **not** de-duplicate caret ids — they're author-controlled and used
+  verbatim, so duplicate `^id`s yield duplicate DOM ids (only the first is reachable). This
+  is intentional; document the "ids must be unique" rule for writers, don't auto-suffix.
+- **`Appendix.astro` ships a small script** (listens on `DOMContentLoaded` +
+  `astro:after-swap`, attaches a one-time delegated `click` listener guarded by
+  `window.__appendixLinks`) that opens a collapsed `<details.appendix>` when a same-page or
+  deep-link hash targets a block inside it, then scrolls via **double `requestAnimationFrame`**
+  (lets the expanded panel reflow before scrolling). Targets get `scroll-margin-top: 6rem`
+  for breathing room. The script is appendix-scoped; normal headings scroll natively.
+
 ## Images: `public/` is unoptimized; mirrored folders; the favicon trap
 
 - **Astro does not optimize anything in `public/`.** Covers, tile images, and in-body

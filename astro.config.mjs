@@ -5,6 +5,7 @@ import tailwind from "@astrojs/tailwind"
 import solidJs from "@astrojs/solid-js"
 import remarkMath from "remark-math"
 import rehypeKatex from "rehype-katex"
+import { remarkBlockId } from "./src/plugins/remark-block-id.mjs"
 import expressiveCode from "astro-expressive-code"
 import { readdirSync, readFileSync } from "node:fs"
 import { join, relative } from "node:path"
@@ -58,7 +59,7 @@ export default defineConfig({
     "/posts/life/29052026_greek": "/posts/fun/29052026_greek",
   },
   markdown: {
-    remarkPlugins: [remarkMath],
+    remarkPlugins: [remarkMath, remarkBlockId],
     rehypePlugins: [rehypeKatex],
   },
   integrations: [

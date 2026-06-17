@@ -1,0 +1,132 @@
+---
+// End-matter "Appendix" section: a full-width rule broken by a centred, clickable
+// label that expands/collapses the supplementary content (workflows, derivations,
+// reproduction notes). Native <details> — no card, just a divider and muted body
+// text at the normal reading size. Supports an `anchor` id for deep links and an
+// optional `label`/`title` (e.g. label="Appendix A", title="Reproduction workflow").
+interface Props {
+  label?: string
+  title?: string
+  anchor?: string
+  open?: boolean
+}
+const { label = "Appendix", title, anchor, open = false } = Astro.props
+---
+
+<details id={anchor} class="appendix not-prose" open={open}>
+  <summary class="appendix-summary">
+    <span class="appendix-rule" aria-hidden="true"></span>
+    <span class="appendix-label">
+      <span class="appendix-text">{label}{title ? ` · ${title}` : ""}</span>
+      <svg class="appendix-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m19.5 8.25l-7.5 7.5l-7.5-7.5" />
+      </svg>
+    </span>
+    <span class="appendix-rule" aria-hidden="true"></span>
+  </summary>
+  <div class="appendix-panel prose prose-lg dark:prose-invert">
+    <slot />
+  </div>
+</details>
+
+<style>
+  .appendix {
+    @apply my-12;
+  }
+  .appendix-summary {
+    @apply flex cursor-pointer list-none items-center gap-4 font-sans marker:hidden;
+  }
+  .appendix-summary::-webkit-details-marker {
+    display: none;
+  }
+  .appendix-rule {
+    @apply h-px flex-1 bg-ink-light/15 dark:bg-ink-dark/20;
+  }
+  .appendix-label {
+    @apply flex shrink-0 items-center gap-2 text-sm uppercase tracking-[0.12em] text-ink-light/55 transition-colors dark:text-ink-dark/55;
+  }
+  .appendix-summary:hover .appendix-label {
+    @apply text-ink-light/80 dark:text-ink-dark/80;
+  }
+  .appendix-chevron {
+    @apply size-4 shrink-0 transition-transform duration-300;
+  }
+  .appendix[open] .appendix-chevron {
+    @apply rotate-180;
+  }
+  /* Body keeps the normal reading size; only the colour is muted so the appendix
+     reads as supplementary without shrinking. Links keep their accent. */
+  .appendix-panel {
+    @apply mt-7;
+    --tw-prose-body: theme(colors.ink.light / 72%);
+    --tw-prose-headings: theme(colors.ink.light / 82%);
+    --tw-prose-bold: theme(colors.ink.light / 84%);
+  }
+  :global(.dark) .appendix-panel {
+    --tw-prose-body: theme(colors.ink.dark / 72%);
+    --tw-prose-headings: theme(colors.ink.dark / 84%);
+    --tw-prose-bold: theme(colors.ink.dark / 86%);
+  }
+  .appendix-panel > :global(:first-child) {
+    @apply mt-0;
+  }
+  .appendix-panel > :global(:last-child) {
+    @apply mb-0;
+  }
+  /* Breathing room when a block-reference link scrolls to a target inside the
+     appendix, so the heading/paragraph doesn't hug the very top of the viewport. */
+  .appendix-panel :global([id]) {
+    scroll-margin-top: 6rem;
+  }
+</style>
+
+<script>
+  // A link from the main text to a heading inside the appendix would land on a
+  // closed <details> and appear to do nothing. This opens the appendix (and scrolls
+  // to the target) whenever an in-page link points to something inside it, and on
+  // first load for deep links. Listeners are attached once; document survives view
+  // transitions, so the click delegate keeps working across soft navigations.
+  function revealAppendixFor(hash: string) {
+    if (!hash || hash === "#") return
+    let target: Element | null = null
+    try {
+      target = document.querySelector(hash)
+    } catch {
+      return
+    }
+    if (!target) return
+    const details = target.closest("details.appendix") as HTMLDetailsElement | null
+    if (details && !details.open) details.open = true
+    // Scroll after the panel has expanded and laid out. A double rAF lets the
+    // browser reflow the now-visible block first; without it the target is still
+    // collapsed (height 0) and the scroll lands in the wrong place — which matters
+    // most for deep links arriving from another page.
+    if (details) {
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => target!.scrollIntoView({ block: "start" }))
+      )
+    }
+  }
+
+  function setupAppendixLinks() {
+    if (!(window as any).__appendixLinks) {
+      ;(window as any).__appendixLinks = true
+      document.addEventListener("click", (e) => {
+        const a = (e.target as Element)?.closest?.('a[href*="#"]') as
+          | HTMLAnchorElement
+          | null
+        if (!a) return
+        const url = new URL(a.href, location.href)
+        if (url.origin !== location.origin || url.pathname !== location.pathname)
+          return
+        revealAppendixFor(url.hash)
+      })
+      window.addEventListener("hashchange", () => revealAppendixFor(location.hash))
+    }
+    // Deep link on (re)load.
+    revealAppendixFor(location.hash)
+  }
+
+  document.addEventListener("DOMContentLoaded", setupAppendixLinks)
+  document.addEventListener("astro:after-swap", setupAppendixLinks)
+</script>

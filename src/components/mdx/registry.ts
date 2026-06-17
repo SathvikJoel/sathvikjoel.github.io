@@ -26,6 +26,7 @@ import ScrollSlides from "./ScrollSlides.astro"
 import Slide from "./Slide.astro"
 import Chat from "./Chat.astro"
 import ChatMessage from "./ChatMessage.astro"
+import Appendix from "./Appendix.astro"
 
 export const mdxComponents = {
   Figure,
@@ -55,4 +56,5 @@ export const mdxComponents = {
   Slide,
   Chat,
   ChatMessage,
+  Appendix,
 }

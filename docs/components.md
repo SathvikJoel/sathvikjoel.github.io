@@ -104,6 +104,86 @@ line, or any other aside.
 </Aside>
 ```
 
+### Appendix
+
+End matter for a post — workflows, derivations, reproduction notes — set off from the
+essay by a full-width rule with a centred, clickable **Appendix** label. Clicking the
+label collapses or expands the section (it works without JavaScript). The body stays at
+the normal reading size, only muted in colour so it clearly reads as supplementary.
+
+```mdx
+<Appendix>
+
+Supplementary material. Organise it with `###` headings.
+
+### Reproduction workflow
+
+Step-by-step notes, code blocks, lists…
+
+</Appendix>
+```
+
+Optional props:
+
+- `label` — overrides the centred word, e.g. `label="Appendix A"`.
+- `title` — appended after a dot, so `label="Appendix A" title="Reproduction workflow"`
+  renders **APPENDIX A · REPRODUCTION WORKFLOW**.
+- `anchor` — an id on the whole block for deep-linking.
+- `open` — start expanded instead of collapsed.
+
+**Use exactly one appendix per post.** If you have several topics of end matter, divide a
+single `<Appendix>` with `###` headings rather than stacking multiple appendix rules — one
+rule reads as a clean section break, several look like a mistake.
+
+A link that points to a heading or block **inside** a collapsed appendix automatically
+opens it and scrolls there — including deep links arriving from another post. See
+[Cross-references](#cross-references-block--heading-links) below for how to link to a block.
+
+---
+
+## Cross-references (block & heading links)
+
+You can deep-link to any heading or block, in the **same post or a different one** — think
+Obsidian block references.
+
+**Headings are anchored automatically.** Every heading gets an id derived from its text
+(lowercased, spaces → hyphens), so `## Why we publish` is reachable at `#why-we-publish`
+with no extra markup.
+
+**Caret markers give a block a stable, custom id.** End a heading *or* a paragraph (or list
+item / blockquote) with `^some-id` — Obsidian style. The marker is stripped from the
+rendered text and becomes the block's id:
+
+```mdx
+### Reproduction workflow ^workflow
+
+We cleaned the data in three passes. ^cleaning
+```
+
+Then link to it with a normal markdown link:
+
+```mdx
+Same post:        [see the workflow](#workflow)
+Different post:   [see the workflow](/posts/tech/my-post/#workflow)
+```
+
+When to reach for a caret id instead of the automatic heading anchor:
+
+- You want a short, readable id (`#workflow` rather than `#the-full-reproduction-workflow`).
+- You want the link to survive a reworded heading — the caret id doesn't change when the
+  text does.
+- You need to anchor a **non-heading** block (a paragraph, list item, or blockquote), which
+  has no automatic anchor.
+
+Two rules to avoid surprises:
+
+- **Caret ids must be unique within a post.** They are used verbatim and are *not*
+  de-duplicated — two `^note` markers produce two elements with the same id, and only the
+  first is reachable.
+- **Duplicate heading text is auto-suffixed** (`#methods`, `#methods-1`, `#methods-2`) in
+  document order. That suffix shifts if you add another heading of the same name above it,
+  so for headings you link to often, prefer a caret id.
+
 ---
 
 ## Highlights & cards
@@ -354,6 +434,7 @@ away.
 | `Tweet` | An embedded post |
 | `Details` | A collapsible accordion section |
 | `Excursion` | A gentler set-apart digression |
+| `Appendix` | Collapsible end matter (one per post) with a centred rule label |
 | `ScrollSlides` / `Slide` | A scroll-synced presentation with notes |
 | `Figure` | One captioned image |
 | `ImageGrid` | Images side by side, each captioned |
