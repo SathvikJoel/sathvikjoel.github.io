@@ -47,6 +47,7 @@ const ACCENT = {
   fun: "#74C69D", // green
   philosophy: "#A98CE6", // purple
   writings: "#FF9A8A", // clay
+  essays: "#FF6FB5", // crimson
 }
 const ACCENT_DEFAULT = "#FF6FB5" // crimson
 

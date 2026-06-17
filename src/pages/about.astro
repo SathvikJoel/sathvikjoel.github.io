@@ -9,34 +9,82 @@ import { ABOUT, SOCIALS } from "@consts"
   <TopLayout>
     <div class="animate flex flex-col-reverse sm:flex-row sm:items-end gap-6">
       <div class="flex-1">
-        <h1 class="font-display text-4xl sm:text-5xl font-semibold text-black dark:text-white">Hi, I'm Sathvik.</h1>
-        <p class="font-serif text-xl opacity-80 mt-2">Re-deriving things by hand, and trying to pay attention.</p>
+        <h1 class="font-display text-4xl sm:text-5xl font-semibold text-black dark:text-white">Hi, I'm Joel.</h1>
+        <p class="font-serif text-xl opacity-80 mt-2">A few conversations with myself, written down.</p>
       </div>
     </div>
   </TopLayout>
   <BottomLayout>
-    <article class="animate prose-post">
+    <article class="animate prose-post about-article">
       <p>
-        I write here mostly to find out what I think. An idea never quite feels like mine until
-        I've turned it over in words — re-derived the awkward step by hand, or followed some small
-        question well past the point of usefulness. This is where that happens.
+        I write here mostly for myself. The plain truth is that I want to be sixty
+        one day, open these pages, and smile at whoever it was that wrote them.
       </p>
       <p>
-        I'm drawn to things that stay honest under pressure: a proof that finally closes, a myth
-        that refuses a tidy ending, the slow work of paying attention. If something here stays with
-        you — or you just want to say hello — I'd genuinely like that.
+        Everything here began as a question that bothered me. I think a lot, and most
+        of that thinking lives in my own notes, a personal knowledge base I keep in
+        Obsidian. The pieces that make it onto this site are the few I felt were worth
+        opening up to the world, a small drop from a much larger ocean, a handful of
+        those conversations with myself that I decided to write down.
       </p>
 
       <h2>Find me</h2>
-      <ul>
+      <div class="find-me not-prose">
         {SOCIALS.map((social) => (
-          <li><a href={social.HREF} target="_blank">{social.NAME}</a> — {social.TEXT}</li>
+          <a
+            href={social.HREF}
+            target="_blank"
+            rel="me noopener"
+            aria-label={social.NAME}
+            class="group inline-flex items-center gap-2 font-sans text-ink-light/75 dark:text-ink-dark/75 hover:text-crimson dark:hover:text-crimson-dark transition-colors duration-300 ease-in-out"
+          >
+            <svg class="size-5 fill-current"><use href={`/social.svg#${social.ICON}`} /></svg>
+            <span>{social.NAME}</span>
+          </a>
         ))}
-      </ul>
+      </div>
 
       <p>
         <a href="/resume">Read my resume →</a>
       </p>
+
+      <aside class="disclaimer not-prose">
+        <span class="label">A note on AI.</span> I do use it to help polish what I
+        write, and sometimes to help me research. I treat it like an intern at an
+        editorial desk: useful for a rough draft or a second pair of eyes, never the
+        one who signs off. Every piece here ends up saying exactly what I want it to
+        say, and I try to stay aware of the biases it can quietly bring in.
+      </aside>
     </article>
   </BottomLayout>
 </PageLayout>
+
+<style>
+  /* Left-align the body with the "Hi, I'm Sathvik." heading above it: the global
+     article rule centres at 38.5rem, which would otherwise indent this column. */
+  .about-article {
+    margin-inline: 0;
+  }
+  .find-me {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.5rem;
+    margin: 0.75rem 0 0.5rem;
+    font-size: 1.05rem;
+  }
+  /* A small, muted footnote so the AI disclaimer sits quietly under everything. */
+  .disclaimer {
+    max-width: 38.5rem;
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    font-family: theme(fontFamily.sans);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    opacity: 0.6;
+  }
+  .disclaimer .label {
+    font-weight: 600;
+    opacity: 0.9;
+  }
+</style>

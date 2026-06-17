@@ -349,6 +349,9 @@ article img {
   overflow-wrap: break-word;
 }
 .prose-post :not(pre) > code {
+  /* JetBrains Mono has a tall x-height, so at 1em it looks larger than the serif
+     body around it; nudge it down a touch so inline code sits flush with the text. */
+  font-size: 0.85em;
   overflow-wrap: anywhere;
   word-break: break-word;
 }
@@ -357,6 +360,15 @@ article img {
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+}
+/* KaTeX renders everything at 1.21em by default, so inline math like $C$ reads a
+   touch larger than the serif body around it. Bring inline math down close to the
+   body size; display math ($$ ... $$) keeps the roomier default for legibility. */
+.prose-post .katex {
+  font-size: 1.05em;
+}
+.prose-post .katex-display .katex {
+  font-size: 1.21em;
 }
 
 /* <UnderDevelopment> marker: everything that follows it in the post is dimmed to
@@ -367,4 +379,56 @@ article img {
 }
 .prose-post .under-dev ~ *:hover {
   opacity: 0.7;
+}
+
+/* --- Overpopulation essay: interactive data-viz figures -------------------------
+   The charts (treemap, choropleths, slope, table) are SolidJS + ECharts islands.
+   Figures sit on the pitch-black page with a transparent background and bleed a
+   little wider than the reading column so the maps have room to breathe. */
+.viz-figure {
+  width: min(96vw, 1080px);
+  margin-left: calc(50% - min(96vw, 1080px) / 2);
+  background: transparent;
+}
+.viz-figure.viz-narrow {
+  width: min(94vw, 760px);
+  margin-left: calc(50% - min(94vw, 760px) / 2);
+}
+.viz-caption {
+  margin-top: 1rem;
+  padding: 0 0.5rem;
+  text-align: center;
+  font-family: Lato, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: rgba(232, 232, 232, 0.62);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.viz-source {
+  font-size: 0.78rem;
+  color: rgba(232, 232, 232, 0.42);
+}
+
+/* --- Markdown tables: a LaTeX booktabs feel on the dark page --------------------
+   Applies to every prose (markdown) table in a post, in the body or an appendix,
+   but never the interactive DensityTable (which carries .density-table). The top,
+   header, and bottom rules share one heavier weight (like \toprule / \midrule /
+   \bottomrule); the dividers between rows sit a step thinner. */
+.prose-post table:not(.density-table) {
+  border-top: 2px solid rgba(255, 255, 255, 0.6);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+}
+.prose-post table:not(.density-table) thead th {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+}
+.prose-post table:not(.density-table) tbody tr + tr {
+  border-top: 1px solid rgba(255, 255, 255, 0.32);
+}
+/* drop the default per-cell prose borders so only the horizontal rules show */
+.prose-post table:not(.density-table) td,
+.prose-post table:not(.density-table) th {
+  border-left: 0;
+  border-right: 0;
 }

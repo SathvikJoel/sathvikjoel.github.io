@@ -418,6 +418,52 @@ away.
 
 ---
 
+## Interactive charts (data visualizations)
+
+For data-driven essays you can drop in interactive, dark-themed charts powered by
+[ECharts](https://echarts.apache.org/). They render on the pitch-black page with a
+transparent background, off-white labels, and hover tooltips, and they only load when
+scrolled into view, so they don't slow the rest of the page. There are four, all built
+for the *Overpopulation* essay but reusable:
+
+| Block | What it draws |
+| --- | --- |
+| `PopulationTreemap` | A treemap (area ∝ value) of the top-ten most populous countries |
+| `DensityMap` | A world choropleth shaded by a density column (`variant="arithmetic"` or `"lived"`) |
+| `DensitySlope` | A slope chart connecting each country's "on paper" and "as lived" density |
+| `DensityTable` | A sortable, searchable table with a live "compare against" column |
+
+```mdx
+<PopulationTreemap
+  caption="India and China are two near-equal giants…"
+  source="UN World Population Prospects, 2024."
+/>
+
+<DensityMap
+  variant="arithmetic"
+  caption="Arithmetic density across the world — what an atlas shows."
+  source="Density = population ÷ land area; 249 countries."
+/>
+
+<DensitySlope caption="Left: density on paper. Right: density as it is lived." />
+
+<DensityTable source="Lived density from the GHS-POP 1 km grid; 242 countries." />
+```
+
+Every chart takes an optional **`caption`** and **`source`** (the small grey note under
+the caption). `DensityMap` also needs **`variant`** to pick the dataset.
+
+**Where the data lives.** These charts read their CSV/GeoJSON files at runtime from
+`public/posts/essays/overpopulation/data/`. Anything a chart fetches in the browser
+**must sit under `public/`** (files inside the post folder in `src/content/` are not
+served). Keep raw source data out of the content folder so the build doesn't try to parse
+it as a post.
+
+> Adding a *new* kind of chart is an engineering task, not just writing — see
+> `DEVELOPER-NOTES.md` ("Interactive data-viz islands").
+
+---
+
 ## At a glance
 
 | Block | Use it for |
@@ -445,3 +491,7 @@ away.
 | `CodeCaption` | A titled header over a code block |
 | `ComingSoon` | A placeholder for unfinished sections |
 | `UnderDevelopment` | A "still writing" marker that fades everything after it |
+| `PopulationTreemap` | An interactive treemap of population by country |
+| `DensityMap` | An interactive world choropleth (`variant="arithmetic"`/`"lived"`) |
+| `DensitySlope` | An interactive "on paper vs as lived" slope chart |
+| `DensityTable` | A sortable, searchable density table with a live comparison column |

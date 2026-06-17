@@ -9,24 +9,28 @@ const contacts = [
   { label: "JoeLogs", href: "/" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/sathvik-joel-97524b18b/" },
   { label: "GitHub", href: "https://github.com/SathvikJoel" },
+  { label: "Google Scholar", href: "https://scholar.google.com/citations?user=RF8FZWUAAAAJ&hl=en" },
 ]
 
 const education = [
   {
     school: "Indian Institute of Technology Madras",
-    detail: "B.Tech & M.Tech in Computer Science and Engineering · GPA 8.73 / 10.00",
+    detail: "B.Tech & M.Tech in Computer Science and Engineering",
+    gpa: "GPA 8.73 / 10.00",
     where: "Chennai, India",
     when: "Aug 2019 – Jun 2024",
   },
   {
     school: "Pohang University of Science and Technology (POSTECH)",
-    detail: "Year Exchange, Computer Science (POSCO GYP Scholarship) · GPA 3.20 / 4.30",
+    detail: "Year Exchange, Computer Science (POSCO GYP Scholarship)",
+    gpa: "GPA 3.20 / 4.30",
     where: "Pohang, South Korea",
     when: "Aug 2023 – Jul 2024",
   },
   {
     school: "KTH Royal Institute of Technology",
-    detail: "Semester Exchange, Computer Science · GPA 4.40 / 5.00",
+    detail: "Semester Exchange, Computer Science",
+    gpa: "GPA 4.40 / 5.00",
     where: "Stockholm, Sweden",
     when: "Aug 2022 – Jan 2023",
   },
@@ -63,11 +67,11 @@ const publications = [
   },
   {
     title: "Code Researcher: Deep Research Agent for Large Systems Code",
-    detail: "First Author — Under Review at ICLR 2026. Deep research agent achieving 58% crash-resolution on the Linux kernel.",
+    detail: "First Author. Deep research agent achieving 58% crash-resolution on the Linux kernel.",
   },
   {
     title: "Exposing Weak Links in Multi-Agent Systems under Adversarial Prompting",
-    detail: "First Author — Under Review at ICLR 2026. SafeAgents framework for MAS security assessment.",
+    detail: "First Author — Poster at SE@AAMAS 26. SafeAgents framework for MAS security assessment.",
   },
 ]
 
@@ -115,6 +119,7 @@ const awards = [
               <div class="min-w-0">
                 <h3 class="resume-title">{e.school}</h3>
                 <p class="resume-sub">{e.detail}</p>
+                <p class="resume-sub mt-0.5">{e.gpa}</p>
               </div>
               <div class="resume-meta">
                 <span class="resume-where">{e.where}</span>

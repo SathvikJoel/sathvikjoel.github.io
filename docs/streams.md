@@ -23,6 +23,7 @@ Every stream automatically gets its own page at `/posts/<key>` — for example,
 | **Fun** | `/posts/fun` | Column | The random things I think about for the fun of it. |
 | **Philosophy** | `/posts/philosophy` | Masonry | Slow thoughts on how to think, live, and pay attention. |
 | **Writings** | `/posts/writings` | List | Short reads — one small idea at a time. |
+| **Essays** | `/posts/essays` | Column | The long form — ideas I've sat with long enough to argue them properly. |
 
 > **Now is a stream too.** The *Now* page (`/now`) is its own kind of stream — dated
 > "what I'm up to" snapshots rather than posts. Its entries appear as tiles on the
@@ -42,7 +43,7 @@ A multi-column grid of cards, like a pinboard. Cards vary in height and flow aro
 each other. This is the richest, most visual style — best for streams where posts have
 covers, images, or a mix of lengths. It's the same look as the homepage garden.
 
-### Column *(Life, Fun)*
+### Column *(Life, Fun, Essays)*
 
 A single column of preview cards, one per row, in a narrow centred width. Calmer than
 masonry and easy to scan top-to-bottom. Best for personal writing you want read more or

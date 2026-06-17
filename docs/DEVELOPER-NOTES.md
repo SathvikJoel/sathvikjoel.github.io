@@ -110,7 +110,7 @@ The build fails loudly (rather than shipping broken output) on these:
 
 - `src/consts.ts` `TOPICS` is the source of truth for stream metadata: `KEY`, `LABEL`,
   `BLURB`, and **`LAYOUT`** (`"masonry"` | `"column"` | `"list"` | `"feed"`). The KEY must
-  equal the post `topic`. Current mapping: tech/philosophy = `masonry`, life/fun = `column`,
+  equal the post `topic`. Current mapping: tech/philosophy = `masonry`, life/fun/essays = `column`,
   writings = `list`.
 - `StreamFeed.astro` exists but is **unused** (the `"feed"` layout isn't wired up anywhere
   live). Don't assume it's on a code path.
@@ -153,6 +153,44 @@ The build fails loudly (rather than shipping broken output) on these:
 - Components only work in **`index.mdx`** files, not `index.md` (plain Markdown doesn't
   process JSX). This is enforced by convention, not the build — a component tag in a `.md`
   file silently renders as text.
+
+## Interactive data-viz islands (ECharts + SolidJS)
+
+The *Overpopulation* essay (`posts/essays/overpopulation`) introduced four interactive
+charts. The pattern is reusable for any future data-driven post.
+
+- **Dependency:** `echarts` (full import — the islands are lazy, so the ~1 MB bundle only
+  loads on pages that actually use a chart, never on prose-only posts).
+- **Two layers per chart:**
+  - The **SolidJS island** lives in `src/components/viz/*.tsx` (`PopulationTreemap`,
+    `DensityMap`, `DensitySlope`, `DensityTable`). It `fetch`es its data on mount, builds the
+    ECharts option, wires a `ResizeObserver`, and disposes on cleanup.
+  - A thin **`.astro` wrapper** in `src/components/mdx/*.astro` renders the island with
+    `client:visible` (so it hydrates on scroll) inside a `<figure class="viz-figure">` with
+    `caption`/`source`. The wrapper is what gets registered in `registry.ts`; **client
+    directives can't go through the registry**, hence the wrapper indirection (same trick as
+    `ScrollSlides`).
+- **Shared helpers:** `src/components/viz/viz-shared.ts` holds the one strict dark palette
+  (`VIZ`), the `INFERNO` ramp, a quoted-field-safe `parseCSV`, `prefersReducedMotion()`
+  (charts pass `animation: !prefersReducedMotion()`), number formatting, and `normaliseIso`.
+- **Data must live under `public/`.** Islands fetch from
+  `public/posts/essays/overpopulation/data/` at runtime; files inside the post's
+  `src/content` folder are **not** served. Keep raw source data (the draft `.md`, the build
+  CSVs/GeoJSON) **out of `src/content/posts/**`** entirely — a stray `.md` there is parsed as
+  a post and fails schema validation; CSVs just bloat the collection. (For this essay the
+  originals were moved to the session workspace after the public copies were made.)
+- **The world map** is a slimmed Natural Earth 110m countries GeoJSON
+  (`public/.../data/world.geojson`), keyed by a normalised ISO field (`properties.name`):
+  ISO_A3, falling back to ADM0_A3 because Natural Earth tags France/Norway/Kosovo as `-99`.
+  `normaliseIso()` patches the matching CSV rows. `DensityMap` registers the map once
+  (module-level promise) and both choropleths share it. Choropleths colour on a **log10**
+  domain (density is extremely skewed) via a continuous `visualMap`; `is_key=1` rows get a
+  bright `#ff5470` border.
+- **Slope-chart labels** use ECharts `labelLayout: { moveOverlap: "shiftY" }` so the crowded
+  right-hand end-labels de-collide automatically — don't remove it.
+- **Styles:** `.viz-figure` / `.viz-caption` / `.viz-source` are global rules in
+  `src/styles/global.css` (the figures bleed wider than the reading column); `.viz-narrow`
+  is the tighter measure used by the table.
 
 ## Block references: the `^id` remark plugin
 

@@ -1,0 +1,37 @@
+---
+import DensityMap from "@components/viz/DensityMap"
+
+// World choropleth. `variant` picks the dataset + column so the two maps stay a
+// matched pair (same projection, scale type and hover behaviour).
+interface Props {
+  variant: "arithmetic" | "lived"
+  caption?: string
+  source?: string
+}
+const base = "/posts/essays/overpopulation/data"
+const { variant, caption, source } = Astro.props
+
+const cfg =
+  variant === "lived"
+    ? { dataSrc: `${base}/world_lived_density.csv`, valueCol: "lived_density", label: "Lived density", showC: true }
+    : { dataSrc: `${base}/world_arithmetic_density.csv`, valueCol: "arith_density", label: "Arithmetic density", showC: false }
+---
+
+<figure class="viz-figure not-prose my-10">
+  <DensityMap
+    client:visible
+    geoSrc={`${base}/world.geojson`}
+    dataSrc={cfg.dataSrc}
+    valueCol={cfg.valueCol}
+    label={cfg.label}
+    showC={cfg.showC}
+  />
+  {
+    (caption || source) && (
+      <figcaption class="viz-caption">
+        {caption && <span>{caption}</span>}
+        {source && <span class="viz-source">{source}</span>}
+      </figcaption>
+    )
+  }
+</figure>

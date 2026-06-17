@@ -27,6 +27,10 @@ import Slide from "./Slide.astro"
 import Chat from "./Chat.astro"
 import ChatMessage from "./ChatMessage.astro"
 import Appendix from "./Appendix.astro"
+import PopulationTreemap from "./PopulationTreemap.astro"
+import DensityMap from "./DensityMap.astro"
+import DensitySlope from "./DensitySlope.astro"
+import DensityTable from "./DensityTable.astro"
 
 export const mdxComponents = {
   Figure,
@@ -57,4 +61,8 @@ export const mdxComponents = {
   Chat,
   ChatMessage,
   Appendix,
+  PopulationTreemap,
+  DensityMap,
+  DensitySlope,
+  DensityTable,
 }

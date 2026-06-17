@@ -1,0 +1,163 @@
+---
+title: "How Crowded Is India, Really?"
+description: "Bangalore traffic sent me down a rabbit hole on population density. The map an atlas shows and the density people actually live in turn out to be two very different things."
+date: 2026-06-17T20:00:00+05:30
+topic: essays
+topGlow: true
+tags: ["data", "india", "population", "maps"]
+growthStage: budding
+math: true
+---
+
+On a weekend evening, I headed to Whitefield to catch a movie with a friend. The commute was rough: heavy traffic and thick pollution made the journey feel far longer than it was. After the movie we went to grab a bite, only to find the food court packed, not a single empty table in sight.
+
+That moment got me thinking. How overpopulated is Bangalore, really? And how does India's population density compare to the rest of the world? In this piece I dig into that question, using data to draw out a few insights.
+
+## How populated is India?
+
+<IconList icon="leaf">
+
+- **World population (2024):** ~8.16 billion
+- **India population (2024):** ~1.45 billion
+- **India's share:** 17.78%, which rounds to **18%**
+
+</IconList>
+
+India is also the **single most populous country**, having overtaken China in April 2023.
+
+A treemap of the top ten countries shows the *shape* of the distribution:
+
+<PopulationTreemap
+  caption="India and China are two near-equal giants; together about one in three people. The top ten countries hold 56.9% of humanity."
+  source="UN World Population Prospects, 2024."
+/>
+
+**India at 17.8%** and **China at 17.4%** are two near-equal giants.
+
+- **Together they are 35.2% of all humanity**, roughly one in three people.
+- The **top ten countries hold 56.9%**; the entire rest of the world is the remaining 43.1%.
+
+The takeaway so far: India is enormous in **raw headcount**. But headcount alone is *scale*, not *overpopulation*.
+
+## Arithmetic density
+
+$$
+D_{\text{arith}} = \frac{P \ (\text{persons})}{A \ (\text{km}^2)}
+$$
+
+<DensityMap
+  variant="arithmetic"
+  caption="Arithmetic density across the world, the picture an atlas shows. Colours use equal-sized groups of countries (quantile bins). Hover any country for its value."
+  source="Density = population ÷ land area. Populations from Natural Earth POP_EST; 249 countries."
+/>
+
+## Perceived, or lived, density
+
+Arithmetic density, the total population divided by the total area, is not representative of what an individual living in that area actually perceives.
+
+To make the point, imagine a forest of 500 square kilometres where the whole population lives in only one of them. Divide the population, say 2,000 people, by the total area and you get 2,000 / 500, or 4 persons per square kilometre. But that is not what anyone perceives. The person living there perceives 2,000 persons per square kilometre, because everyone is concentrated in a single patch. The lived figure is about 500 times the arithmetic one.
+
+The same holds for India. India has a lot of empty patches, so its arithmetic density can be *lower* than countries like the Netherlands or Japan. But because the Netherlands' population is evenly spread, the density an individual there perceives is far lower than what an individual in India perceives.
+
+So there is little point dwelling on arithmetic density; what matters is perceived density. How do we calculate it? The formula is:
+
+$$
+D_{\text{perceived}} = \sum_{i=1}^{N} w_i \, D_i
+\quad\text{where}\quad
+w_i = \frac{P_i}{\sum_{j=1}^{N} P_j}
+$$
+
+Here each patch $i$ (one square kilometre) has population $P_i$ and density $D_i$, and $w_i$ is the share of the total population living in that patch.
+
+<Details title="Making sense of perceived density">
+Divide the land into patches of one square kilometre, and for each patch calculate its individual density, $D_1$ through $D_N$. Then take a weighted average of these densities, weighting each by the share of the population living in that patch. This roughly translates to the density experienced by a randomly chosen individual. Equivalently, ask every person living in the area what density they experience and take the mean, and that is perceived, or lived, density.
+</Details>
+
+There's one more number worth defining, the **concentration ratio** $C$. It is simply lived density divided by arithmetic density:
+
+$$
+C = \frac{D_{\text{perceived}}}{D_{\text{arith}}}
+$$
+
+It tells you *how much the map deceives you*, how tightly a country's people are clustered onto a small part of its land.
+
+<Details title="A note about C">
+A small $C$ (the Netherlands, about 7×) means people are spread evenly, so the average is honest. A large $C$ (Russia, about 620×, near-empty land with everyone packed into a few cities) means the arithmetic figure is almost meaningless. India sits at about 22×. A high $C$ isn't automatically "bad" and shouldn't be used to compare countries, since it measures only clustering, not whether a place is livable.
+</Details>
+
+Now look at what happens when we shade the *same* world by lived density instead of arithmetic density.
+
+<DensityMap
+  variant="lived"
+  caption="The same world, now shaded by lived density, how it actually feels to be there. Colours use the same equal-sized country groups (quantile bins). Hover any country for its value and its concentration ratio C."
+  source="Lived (population-weighted) density from the GHS-POP 1 km grid; 242 countries. Validated against India's UN total to 0.05%."
+/>
+
+The shift is sharpest when you track a handful of countries from one measure to the other:
+
+<DensitySlope
+  caption="Left: density on paper. Right: density as it is lived. The Netherlands and Japan invert, denser on paper yet far emptier in daily life than India. But the countries that matter for what comes next, South Korea, Taiwan and Hong Kong (denser-lived) and Israel and Spain (about equal), are all far more livable than India at the same or higher lived density. Density is not the disease."
+  source="Arithmetic (grid) vs lived (population-weighted) density, GHS-POP. Hong Kong is a city-state, noted so the comparison stays honest."
+/>
+
+## Insights from lived versus arithmetic density
+
+<Pullquote mini>
+Arithmetic density measures the land. Lived density measures the life.
+</Pullquote>
+
+**On paper, the Netherlands is denser than India**, 472 people/km² to India's 458. But arithmetic density spreads everyone evenly over *all* the land, including the empty parts. Measure what people actually experience and it flips: the average Indian lives at **~10,060/km², three times the Netherlands' 3,428.** The map says the Netherlands is more crowded; real life says India is.
+
+<Pullquote mini>
+India is one of the most densely *lived* large countries on Earth.
+</Pullquote>
+
+Almost everyone packed tighter is either a city-state with no countryside, or a near-empty country where people huddle onto a thin strip of habitable land. Among large, fully-inhabited nations, only a handful are more densely lived than India: its neighbours Bangladesh and Pakistan, and the East-Asian density champions Taiwan and South Korea.<Sidenote n="1">The full per-country numbers are in the sortable table in the appendix, where you can search for any country and compare it directly against India.</Sidenote> For scale, the average Indian lives 5× more densely than a Finn, the citizen of the world's happiest country, and 3 to 4× denser than the average Swede, Norwegian, New Zealander or Canadian.
+
+So is India overpopulated? By headcount, certainly; it is the largest country on Earth. By lived density, it is genuinely among the most crowded ordinary countries anywhere. And yet the slope chart already hinted at the twist. South Korea, Taiwan and Hong Kong live denser than India, Israel and Spain about the same, and every one of them is far more livable. Density is not the disease. What we feel in that Whitefield traffic is not really too many people on the land, but too little of everything that makes density livable. That, though, is a question for another piece.
+
+<ComingSoon note="More on what actually makes density livable is still growing. Check back soon." />
+
+<Appendix title="How lived density is calculated, and the full table">
+
+The formula above asks us to chop a country into 1 km² patches, find each patch's density, and take a population-weighted average. In practice we don't draw those patches by hand, since a satellite dataset already provides them.
+
+**The data.** We use **GHS-POP** (the EU Joint Research Centre's Global Human Settlement population grid), which estimates how many people live in every **1 km × 1 km** cell on Earth. Each cell $i$ is one patch in the formula: its area is fixed at 1 km², so the cell's population $P_i$ *is* its density $D_i$ (people per km²).
+
+**The calculation.** For a given country we:
+
+1. **Clip** the global grid to that country's borders, keeping only the cells inside it.
+2. For each cell, read its population $P_i$ (which equals its density $D_i$, since the cell is 1 km²).
+3. Take the **population-weighted average**, where each cell counts in proportion to how many people live there:
+
+$$
+\bar{D} = \frac{\sum_i P_i \cdot D_i}{\sum_i P_i}
+$$
+
+Because empty desert and mountain cells hold almost no people, they barely count; the crowded cells where most people actually live dominate the average. That is why lived density reflects the experience of a *typical resident* rather than the *average square kilometre of land*.
+
+**Why it's trustworthy.** Summing $P_i$ over all of India's cells reproduces the country's total population to within a rounding error, about **1.4502 billion versus the UN's 1.4509 billion, a 0.05% match**, which tells us the grid is capturing essentially everyone in roughly the right places.
+
+**The two numbers, side by side.** For each country we report:
+
+| Quantity | Definition | What it answers |
+|---|---|---|
+| Arithmetic density $\rho$ | people ÷ total land area | "What does a map show?" |
+| Lived density $\bar{D}$ | population-weighted cell density | "How dense is the average person's surroundings?" |
+| Concentration ratio $C = \bar{D}/\rho$ | lived ÷ arithmetic | "How clustered are the people?" |
+
+A large $C$ means people are squeezed into a small fraction of the land (Russia 620×, Brazil 250×); a small $C$ means they're spread evenly (Netherlands just 7×). India sits at **22×**: its 458/km² on paper becomes **~10,060/km² as actually lived**.
+
+*Source: GHS-POP 1 km population grid (GHS-POP R2023A, 2025 epoch), clipped to national boundaries.*
+
+### The full table: every country's lived density
+
+India is denser-lived than about 85% of all countries. The table is sortable and searchable, and the last column recomputes live against whichever country you pick, India by default, so you can see exactly how any place compares.
+
+<DensityTable
+  source="Lived (population-weighted) density from the GHS-POP 1 km grid; 242 countries."
+/>
+
+A few countries sit above India only for technical reasons.<Sidenote n="2">The very top of the table is mostly **city-states and tiny islands** (Macao, Hong Kong, Singapore, Monaco, the Maldives), places with almost no countryside, so their lived density is barely different from their arithmetic one. Most of the rest are **desert- or conflict-clustered countries** (Congo, Somalia, Egypt, Iran, Sudan) where people huddle onto a thin strip of habitable land while vast empty areas drag the arithmetic density toward zero, which is exactly why their concentration ratio $C$ is enormous, often 200× to 1700×. Strip those two groups out and only a handful of *ordinary, fully-inhabited* countries (Bangladesh, Pakistan, Taiwan and South Korea) are genuinely more densely lived than India.</Sidenote> Once you set them aside, India stands out as one of the most densely *lived* ordinary countries on Earth.
+
+</Appendix>

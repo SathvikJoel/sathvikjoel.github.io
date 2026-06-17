@@ -25,7 +25,7 @@ export const SEARCH: Page = {
   DESCRIPTION: "Search all writing by keyword.",
 }
 
-// Streams — Tech / Life / Philosophy / Writings. Each is a feed you tend over time.
+// Streams — Tech / Life / Fun / Philosophy / Writings / Essays. Each is a feed you tend over time.
 // LAYOUT: "masonry" = 3-column previews (like Maggie's Notes);
 //         "feed"    = full posts stacked with separators (like her Smidgeons);
 //         "column"  = single column of preview cards (one per row);
@@ -60,6 +60,12 @@ export const TOPICS = [
     LABEL: "Writings",
     LAYOUT: "list",
     BLURB: "Short reads — one small idea at a time.",
+  },
+  {
+    KEY: "essays",
+    LABEL: "Essays",
+    LAYOUT: "column",
+    BLURB: "The long form — ideas I've sat with long enough to argue them properly.",
   },
 ] as const
 
