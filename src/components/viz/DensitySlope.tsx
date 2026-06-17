@@ -14,6 +14,7 @@ export default function DensitySlope(props: Props) {
 
   onMount(async () => {
     const rows = parseCSV(await (await fetch(props.src)).text())
+    const isPhone = el.clientWidth < 560
 
     const roleStyle = (role: string) => {
       if (role === "focus") return { color: VIZ.focus, width: 3.6, z: 10 }
@@ -42,9 +43,9 @@ export default function DensitySlope(props: Props) {
           formatter: () => `${r.country}  ${fmt(lived)}`,
           color: st.color,
           fontFamily: "Lato, sans-serif",
-          fontSize: isFocus ? 13 : 12,
+          fontSize: isFocus ? (isPhone ? 12 : 13) : isPhone ? 11 : 12,
           fontWeight: isFocus ? 700 : 400,
-          padding: [0, 0, 0, 6],
+          padding: [0, 0, 0, isPhone ? 4 : 6],
         },
       }
     })
@@ -53,7 +54,10 @@ export default function DensitySlope(props: Props) {
     chart.setOption({
       backgroundColor: "transparent",
       animation: !prefersReducedMotion(),
-      grid: { left: 8, right: 132, top: 28, bottom: 28, containLabel: true },
+      // The right gutter holds the end labels ("Country 12,345"). Reserve less of it
+      // on phones so the slope lines aren't squeezed into a sliver and there's no dead
+      // black band on the right.
+      grid: { left: 6, right: isPhone ? 104 : 132, top: 28, bottom: 28, containLabel: true },
       tooltip: {
         ...tooltipStyle,
         trigger: "item",

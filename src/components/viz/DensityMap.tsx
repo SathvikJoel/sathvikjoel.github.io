@@ -141,11 +141,14 @@ export default function DensityMap(props: Props) {
           nameProperty: "name",
           roam: true,
           scaleLimit: { min: 1, max: 6 },
-          zoom: 1.15,
+          // The container is sized to the map's true aspect ratio (~1.94), so filling
+          // the box edge to edge introduces no distortion. (left/right/top/bottom on a
+          // mismatched box is what stretched the continents on phones before.)
           left: 0,
           right: 0,
-          top: 6,
-          bottom: 6,
+          top: 0,
+          bottom: 0,
+          zoom: 1,
           itemStyle: {
             areaColor: VIZ.noData,
             borderColor: VIZ.noDataBorder,
@@ -172,7 +175,7 @@ export default function DensityMap(props: Props) {
   return (
     <div
       ref={el}
-      class="h-[360px] w-full sm:h-[460px]"
+      class="aspect-[97/50] max-h-[70vh] w-full"
       role="img"
       aria-label={`World map shaded by ${props.label.toLowerCase()}. Hover any country for its value.`}
     />
