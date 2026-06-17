@@ -107,14 +107,17 @@ line, or any other aside.
 ### Appendix
 
 End matter for a post — workflows, derivations, reproduction notes — set off from the
-essay by a full-width rule with a centred, clickable **Appendix** label. Clicking the
-label collapses or expands the section (it works without JavaScript). The body stays at
-the normal reading size, only muted in colour so it clearly reads as supplementary.
+essay by a full-width rule with a centred, clickable **Appendix** label. The label is
+always the word "Appendix"; title the contents with headings inside instead. Clicking
+the label collapses or expands the section (it works without JavaScript). The body stays
+at the normal reading size, only muted in colour so it clearly reads as supplementary.
 
 ```mdx
 <Appendix>
 
-Supplementary material. Organise it with `###` headings.
+# The full table and how it's built
+
+Supplementary material. Organise it with `##`/`###` headings.
 
 ### Reproduction workflow
 
@@ -125,14 +128,11 @@ Step-by-step notes, code blocks, lists…
 
 Optional props:
 
-- `label` — overrides the centred word, e.g. `label="Appendix A"`.
-- `title` — appended after a dot, so `label="Appendix A" title="Reproduction workflow"`
-  renders **APPENDIX A · REPRODUCTION WORKFLOW**.
 - `anchor` — an id on the whole block for deep-linking.
 - `open` — start expanded instead of collapsed.
 
 **Use exactly one appendix per post.** If you have several topics of end matter, divide a
-single `<Appendix>` with `###` headings rather than stacking multiple appendix rules — one
+single `<Appendix>` with headings rather than stacking multiple appendix rules — one
 rule reads as a clean section break, several look like a mistake.
 
 A link that points to a heading or block **inside** a collapsed appendix automatically
