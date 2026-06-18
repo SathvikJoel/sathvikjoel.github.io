@@ -40,7 +40,7 @@ export default function DensitySlope(props: Props) {
         labelLayout: { moveOverlap: "shiftY" },
         endLabel: {
           show: true,
-          formatter: () => `${r.country}  ${fmt(lived)}`,
+          formatter: () => `${r.country}  ${fmt(arith)} → ${fmt(lived)}`,
           color: st.color,
           fontFamily: "Lato, sans-serif",
           fontSize: isFocus ? (isPhone ? 12 : 13) : isPhone ? 11 : 12,
@@ -60,7 +60,7 @@ export default function DensitySlope(props: Props) {
       // slope block under the centred caption instead of hugging the y-axis.
       grid: {
         left: isPhone ? 6 : 70,
-        right: isPhone ? 104 : 132,
+        right: isPhone ? 150 : 178,
         top: 28,
         bottom: 28,
         containLabel: true,
