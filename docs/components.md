@@ -238,6 +238,11 @@ it lays the cover beside the text; add `small` for a compact, centred card you c
 into a reading list. Put the cover image under `public/...` and link it by absolute path.
 The `cover` is optional — leave it off and the card draws a tidy book glyph in its place.
 
+Every cover is rendered at a **standard book size** (a fixed 2:3 box): whatever image you
+pass is fitted to that box, so covers of any source dimensions line up uniformly and the
+title's top edge always aligns with the top of the cover. No need to pre-crop or resize
+your image — drop it in and it's normalised for you.
+
 ```mdx
 <Book cover="/covers/metaphors.jpg" title="Metaphors We Live By"
       author="Lakoff & Johnson" href="https://example.com">
