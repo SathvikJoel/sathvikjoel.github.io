@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content"
+import { postUrl } from "@lib/utils"
 
 type Props = {
   posts: CollectionEntry<"posts">[]
@@ -15,7 +16,7 @@ const stamp = (date: Date) =>
 <ul class="writing-list animate">
   {posts.map((post) => (
     <li>
-      <a href={`/posts/${post.slug}`} class="writing-row">
+      <a href={postUrl(post.slug)} class="writing-row">
         <time class="writing-date" datetime={post.data.date.toISOString()}>
           {stamp(post.data.date)}
         </time>

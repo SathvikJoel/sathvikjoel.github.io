@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content"
 import { getBacklinks, getRelated } from "@lib/connections"
+import { postUrl } from "@lib/utils"
 import StageIcon from "@components/StageIcon.astro"
 
 type Props = {
@@ -23,7 +24,7 @@ const related = getRelated(post, all, backlinks, 3)
         </h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {backlinks.map((p) => (
-            <a href={`/posts/${p.slug}`} class="conn-card group">
+            <a href={postUrl(p.slug)} class="conn-card group">
               <span class="conn-emoji">
                 <StageIcon stage={p.data.growthStage} src={p.data.stageIcon} class="size-4" />
               </span>
@@ -42,7 +43,7 @@ const related = getRelated(post, all, backlinks, 3)
         <h3 class="font-sans text-xs uppercase tracking-widest opacity-50 mb-4">Keep exploring</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {related.map((p) => (
-            <a href={`/posts/${p.slug}`} class="conn-card group">
+            <a href={postUrl(p.slug)} class="conn-card group">
               <span class="min-w-0">
                 <span class="conn-title">{p.data.title}</span>
                 {p.data.description && <span class="conn-desc">{p.data.description}</span>}

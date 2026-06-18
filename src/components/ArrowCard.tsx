@@ -1,4 +1,4 @@
-import { relativeDate, truncateText } from "@lib/utils"
+import { relativeDate, truncateText, postUrl } from "@lib/utils"
 import type { SearchItem } from "@components/Search"
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 
 export default function ArrowCard({ entry, pill }: Props) {
   return (
-    <a href={`/posts/${entry.slug}`} class="group p-4 gap-3 flex items-center border rounded-lg hover:bg-black/5 hover:dark:bg-white/10 border-black/15 dark:border-white/20 transition-colors duration-300 ease-in-out">
+    <a href={postUrl(entry.slug)} class="group p-4 gap-3 flex items-center border rounded-lg hover:bg-black/5 hover:dark:bg-white/10 border-black/15 dark:border-white/20 transition-colors duration-300 ease-in-out">
       <div class="w-full group-hover:text-black group-hover:dark:text-white blend">
         <div class="flex flex-wrap items-center gap-2">
           {pill &&

@@ -8,11 +8,14 @@ function leaf(slug: string): string {
   return parts[parts.length - 1]
 }
 
-// Does `from`'s body link to `to`? Supports absolute /posts/<slug> links and [[wikilinks]].
+// Does `from`'s body link to `to`? Supports the flat /posts/<leaf> links, the legacy
+// /posts/<topic>/<leaf> form, and [[wikilinks]].
 function linksTo(from: Post, to: Post): boolean {
   const body = from.body
+  const leafName = leaf(to.slug)
+  if (body.includes(`/posts/${leafName}`)) return true
   if (body.includes(`/posts/${to.slug}`)) return true
-  const wiki = new RegExp(`\\[\\[\\s*${leaf(to.slug)}\\s*\\]\\]`, "i")
+  const wiki = new RegExp(`\\[\\[\\s*${leafName}\\s*\\]\\]`, "i")
   return wiki.test(body)
 }
 

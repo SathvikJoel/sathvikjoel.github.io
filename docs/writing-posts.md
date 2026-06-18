@@ -191,7 +191,9 @@ You can deep-link to any heading or block — in the same post or another one.
 
 - **Headings** are anchored automatically: `## Why we publish` is reachable at
   `#why-we-publish`. Link with `[text](#why-we-publish)` in the same post, or
-  `[text](/posts/tech/my-post/#why-we-publish)` from another.
+  `[text](/posts/my-post/#why-we-publish)` from another. **Use the flat
+  `/posts/<post-folder>/` form** (the folder name only, no stream) so the link keeps working
+  even if the post later moves to a different stream.
 - **Any block** can get a short, stable, custom id by ending it with an Obsidian-style
   caret marker, e.g. `We cleaned the data in three passes. ^cleaning`, then linked as
   `[see how](#cleaning)`. Keep each caret id unique within a post.

@@ -88,3 +88,13 @@ page isn't empty.
 > Newly added streams behave exactly like the existing ones — the only choice you're
 > really making is which of the three **styles** fits the kind of writing you'll put
 > there.
+
+## Moving a post between streams
+
+A post's public URL is **flat** — `/posts/<post-folder>/`, with no stream in it. That means
+you can move a post to a different stream **without breaking its link**: change the post's
+`topic` to the new stream and move both its folders to match
+(`src/content/posts/<new-stream>/<same-folder>/` and `public/posts/<new-stream>/<same-folder>/`).
+The URL stays `/posts/<same-folder>/`, and the old `/posts/<old-stream>/<folder>/` address
+keeps redirecting to it. Keep the folder name unique across all streams — the build fails if
+two posts share one.

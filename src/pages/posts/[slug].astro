@@ -8,14 +8,16 @@ import Connections from "@components/Connections.astro"
 import { mdxComponents } from "@components/mdx/registry"
 import StageIcon from "@components/StageIcon.astro"
 import TableOfContents from "@components/TableOfContents.astro"
+import { TOPICS } from "@consts"
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts")
+  const topics = new Set<string>(TOPICS.map((t) => t.KEY))
+  const seen = new Map<string, string>()
   return posts.map((post) => {
     const parts = post.slug.split("/")
     // Convention guard: posts must live exactly one folder deep under a topic,
     // i.e. src/content/posts/<topic>/<folder>/index.mdx → slug "<topic>/<folder>".
-    // Anything else would silently route to the wrong URL, so fail the build loudly.
     if (parts.length !== 2) {
       throw new Error(
         `Post "${post.slug}" must live at posts/<topic>/<folder>/index.mdx ` +
@@ -29,7 +31,24 @@ export async function getStaticPaths() {
           `topic "${post.data.topic}". The folder and the topic field must match.`
       )
     }
-    return { params: { topic, slug }, props: post }
+    // Posts are served at the flat /posts/<slug>, so the folder name must be unique
+    // across every stream and must not collide with a stream index (/posts/<topic>).
+    // Either would silently overwrite a page, so fail the build loudly instead.
+    if (topics.has(slug)) {
+      throw new Error(
+        `Post folder "${slug}" collides with the "${slug}" stream URL (/posts/${slug}). ` +
+          `Rename the post folder so flat post URLs stay unambiguous.`
+      )
+    }
+    const prior = seen.get(slug)
+    if (prior) {
+      throw new Error(
+        `Two posts share the folder name "${slug}" ("${prior}" and "${post.slug}"). ` +
+          `Flat post URLs require unique folder names across all streams.`
+      )
+    }
+    seen.set(slug, post.slug)
+    return { params: { slug }, props: post }
   })
 }
 

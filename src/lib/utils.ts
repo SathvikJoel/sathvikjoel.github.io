@@ -5,6 +5,18 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// Post slugs are stored as "<topic>/<folder>" (the content folder layout), but posts
+// are served at /posts/<folder> — without the stream segment — so a post can move
+// between streams without changing its URL or breaking shared links. These helpers
+// derive the flat leaf and public path from a slug.
+export function postLeaf(slug: string): string {
+  return slug.split("/").pop() as string
+}
+
+export function postUrl(slug: string): string {
+  return `/posts/${postLeaf(slug)}`
+}
+
 export function formatDate(date: Date) {
   return Intl.DateTimeFormat("en-US", {
     month: "short",

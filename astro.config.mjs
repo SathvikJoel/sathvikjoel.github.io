@@ -18,9 +18,13 @@ const monoFont =
 // post so the sitemap integration can drop them. We read frontmatter directly
 // (the sitemap `filter` only receives a URL string, not the post data) so the
 // exclusion stays in sync with the content instead of a hardcoded list.
-function hiddenPostFragments() {
+// Walk src/content/posts and collect every post's "<topic>/<folder>" slug, its flat
+// leaf (the folder name), and whether it's hidden (draft/unlisted). We read frontmatter
+// directly so the sitemap exclusion and the legacy redirects stay in sync with the
+// content instead of a hardcoded list.
+function collectPosts() {
   const root = "src/content/posts"
-  const fragments = []
+  const posts = []
   const walk = (dir) => {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
       const full = join(dir, entry.name)
@@ -28,19 +32,28 @@ function hiddenPostFragments() {
         walk(full)
       } else if (entry.name === "index.md" || entry.name === "index.mdx") {
         const { data } = matter(readFileSync(full, "utf8"))
-        if (data.draft || data.unlisted) {
-          // slug = folder path relative to the posts root, e.g. "tech/12032024_forest"
-          const slug = relative(root, dir).split(/[\\/]/).join("/")
-          fragments.push(`/posts/${slug}`)
-        }
+        const slug = relative(root, dir).split(/[\\/]/).join("/")
+        const leaf = slug.split("/").pop()
+        posts.push({ slug, leaf, hidden: Boolean(data.draft || data.unlisted) })
       }
     }
   }
   walk(root)
-  return fragments
+  return posts
 }
 
-const hiddenFragments = hiddenPostFragments()
+const allPosts = collectPosts()
+
+// Posts are served at the flat /posts/<leaf>, so hidden-post URL fragments use the leaf.
+const hiddenFragments = allPosts.filter((p) => p.hidden).map((p) => `/posts/${p.leaf}`)
+
+// Posts now live at /posts/<leaf> (no stream segment) so they can move between streams
+// without breaking links. Forward every legacy /posts/<topic>/<folder> URL — which may
+// be shared on the web — to its flat equivalent. Astro emits a static meta-refresh +
+// canonical page for each on GitHub Pages.
+const legacyPostRedirects = Object.fromEntries(
+  allPosts.map((p) => [`/posts/${p.slug}`, `/posts/${p.leaf}`])
+)
 
 // https://astro.build/config
 export default defineConfig({
@@ -54,8 +67,12 @@ export default defineConfig({
     "/archive": "/",
     "/tags": "/",
     "/categories": "/",
-    "/posts/life/12222025_kora": "/posts/fun/12222025_kora",
-    "/posts/life/29052026_greek": "/posts/fun/29052026_greek",
+    // Posts that have moved streams: forward the old stream paths straight to the
+    // flat URL so there's no double hop.
+    "/posts/life/12222025_kora": "/posts/12222025_kora",
+    "/posts/life/29052026_greek": "/posts/29052026_greek",
+    // Every /posts/<topic>/<folder> → /posts/<folder>.
+    ...legacyPostRedirects,
   },
   markdown: {
     remarkPlugins: [remarkMath, remarkBlockId],
@@ -92,7 +109,8 @@ export default defineConfig({
       // engines don't index them. Draft + unlisted post URLs are derived from
       // frontmatter above; the toolkit is reachable only via the /docs handbook.
       filter: (page) =>
-        !page.includes("/posts/tech/toolkit") &&
+        !page.includes("/posts/toolkit") &&
+        !Object.keys(legacyPostRedirects).some((old) => page.includes(old)) &&
         !hiddenFragments.some((fragment) => page.includes(fragment)),
     }),
     solidJs(),

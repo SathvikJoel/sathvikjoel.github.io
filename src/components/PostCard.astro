@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content"
-import { relativeDate } from "@lib/utils"
+import { relativeDate, postUrl } from "@lib/utils"
 import StageIcon from "@components/StageIcon.astro"
 
 type Props = {
@@ -24,7 +24,7 @@ const image = entry.collection === "posts" ? entry.data.image : undefined
 const imageAlt = entry.collection === "posts" ? entry.data.imageAlt : undefined
 const tile = entry.collection === "posts" ? entry.data.tile : undefined
 const stageIcon = entry.collection === "posts" ? entry.data.stageIcon : undefined
-const href = isNow ? `/now/${entry.slug}` : `/posts/${entry.slug}`
+const href = isNow ? `/now/${entry.slug}` : postUrl(entry.slug)
 // Drives the little state icon + label. Now entries show a clock instead of a growth
 // stage and carry no stage for the stage filter (data-stage stays empty).
 const stage = isNow ? "now" : entry.collection === "posts" ? entry.data.growthStage : "now"

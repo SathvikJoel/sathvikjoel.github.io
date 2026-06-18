@@ -56,8 +56,15 @@ export default function DensitySlope(props: Props) {
       animation: !prefersReducedMotion(),
       // The right gutter holds the end labels ("Country 12,345"). Reserve less of it
       // on phones so the slope lines aren't squeezed into a sliver and there's no dead
-      // black band on the right.
-      grid: { left: 6, right: isPhone ? 104 : 132, top: 28, bottom: 28, containLabel: true },
+      // black band on the right. On wider screens a matching left inset centres the
+      // slope block under the centred caption instead of hugging the y-axis.
+      grid: {
+        left: isPhone ? 6 : 70,
+        right: isPhone ? 104 : 132,
+        top: 28,
+        bottom: 28,
+        containLabel: true,
+      },
       tooltip: {
         ...tooltipStyle,
         trigger: "item",

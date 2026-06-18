@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content"
 import { relativeDate } from "@lib/utils"
+import { postUrl } from "@lib/utils"
 import { mdxComponents } from "@components/mdx/registry"
 import StageIcon from "@components/StageIcon.astro"
 
@@ -25,13 +26,13 @@ const rendered = await Promise.all(
           <StageIcon stage={post.data.growthStage} src={post.data.stageIcon} class="size-4" />
         </div>
         <h2 class="font-display text-2xl sm:text-3xl leading-tight mt-1 text-black dark:text-white">
-          <a href={`/posts/${post.slug}`} class="hover:text-crimson dark:hover:text-crimson-dark transition-colors">{post.data.title}</a>
+          <a href={postUrl(post.slug)} class="hover:text-crimson dark:hover:text-crimson-dark transition-colors">{post.data.title}</a>
         </h2>
       </header>
       <div class="prose-post stream-body">
         <Content components={mdxComponents} />
       </div>
-      <a href={`/posts/${post.slug}`} class="inline-block mt-4 font-sans text-sm text-crimson dark:text-crimson-dark hover:underline">
+      <a href={postUrl(post.slug)} class="inline-block mt-4 font-sans text-sm text-crimson dark:text-crimson-dark hover:underline">
         Permalink →
       </a>
     </article>

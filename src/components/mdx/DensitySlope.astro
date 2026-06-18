@@ -9,7 +9,7 @@ const base = "/posts/essays/overpopulation/data"
 const { caption, source } = Astro.props
 ---
 
-<figure class="viz-figure not-prose my-10">
+<figure class="viz-figure viz-narrow not-prose my-10">
   <DensitySlope client:visible src={`${base}/slope_density_selected.csv`} />
   {
     (caption || source) && (

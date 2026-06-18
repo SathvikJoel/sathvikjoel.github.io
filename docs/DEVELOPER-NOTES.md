@@ -74,7 +74,7 @@ Key `posts` fields whose behavior isn't obvious from the name:
 - **`unlisted: true`** — hidden from homepage, stream indexes, search, RSS, and
   related/backlink connections, **but intentionally reachable at its URL** (used for the
   Writing toolkit, linked only from the private `/docs`).
-- **CRITICAL:** `getStaticPaths` in `src/pages/posts/[topic]/[slug].astro` maps **every**
+- **CRITICAL:** `getStaticPaths` in `src/pages/posts/[slug].astro` maps **every**
   post to a page — it does **not** filter `draft` or `unlisted`. Astro content collections
   don't auto-exclude drafts either. So **a draft post still builds a page at its URL**;
   `draft`/`unlisted` only remove it from *listings*. Don't assume a draft is fully private —
@@ -82,9 +82,9 @@ Key `posts` fields whose behavior isn't obvious from the name:
 - **Search engines are kept out, though:** draft/unlisted post pages emit
   `<meta name="robots" content="noindex, nofollow">` (via `noindex={draft || unlisted}`
   threaded `[slug].astro` → `PageLayout` → `BaseHead`), and their URLs are **excluded from
-  `sitemap-0.xml`**. The sitemap exclusion lives in `astro.config.mjs`: `hiddenPostFragments()`
+  `sitemap-0.xml`**. The sitemap exclusion lives in `astro.config.mjs`: `collectPosts()`
   reads every post's frontmatter with `gray-matter` at config load and drops any `draft`/`unlisted`
-  slug from the sitemap `filter`. (The `filter` only gets a URL string, so it can't see post data —
+  leaf from the sitemap `filter`. (The `filter` only gets a URL string, so it can't see post data —
   hence the separate frontmatter read. Keep this in sync if you change how visibility works.)
 - **The listing visibility filter is duplicated inline in every listing surface**, not centralized.
   Grep shows it in `index.astro`, `posts/[topic]/index.astro`, `rss.xml.ts`,
@@ -101,10 +101,14 @@ The build fails loudly (rather than shipping broken output) on these:
   `<meta name="description">`, the OG/Twitter card, and search snippets, so an empty one used
   to ship silently. Adding a post without one now fails `astro check`/build.
 - **Post folder depth + topic match** (`getStaticPaths` in `[slug].astro`). A post must live
-  exactly one level deep — `posts/<topic>/<folder>/index.md(x)` → slug `<topic>/<folder>` — and
+  exactly one level deep — `posts/<topic>/<folder>/index.md(x)` → content slug `<topic>/<folder>` — and
   its frontmatter `topic` **must equal** its `<topic>` folder. The slug is split into exactly two
-  segments to build the URL; a deeper folder or a folder/`topic` mismatch would silently route to
-  the wrong address, so both now `throw` during the build.
+  segments; a deeper folder or a folder/`topic` mismatch would silently route to the wrong
+  address, so both now `throw` during the build.
+- **Flat post-URL uniqueness** (`getStaticPaths` in `[slug].astro`). Posts are served at the
+  flat `/posts/<folder>` (the leaf only — see "Post URLs" below), so the build also `throw`s if a
+  folder name collides with a stream KEY (`/posts/<topic>`) or if two posts in different streams
+  share a folder name. Both would silently overwrite a page, so they fail loudly instead.
 
 ## Streams (`TOPICS`) coupling
 
@@ -307,14 +311,36 @@ The `/docs` route is a **password-gated writer handbook**, encrypted at build ti
   `draft`/`unlisted`), so a same-day post won't silently vanish — but still use the IST
   offset for correct ordering and "x days ago" math.
 
+## Post URLs: flat `/posts/<slug>` + legacy redirects
+
+- **Posts are served at a flat `/posts/<folder>`** — the folder leaf only, *not*
+  `/posts/<topic>/<folder>`. This lets a post move between streams (change its `topic` +
+  folder location) **without changing its public URL or breaking inbound links**. The content
+  collection slug is still `<topic>/<folder>` (Astro derives it from the path); the flat route
+  `src/pages/posts/[slug].astro` maps each post to `params.slug = <leaf>`.
+- **Build URLs with the helpers, never by hand:** `postLeaf(slug)` / `postUrl(slug)` in
+  `src/lib/utils.ts` turn a content slug into the flat leaf / `/posts/<leaf>` path. Every link
+  builder uses them (`Connections`, `StreamList`, `StreamFeed`, `PostCard`, `ArrowCard`,
+  `rss.xml.ts`). If you add a surface that links to a post, use `postUrl`.
+- **Old nested URLs still resolve.** `astro.config.mjs` `collectPosts()` enumerates every post
+  and `legacyPostRedirects` emits a redirect from each old `/posts/<topic>/<folder>` →
+  `/posts/<folder>`. Posts that *changed* streams (e.g. `kora`, `greek` moved life → fun) also
+  get **manual** redirects from their former stream path. Redirects are static meta-refresh +
+  canonical pages, and their URLs are excluded from the sitemap.
+- **Asset paths stay nested.** Image/file refs like `/posts/<topic>/<folder>/images/...` point
+  at `public/posts/<topic>/<folder>/...` and are **unaffected** — the public folder keeps the
+  nested structure. Only genuine *page* links flatten.
+
 ## Connections (backlinks + related)
 
 - `src/lib/connections.ts` builds the garden web. `getBacklinks` scans every post's **raw
-  body** for either an absolute `/posts/<slug>` link **or** a `[[wikilink]]` matching the
-  target's slug leaf (last path segment). `getRelated` is a score-based fallback (same
-  topic = +2, each shared tag = +1) so the connections block is never empty.
-- Implication: to create a backlink, link with the **full `/posts/<stream>/<post>` path**
-  or a `[[<post-folder-name>]]` wikilink. A bare relative link won't be detected.
+  body** for an absolute link to the target (flat `/posts/<leaf>` **or** the old
+  `/posts/<topic>/<folder>` form) **or** a `[[wikilink]]` matching the target's slug leaf
+  (last path segment). `getRelated` is a score-based fallback (same topic = +2, each shared
+  tag = +1) so the connections block is never empty.
+- Implication: to create a backlink, link with the **flat `/posts/<post-folder>/` path** (old
+  nested paths still match for legacy content) or a `[[<post-folder-name>]]` wikilink. A bare
+  relative link won't be detected.
 
 ## Resume has two sources of truth
 
