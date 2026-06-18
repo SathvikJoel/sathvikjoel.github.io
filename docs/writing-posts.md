@@ -7,19 +7,24 @@ freely in Markdown.
 
 ## Where posts live
 
-A post is **two mirrored folders** that share the same `<stream>/<post-name>` path: the
+A post is **two mirrored folders** that share the same `<post-name>` path: the
 **text** lives in the content folder, and the **pictures** live in the public folder.
 
 ```
-src/content/posts/<stream>/<post-name>/index.md     ← the post TEXT (this file)
-public/posts/<stream>/<post-name>/                   ← the post's PICTURES & files
+src/content/posts/<post-name>/index.md     ← the post TEXT (this file)
+public/posts/<post-name>/                   ← the post's PICTURES & files
 ```
 
-For example, a Life post's writing lives at `src/content/posts/life/my-trip/index.md`,
-and its photos live at `public/posts/life/my-trip/...` (e.g. a `cover.png` and an
+For example, a post's writing lives at `src/content/posts/my-trip/index.md`,
+and its photos live at `public/posts/my-trip/...` (e.g. a `cover.png` and an
 `images/` subfolder). You then link to a picture with a slash-prefixed address that
-mirrors that path — `/posts/life/my-trip/cover.png`. See
+mirrors that path — `/posts/my-trip/cover.png`. See
 [Covers & images](./covers-and-images.md) for the details.
+
+> **Which stream is it in?** Not the folder — the **`topic`** frontmatter field decides
+> the stream (see [Streams](./streams.md)). The folder name is just the post's URL slug.
+> To move a post to another stream, change one line (`topic:`); nothing on disk needs to
+> move.
 
 > **Why two folders?** Anything under `public/` is published at the site root exactly
 > as-is, which is what lets `/posts/...` image links resolve. An image placed *next to*
@@ -32,11 +37,10 @@ mirrors that path — `/posts/life/my-trip/cover.png`. See
   those blocks.)
 
 > **One folder deep, always.** A post must live at exactly
-> `src/content/posts/<stream>/<post-name>/index.md(x)` — one stream folder, then one
-> post folder, then the file. Don't nest a post inside extra sub-folders: the post URL
-> is built from that `<stream>/<post-name>` path, so a deeper folder would route to the
-> wrong address. The build **fails loudly** if a post isn't exactly one level deep, or
-> if its `topic` doesn't match its `<stream>` folder.
+> `src/content/posts/<post-name>/index.md(x)` — one post folder, then the file. Don't
+> nest a post inside extra sub-folders: the post URL is the `<post-name>` segment, so a
+> deeper folder would route to the wrong address. The build **fails loudly** if a post
+> isn't exactly one level deep, or if its folder name clashes with a stream URL.
 
 ## The front matter
 
@@ -59,7 +63,7 @@ growthStage: evergreen
 | --- | --- | --- |
 | `title` | **Yes** | The headline of the post. |
 | `date` | **Yes** | When it was published. Controls ordering and the "x ago" label. |
-| `topic` | **Yes** | Which [stream](./streams.md) the post belongs to. **Must match the post's folder** (a post in `posts/life/...` must have `topic: life`) — the build fails if they disagree. |
+| `topic` | **Yes** | Which [stream](./streams.md) the post belongs to. **This field alone decides the stream** — the folder name doesn't have to match. Change it to move a post between streams. Must be one of the defined stream keys, or the build fails. |
 | `description` | **Yes** | A one-line summary shown under the title, on tiles, and in search/social previews. Required: it powers the SEO meta description and the OG/Twitter share card, so the build **fails** if it's missing or empty. Aim for ~50–160 characters. |
 | `tags` | Optional | Labels for cross-cutting themes. They don't make pages, just describe the post. |
 | `growthStage` | Optional | The post's maturity: `seedling`, `budding`, or `evergreen`. Defaults to `evergreen` (see below). |
@@ -202,7 +206,7 @@ Full rules and examples live in the [writing toolkit](./components.md#cross-refe
 
 ## Publishing checklist
 
-- [ ] The post is in the right stream folder, with a `title`, `date`, and `topic`.
+- [ ] The post has its own folder under `src/content/posts/`, with a `title`, `date`, and `topic`.
 - [ ] The `date` ends in `+05:30`.
 - [ ] `draft` is removed or set to `false`.
 - [ ] You've set a `growthStage` (or left it off to mean evergreen).

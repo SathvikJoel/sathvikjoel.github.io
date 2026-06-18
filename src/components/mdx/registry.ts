@@ -1,5 +1,5 @@
 // Single source of truth for the MDX components available inside posts. Imported by
-// both the full post page ([topic]/[slug].astro) and the inline feed (StreamFeed.astro)
+// both the full post page ([slug].astro) and the inline feed (StreamFeed.astro)
 // so the two never drift — add a component here once and it works everywhere.
 import Figure from "./Figure.astro"
 import Excursion from "./Excursion.astro"

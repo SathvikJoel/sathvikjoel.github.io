@@ -13,41 +13,26 @@ import { TOPICS } from "@consts"
 export async function getStaticPaths() {
   const posts = await getCollection("posts")
   const topics = new Set<string>(TOPICS.map((t) => t.KEY))
-  const seen = new Map<string, string>()
   return posts.map((post) => {
-    const parts = post.slug.split("/")
-    // Convention guard: posts must live exactly one folder deep under a topic,
-    // i.e. src/content/posts/<topic>/<folder>/index.mdx → slug "<topic>/<folder>".
-    if (parts.length !== 2) {
+    // Posts live flat at src/content/posts/<slug>/index.md(x), so the content slug
+    // is a single segment and the post is served at /posts/<slug>. The stream a post
+    // belongs to is decided by its `topic` frontmatter alone, not its folder location.
+    const slug = post.slug
+    if (slug.includes("/")) {
       throw new Error(
-        `Post "${post.slug}" must live at posts/<topic>/<folder>/index.mdx ` +
-          `(slug "<topic>/<folder>"), but its slug has ${parts.length} segment(s).`
+        `Post "${post.slug}" must live exactly one folder deep at ` +
+          `posts/<slug>/index.md(x). Nested post folders are no longer supported.`
       )
     }
-    const [topic, slug] = parts
-    if (topic !== post.data.topic) {
-      throw new Error(
-        `Post "${post.slug}" sits in the "${topic}" folder but has frontmatter ` +
-          `topic "${post.data.topic}". The folder and the topic field must match.`
-      )
-    }
-    // Posts are served at the flat /posts/<slug>, so the folder name must be unique
-    // across every stream and must not collide with a stream index (/posts/<topic>).
-    // Either would silently overwrite a page, so fail the build loudly instead.
+    // The flat post URL /posts/<slug> shares the /posts/ namespace with the stream
+    // index pages /posts/<topic>. A post folder named like a stream would silently
+    // overwrite that listing, so fail the build loudly instead.
     if (topics.has(slug)) {
       throw new Error(
-        `Post folder "${slug}" collides with the "${slug}" stream URL (/posts/${slug}). ` +
+        `Post folder "${slug}" collides with the "/posts/${slug}" stream URL. ` +
           `Rename the post folder so flat post URLs stay unambiguous.`
       )
     }
-    const prior = seen.get(slug)
-    if (prior) {
-      throw new Error(
-        `Two posts share the folder name "${slug}" ("${prior}" and "${post.slug}"). ` +
-          `Flat post URLs require unique folder names across all streams.`
-      )
-    }
-    seen.set(slug, post.slug)
     return { params: { slug }, props: post }
   })
 }

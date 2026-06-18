@@ -63,7 +63,7 @@ Key `posts` fields whose behavior isn't obvious from the name:
 | --- | --- |
 | `topic` | A `z.enum(["tech","life","fun","philosophy","writings"])`. **Must stay in lockstep with `TOPICS` in `src/consts.ts`** — the streams are derived from `TOPICS`, but the schema enum is a separate hardcoded list. Adding a stream means editing **both**. |
 | `growthStage` | `seedling` / `budding` / `evergreen`, default **`evergreen`** (an unmarked post is treated as finished). Drives the stage icon/word. |
-| `stageIcon` | Optional path (e.g. `/icons/comet.svg`) that overrides the **displayed** stage glyph only — stage name, label, filtering, and ordering are untouched. `StageIcon.astro` renders an `<img src>` (no `currentColor` tint, so the file supplies its own colour) instead of the built-in inline SVG. Threaded through every `StageIcon` call site (PostCard ×2, Connections, breadcrumb in `posts/[topic]/[slug].astro`, StreamFeed). Custom icons live in **`public/icons/`** (SVG preferred, transparent PNG ok). |
+| `stageIcon` | Optional path (e.g. `/icons/comet.svg`) that overrides the **displayed** stage glyph only — stage name, label, filtering, and ordering are untouched. `StageIcon.astro` renders an `<img src>` (no `currentColor` tint, so the file supplies its own colour) instead of the built-in inline SVG. Threaded through every `StageIcon` call site (PostCard ×2, Connections, breadcrumb in `posts/[slug].astro`, StreamFeed). Custom icons live in **`public/icons/`** (SVG preferred, transparent PNG ok). |
 | `width` | `"wide"` adds the `.wide-col` class on the article, widening the column for code-heavy posts. Pure presentation. |
 | `tile` + `cover` + `image` | The homepage tile style is **resolved in `PostCard.astro`**, not the schema. `tile: auto` → cover banner if `cover` set, else square `image`, else plain text. A forced style with a missing picture falls back gracefully. See `covers-and-images.md`. |
 | `draft` vs `unlisted` | **Different meanings — see next section.** |
@@ -84,7 +84,7 @@ Key `posts` fields whose behavior isn't obvious from the name:
   threaded `[slug].astro` → `PageLayout` → `BaseHead`), and their URLs are **excluded from
   `sitemap-0.xml`**. The sitemap exclusion lives in `astro.config.mjs`: `collectPosts()`
   reads every post's frontmatter with `gray-matter` at config load and drops any `draft`/`unlisted`
-  leaf from the sitemap `filter`. (The `filter` only gets a URL string, so it can't see post data —
+  slug from the sitemap `filter`. (The `filter` only gets a URL string, so it can't see post data —
   hence the separate frontmatter read. Keep this in sync if you change how visibility works.)
 - **The listing visibility filter is duplicated inline in every listing surface**, not centralized.
   Grep shows it in `index.astro`, `posts/[topic]/index.astro`, `rss.xml.ts`,
@@ -100,15 +100,13 @@ The build fails loudly (rather than shipping broken output) on these:
 - **`description` is required + non-empty** (`src/content/config.ts`). It powers the
   `<meta name="description">`, the OG/Twitter card, and search snippets, so an empty one used
   to ship silently. Adding a post without one now fails `astro check`/build.
-- **Post folder depth + topic match** (`getStaticPaths` in `[slug].astro`). A post must live
-  exactly one level deep — `posts/<topic>/<folder>/index.md(x)` → content slug `<topic>/<folder>` — and
-  its frontmatter `topic` **must equal** its `<topic>` folder. The slug is split into exactly two
-  segments; a deeper folder or a folder/`topic` mismatch would silently route to the wrong
-  address, so both now `throw` during the build.
-- **Flat post-URL uniqueness** (`getStaticPaths` in `[slug].astro`). Posts are served at the
-  flat `/posts/<folder>` (the leaf only — see "Post URLs" below), so the build also `throw`s if a
-  folder name collides with a stream KEY (`/posts/<topic>`) or if two posts in different streams
-  share a folder name. Both would silently overwrite a page, so they fail loudly instead.
+- **Post folder depth** (`getStaticPaths` in `[slug].astro`). A post must live exactly one
+  level deep — `posts/<slug>/index.md(x)` → content slug `<slug>` (a single segment). A
+  deeper folder would route to the wrong address, so it `throw`s during the build.
+- **Flat post-URL collision** (`getStaticPaths` in `[slug].astro`). Posts are served at the
+  flat `/posts/<slug>` (see "Post URLs" below), which shares the `/posts/` namespace with the
+  stream index pages `/posts/<topic>`. The build `throw`s if a post folder name equals a stream
+  KEY, since it would silently overwrite that listing.
 
 ## Streams (`TOPICS`) coupling
 
@@ -223,8 +221,8 @@ charts. The pattern is reusable for any future data-driven post.
 - **Astro does not optimize anything in `public/`.** Covers, tile images, and in-body
   `<Figure>` images are plain `<img src="/posts/...">` with string paths (the schema types
   `cover`/`image` as `z.string()`, not the `image()` helper). They are served byte-for-byte.
-- **A post is two mirrored folders**: text in `src/content/posts/<stream>/<post>/index.mdx`,
-  pictures in `public/posts/<stream>/<post>/...`. An image placed next to the `.mdx` in
+- **A post is two mirrored folders**: text in `src/content/posts/<slug>/index.mdx`,
+  pictures in `public/posts/<slug>/...`. An image placed next to the `.mdx` in
   `src/content` will **404** — `/posts/...` links only resolve to files under `public/`.
 - Compress large images with **`node scripts/optimize-images.mjs`** (resizes ≤2000px,
   re-encodes in place in the same format/path, only if smaller). Originals are recoverable
@@ -241,7 +239,7 @@ Every post page ships a per-post **1200×630** OG image so links shared to Whats
 Discord / iMessage always render a large, branded preview at the exact size platforms want.
 
 - **`scripts/build-og.mjs`** runs as a **`predev`/`prebuild` hook** and writes one
-  `public/og/<topic>/<slug>.jpg` per post. Card chosen by priority:
+  `public/og/<slug>.jpg` per post. Card chosen by priority:
   1. explicit **`ogImage`** front-matter → used full-bleed at 1200×630 (cover-fit), for a
      hand-made / Midjourney card;
   2. `cover`/`image` art → *contained* (never cropped), centered on the dark `#161618` canvas;
@@ -254,7 +252,7 @@ Discord / iMessage always render a large, branded preview at the exact size plat
   identically on CI: they do **not** depend on system fonts, and `@fontsource` ships woff2
   only (which librsvg/freetype can't reliably read). If you change the display/UI font, drop
   the matching `.ttf` into `scripts/og-fonts/` and update the `font-family` names in the SVG.
-- **Wiring:** `[topic]/[slug].astro` always sets `image={'/og/' + post.slug + '.jpg'}` and
+- **Wiring:** `[slug].astro` always sets `image={'/og/' + post.slug + '.jpg'}` and
   passes it (plus `imageAlt`) to `PageLayout` → `BaseHead`, which emits `og:image` +
   `twitter:image` at a hardcoded 1200×630. Non-post pages (home, streams) fall back to the
   static `public/open-graph.jpg` (also 1200×630).
@@ -313,34 +311,40 @@ The `/docs` route is a **password-gated writer handbook**, encrypted at build ti
 
 ## Post URLs: flat `/posts/<slug>` + legacy redirects
 
-- **Posts are served at a flat `/posts/<folder>`** — the folder leaf only, *not*
-  `/posts/<topic>/<folder>`. This lets a post move between streams (change its `topic` +
-  folder location) **without changing its public URL or breaking inbound links**. The content
-  collection slug is still `<topic>/<folder>` (Astro derives it from the path); the flat route
-  `src/pages/posts/[slug].astro` maps each post to `params.slug = <leaf>`.
+- **Posts live flat on disk and on the web.** Content is at
+  `src/content/posts/<slug>/index.md(x)` (a single folder deep, *no* stream segment), assets
+  at `public/posts/<slug>/...`, and the page is served at `/posts/<slug>`. The content
+  collection slug is the single segment `<slug>`; the route `src/pages/posts/[slug].astro` maps
+  each post to `params.slug = post.slug`.
+- **Stream is metadata, not location.** A post's stream is decided **only** by its `topic`
+  frontmatter, which is validated against the content-collection enum. To move a post between
+  streams you change **one line** (`topic:`) — no files move, the URL is unchanged, and assets
+  keep resolving. (Historically posts lived at `posts/<topic>/<slug>/`; that nesting was removed
+  so re-streaming is a one-line edit.)
 - **Build URLs with the helpers, never by hand:** `postLeaf(slug)` / `postUrl(slug)` in
-  `src/lib/utils.ts` turn a content slug into the flat leaf / `/posts/<leaf>` path. Every link
-  builder uses them (`Connections`, `StreamList`, `StreamFeed`, `PostCard`, `ArrowCard`,
-  `rss.xml.ts`). If you add a surface that links to a post, use `postUrl`.
-- **Old nested URLs still resolve.** `astro.config.mjs` `collectPosts()` enumerates every post
-  and `legacyPostRedirects` emits a redirect from each old `/posts/<topic>/<folder>` →
-  `/posts/<folder>`. Posts that *changed* streams (e.g. `kora`, `greek` moved life → fun) also
-  get **manual** redirects from their former stream path. Redirects are static meta-refresh +
-  canonical pages, and their URLs are excluded from the sitemap.
-- **Asset paths stay nested.** Image/file refs like `/posts/<topic>/<folder>/images/...` point
-  at `public/posts/<topic>/<folder>/...` and are **unaffected** — the public folder keeps the
-  nested structure. Only genuine *page* links flatten.
+  `src/lib/utils.ts` produce the `/posts/<slug>` path. Every link builder uses them
+  (`Connections`, `StreamList`, `StreamFeed`, `PostCard`, `ArrowCard`, `rss.xml.ts`). If you add
+  a surface that links to a post, use `postUrl`. (The helpers still tolerate a legacy
+  `<topic>/<slug>` slug defensively.)
+- **Old nested URLs still resolve.** `astro.config.mjs` `collectPosts()` reads each post's
+  frontmatter `topic`, and `legacyPostRedirects` emits a redirect from each
+  `/posts/<current-topic>/<slug>` → `/posts/<slug>`. Posts that have **changed** streams, or
+  whose old path was **shared publicly**, get an additional **manual** redirect for that old
+  `/posts/<old-topic>/<slug>` in the `redirects` block (e.g. `kora`/`greek` moved life → fun;
+  `aiwriting`/`overpopulation` pinned for Twitter). Redirects are static meta-refresh + canonical
+  pages, excluded from the sitemap. **When you re-stream a post whose old URL is out in the wild,
+  add the one-line manual pin.**
+- **Asset paths are flat too.** Image/file refs like `/posts/<slug>/images/...` point at
+  `public/posts/<slug>/...`. They never include the stream, so they survive a re-stream untouched.
 
 ## Connections (backlinks + related)
 
 - `src/lib/connections.ts` builds the garden web. `getBacklinks` scans every post's **raw
-  body** for an absolute link to the target (flat `/posts/<leaf>` **or** the old
-  `/posts/<topic>/<folder>` form) **or** a `[[wikilink]]` matching the target's slug leaf
-  (last path segment). `getRelated` is a score-based fallback (same topic = +2, each shared
+  body** for an absolute flat `/posts/<slug>` link **or** a `[[wikilink]]` matching the target's
+  slug (last path segment). `getRelated` is a score-based fallback (same topic = +2, each shared
   tag = +1) so the connections block is never empty.
-- Implication: to create a backlink, link with the **flat `/posts/<post-folder>/` path** (old
-  nested paths still match for legacy content) or a `[[<post-folder-name>]]` wikilink. A bare
-  relative link won't be detected.
+- Implication: to create a backlink, link with the **flat `/posts/<post-folder>/` path** or a
+  `[[<post-folder-name>]]` wikilink. A bare relative link won't be detected.
 
 ## Resume has two sources of truth
 

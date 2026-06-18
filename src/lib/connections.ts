@@ -2,18 +2,17 @@ import type { CollectionEntry } from "astro:content"
 
 type Post = CollectionEntry<"posts">
 
-// The last path segment of a post slug, e.g. "tech/04032024_tokenizer" -> "04032024_tokenizer".
+// Post slugs are flat single segments (e.g. "04032024_tokenizer"), so the leaf is the
+// slug itself. Kept as a helper for clarity and defensiveness.
 function leaf(slug: string): string {
   const parts = slug.split("/")
   return parts[parts.length - 1]
 }
 
-// Does `from`'s body link to `to`? Supports the flat /posts/<leaf> links, the legacy
-// /posts/<topic>/<leaf> form, and [[wikilinks]].
+// Does `from`'s body link to `to`? Matches a flat /posts/<slug> link or a [[wikilink]].
 function linksTo(from: Post, to: Post): boolean {
   const body = from.body
   const leafName = leaf(to.slug)
-  if (body.includes(`/posts/${leafName}`)) return true
   if (body.includes(`/posts/${to.slug}`)) return true
   const wiki = new RegExp(`\\[\\[\\s*${leafName}\\s*\\]\\]`, "i")
   return wiki.test(body)

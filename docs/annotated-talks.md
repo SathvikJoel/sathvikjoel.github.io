@@ -15,8 +15,8 @@ Follow the usual `DDMMYYYY_shortname` convention — one folder for the post, on
 assets:
 
 ```
-src/content/posts/<topic>/<DDMMYYYY_shortname>/index.mdx   ← the post
-public/posts/<topic>/<DDMMYYYY_shortname>/                 ← the assets (pdf, notes, slides)
+src/content/posts/<DDMMYYYY_shortname>/index.mdx   ← the post
+public/posts/<DDMMYYYY_shortname>/                 ← the assets (pdf, notes, slides)
 ```
 
 ## 2. Drop in your two inputs
@@ -24,8 +24,8 @@ public/posts/<topic>/<DDMMYYYY_shortname>/                 ← the assets (pdf, 
 Put the deck and your notes in the **public** asset folder:
 
 ```
-public/posts/tech/08032026_agentandskills/talk.pdf
-public/posts/tech/08032026_agentandskills/notes.txt
+public/posts/08032026_agentandskills/talk.pdf
+public/posts/08032026_agentandskills/notes.txt
 ```
 
 Write `notes.txt` with **one block per slide, in order**. A simple `Slide N` (or
@@ -38,7 +38,7 @@ Use `pdftoppm` (from `poppler-utils`, already available in this repo's tooling).
 from the asset folder, writing into a `slides/` subfolder:
 
 ```bash
-cd public/posts/tech/08032026_agentandskills
+cd public/posts/08032026_agentandskills
 mkdir -p slides
 pdftoppm -png -r 110 talk.pdf slides/slide     # -> slides/slide-01.png, slide-02.png, …
 ```
@@ -71,7 +71,7 @@ topGlow: false
 tags: ["talks", "agents", "skills"]
 growthStage: evergreen
 stageIcon: /icons/talk.svg
-cover: /posts/tech/08032026_agentandskills/slides/slide-01.png
+cover: /posts/08032026_agentandskills/slides/slide-01.png
 coverAlt: "Title slide: Using Agents and Skills"
 tile: cover
 ---
@@ -80,15 +80,15 @@ A paragraph or two of context: where you gave the talk, who the audience was, an
 it's about.
 
 <ScrollSlides>
-  <Slide image="/posts/tech/08032026_agentandskills/slides/slide-01.png" alt="Title slide">
+  <Slide image="/posts/08032026_agentandskills/slides/slide-01.png" alt="Title slide">
     The notes you spoke over slide one. **Markdown** and lists work here.
   </Slide>
-  <Slide image="/posts/tech/08032026_agentandskills/slides/slide-02.png" alt="The problem">
+  <Slide image="/posts/08032026_agentandskills/slides/slide-02.png" alt="The problem">
     …and so on, one `<Slide>` per page.
   </Slide>
 </ScrollSlides>
 
-You can also [download the full deck](/posts/tech/08032026_agentandskills/talk.pdf).
+You can also [download the full deck](/posts/08032026_agentandskills/talk.pdf).
 ```
 
 Two conventions worth keeping for talks:

@@ -17,12 +17,12 @@ folder, in a path that mirrors the post. (The text lives in `src/content/posts/.
 the pictures live in `public/posts/...`.)
 
 ```
-public/posts/<stream>/<post-name>/my-picture.jpg
-public/posts/<stream>/<post-name>/images/diagram.jpg   ← an images/ subfolder is fine
+public/posts/<post-name>/my-picture.jpg
+public/posts/<post-name>/images/diagram.jpg   ← an images/ subfolder is fine
 ```
 
 You then refer to that file from the post with a slash-prefixed address that mirrors
-the path — `/posts/<stream>/<post-name>/my-picture.jpg`. **This is the same for all
+the path — `/posts/<post-name>/my-picture.jpg`. **This is the same for all
 three kinds of picture:** the `cover`, the square tile `image`, and any in-body
 picture (`<Figure src="/posts/.../images/diagram.jpg">`). They all live under
 `public/posts/...` and are referenced by their `/posts/...` address.
@@ -59,7 +59,7 @@ Handy variations:
 node scripts/optimize-images.mjs --dry          # preview the savings, write nothing
 node scripts/optimize-images.mjs --min 800      # only touch files over 800 KB
 node scripts/optimize-images.mjs --max 1600     # cap the longest side to 1600 px
-node scripts/optimize-images.mjs public/posts/life/my-trip/harbour.jpg   # one file
+node scripts/optimize-images.mjs public/posts/my-trip/harbour.jpg   # one file
 ```
 
 **Workflow:** drop your full-res pictures into the post folder, run
@@ -73,7 +73,7 @@ the title beneath it, and a small `stream · stage · date` line — the eye-cat
 "feature" look. It's perfect for posts you want to draw attention to.
 
 ```yaml
-cover: "/posts/life/my-trip/harbour.jpg"
+cover: "/posts/my-trip/harbour.jpg"
 coverAlt: "The harbour at dusk"
 ```
 
@@ -97,7 +97,7 @@ figures) look especially nice here, since they float directly on the card's dark
 background. This is the right choice for a hand-drawn tile that should keep its full shape.
 
 ```yaml
-image: "/posts/philosophy/my-essay/cover.png"
+image: "/posts/my-essay/cover.png"
 imageAlt: "A small line drawing of a harbour"
 ```
 
@@ -119,8 +119,8 @@ a **square image** if you set `image`, otherwise a **plain text** tile. The opti
 `tile` field lets you **override** that choice:
 
 ```yaml
-cover: "/posts/tech/my-post/banner.jpg"
-image: "/posts/tech/my-post/art.png"
+cover: "/posts/my-post/banner.jpg"
+image: "/posts/my-post/art.png"
 tile: image   # show the square illustration even though a cover is set
 ```
 
@@ -160,7 +160,7 @@ share card** — the picture WhatsApp / X / Discord / iMessage show when you pas
   **`ogImage`** front-matter field — it overrides both of the above:
 
   ```yaml
-  ogImage: /posts/tech/my-post/share.jpg   # used as-is, 1200×630
+  ogImage: /posts/my-post/share.jpg   # used as-is, 1200×630
   ogImageAlt: "A short description of the card"
   ```
 

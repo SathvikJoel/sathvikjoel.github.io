@@ -45,9 +45,10 @@ edits only reach the live `/docs` page after a rebuild + deploy.
   `topic` enum in `src/content/config.ts`. Keep them in lockstep, then update the stream docs.
 - **Posts that use components must be `.mdx`.** In a `.md` file, `<Component>` renders as
   raw HTML and silently does nothing.
-- **A post folder's topic segment must match its `topic` frontmatter** (`posts/fun/...`
-  ⇒ `topic: fun`) — the build throws otherwise. Mirror the same path under
-  `public/posts/<topic>/<slug>/` for that post's images.
+- **A post's stream is set by its `topic` frontmatter alone, not its folder.** Posts live
+  flat at `src/content/posts/<slug>/index.md(x)` with images mirrored at
+  `public/posts/<slug>/...`. Re-streaming a post is a one-line `topic:` change — no files move.
+  The build throws if a post folder name collides with a stream URL key.
 - **Frontmatter `date` uses the IST offset `+05:30`** so timestamps match local time and
   homepage/stream sort order stays correct.
 - **`description` frontmatter is required** (non-empty) — the schema fails the build without it.
@@ -70,8 +71,8 @@ edits only reach the live `/docs` page after a rebuild + deploy.
 
 Astro (static output) + Tailwind + TypeScript, a little SolidJS; content is Markdown/MDX.
 
-- `src/pages/` — routes (`index`, `about`, `resume`, `now/`, `posts/[topic]/[slug]`, `search/`, `404`, `rss.xml.ts`).
-- `src/content/posts/<topic>/<slug>/index.md(x)` — blog posts · `src/content/now/` — "Now" snapshots.
+- `src/pages/` — routes (`index`, `about`, `resume`, `now/`, `posts/[slug]`, `posts/[topic]/` stream index, `search/`, `404`, `rss.xml.ts`).
+- `src/content/posts/<slug>/index.md(x)` — blog posts (flat; stream set by `topic` frontmatter) · `src/content/now/` — "Now" snapshots.
 - `src/content/config.ts` — collection schemas · `src/components/` (+ `mdx/`) — UI & MDX components.
 - `src/consts.ts` — `TOPICS`, nav `LINKS`, `SOCIALS` · `public/` — static assets · `scripts/` — build hooks.
 - Full architecture and rationale: `docs/DEVELOPER-NOTES.md`.

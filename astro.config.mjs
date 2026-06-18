@@ -7,52 +7,53 @@ import remarkMath from "remark-math"
 import rehypeKatex from "rehype-katex"
 import { remarkBlockId } from "./src/plugins/remark-block-id.mjs"
 import expressiveCode from "astro-expressive-code"
-import { readdirSync, readFileSync } from "node:fs"
-import { join, relative } from "node:path"
+import { readdirSync, readFileSync, existsSync } from "node:fs"
+import { join } from "node:path"
 import matter from "gray-matter"
 
 const monoFont =
   '"JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace'
 
-// Walk src/content/posts and collect the URL fragments of every draft/unlisted
-// post so the sitemap integration can drop them. We read frontmatter directly
-// (the sitemap `filter` only receives a URL string, not the post data) so the
-// exclusion stays in sync with the content instead of a hardcoded list.
-// Walk src/content/posts and collect every post's "<topic>/<folder>" slug, its flat
-// leaf (the folder name), and whether it's hidden (draft/unlisted). We read frontmatter
-// directly so the sitemap exclusion and the legacy redirects stay in sync with the
-// content instead of a hardcoded list.
+// Walk src/content/posts (now a flat list of <slug> folders) and collect each post's
+// slug, its current `topic` (from frontmatter — the folder no longer encodes it), and
+// whether it's hidden (draft/unlisted). We read frontmatter directly so the sitemap
+// exclusion and the legacy redirects stay in sync with the content instead of a
+// hardcoded list.
 function collectPosts() {
   const root = "src/content/posts"
   const posts = []
-  const walk = (dir) => {
-    for (const entry of readdirSync(dir, { withFileTypes: true })) {
-      const full = join(dir, entry.name)
-      if (entry.isDirectory()) {
-        walk(full)
-      } else if (entry.name === "index.md" || entry.name === "index.mdx") {
-        const { data } = matter(readFileSync(full, "utf8"))
-        const slug = relative(root, dir).split(/[\\/]/).join("/")
-        const leaf = slug.split("/").pop()
-        posts.push({ slug, leaf, hidden: Boolean(data.draft || data.unlisted) })
-      }
-    }
+  for (const entry of readdirSync(root, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue
+    const dir = join(root, entry.name)
+    const index = ["index.md", "index.mdx"]
+      .map((name) => join(dir, name))
+      .find((p) => existsSync(p))
+    if (!index) continue
+    const { data } = matter(readFileSync(index, "utf8"))
+    posts.push({
+      slug: entry.name,
+      topic: data.topic,
+      hidden: Boolean(data.draft || data.unlisted),
+    })
   }
-  walk(root)
   return posts
 }
 
 const allPosts = collectPosts()
 
-// Posts are served at the flat /posts/<leaf>, so hidden-post URL fragments use the leaf.
-const hiddenFragments = allPosts.filter((p) => p.hidden).map((p) => `/posts/${p.leaf}`)
+// Posts are served at the flat /posts/<slug>, so hidden-post URL fragments use the slug.
+const hiddenFragments = allPosts.filter((p) => p.hidden).map((p) => `/posts/${p.slug}`)
 
-// Posts now live at /posts/<leaf> (no stream segment) so they can move between streams
-// without breaking links. Forward every legacy /posts/<topic>/<folder> URL — which may
-// be shared on the web — to its flat equivalent. Astro emits a static meta-refresh +
-// canonical page for each on GitHub Pages.
+// Posts live at /posts/<slug> (no stream segment) so they can move between streams just
+// by editing frontmatter. Forward every legacy /posts/<topic>/<slug> URL — which may be
+// shared on the web — to its flat equivalent, derived from the post's *current* topic.
+// (Posts that have changed streams need a manual redirect for their *old* topic path —
+// see the redirects block below.) Astro emits a static meta-refresh + canonical page for
+// each on GitHub Pages.
 const legacyPostRedirects = Object.fromEntries(
-  allPosts.map((p) => [`/posts/${p.slug}`, `/posts/${p.leaf}`])
+  allPosts
+    .filter((p) => p.topic)
+    .map((p) => [`/posts/${p.topic}/${p.slug}`, `/posts/${p.slug}`])
 )
 
 // https://astro.build/config
@@ -76,7 +77,7 @@ export default defineConfig({
     // (the auto list below only covers a post's *current* path).
     "/posts/tech/16062026_aiwriting": "/posts/16062026_aiwriting",
     "/posts/essays/overpopulation": "/posts/overpopulation",
-    // Every /posts/<topic>/<folder> → /posts/<folder>.
+    // Every /posts/<current-topic>/<slug> → /posts/<slug>, auto-generated from frontmatter.
     ...legacyPostRedirects,
   },
   markdown: {

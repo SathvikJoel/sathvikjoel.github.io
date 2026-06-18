@@ -91,10 +91,13 @@ page isn't empty.
 
 ## Moving a post between streams
 
-A post's public URL is **flat** — `/posts/<post-folder>/`, with no stream in it. That means
-you can move a post to a different stream **without breaking its link**: change the post's
-`topic` to the new stream and move both its folders to match
-(`src/content/posts/<new-stream>/<same-folder>/` and `public/posts/<new-stream>/<same-folder>/`).
-The URL stays `/posts/<same-folder>/`, and the old `/posts/<old-stream>/<folder>/` address
-keeps redirecting to it. Keep the folder name unique across all streams — the build fails if
-two posts share one.
+A post's stream is decided by its **`topic`** frontmatter, not by where it sits on disk,
+and its public URL is **flat** — `/posts/<post-folder>/`, with no stream in it. So moving a
+post to another stream is a **one-line change**: edit `topic:` to the new stream. Nothing on
+disk moves, the post keeps its folder, and its images keep resolving.
+
+The URL stays `/posts/<post-folder>/` either way. The site also keeps the *old*
+`/posts/<old-stream>/<post-folder>/` address alive — every post's current-stream path
+redirects automatically, and any path a post has been **publicly shared under** before a move
+is pinned with a manual redirect in `astro.config.mjs` (so an old tweet still resolves). If
+you re-stream a post whose previous URL is out in the wild, add that one-line pin.

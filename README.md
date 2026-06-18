@@ -15,7 +15,7 @@ is preserved on the **`hugo-old`** branch.
 src/
   components/        UI + MDX components (cards, ScrollSlides, StageIcon, …)
   content/
-    posts/<stream>/  blog posts (tech, life, fun, philosophy, writings)
+    posts/<slug>/    blog posts (flat; stream set by `topic` frontmatter)
     now/             dated "now" snapshots
   pages/             routes (home, streams, posts, now, about, resume, search, RSS)
   styles/            global CSS + Tailwind layer

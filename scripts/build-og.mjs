@@ -16,7 +16,7 @@
 // depending on any system fonts. (@fontsource ships woff2 only, which librsvg/freetype
 // can't always read — hence the vendored TTFs.)
 //
-// Output: public/og/<topic>/<slug>.jpg  (referenced by [topic]/[slug].astro as
+// Output: public/og/<slug>.jpg  (referenced by posts/[slug].astro as
 //          /og/<post.slug>.jpg). public/og/ is gitignored — regenerated on every build.
 //
 // Runs automatically before `dev` and `build` (see package.json predev/prebuild).
@@ -202,7 +202,7 @@ async function main() {
     const { data } = matter(readFileSync(file, "utf8"))
     if (data.draft) continue
 
-    // slug = path under posts/ without the trailing /index.ext, e.g. "life/29052026_greek"
+    // slug = the post folder name under posts/ (flat), e.g. "29052026_greek"
     const slug = relative(postsDir, dirname(file)).split(/[\\/]/).join("/")
     const topic = data.topic || slug.split("/")[0]
     const outPath = join(outDir, `${slug}.jpg`)

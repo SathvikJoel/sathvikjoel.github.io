@@ -7,7 +7,7 @@ writing consistent with the rest of the site without any fuss.
 > **One rule:** building blocks only work in posts saved as **`index.mdx`** (not
 > `index.md`). If you want to use anything on this page, name the file `index.mdx`.
 >
-> **See them live:** open the **[Writing toolkit](/posts/tech/toolkit/)**
+> **See them live:** open the **[Writing toolkit](/posts/toolkit/)**
 > post — it demonstrates every block below with its result. It's the fastest way to
 > learn. (The post is unlisted, so it won't show up in the garden or Tech stream;
 > reach it from this link.)
@@ -164,7 +164,7 @@ Then link to it with a normal markdown link:
 
 ```mdx
 Same post:        [see the workflow](#workflow)
-Different post:   [see the workflow](/posts/tech/my-post/#workflow)
+Different post:   [see the workflow](/posts/my-post/#workflow)
 ```
 
 When to reach for a caret id instead of the automatic heading anchor:
@@ -269,10 +269,10 @@ configure, and it respects reduced-motion settings.
 
 ```mdx
 <ScrollSlides>
-  <Slide image="/posts/tech/my-talk/slides/slide-01.png" alt="Title slide">
+  <Slide image="/posts/my-talk/slides/slide-01.png" alt="Title slide">
     What I said while this slide was up. **Markdown works here.**
   </Slide>
-  <Slide image="/posts/tech/my-talk/slides/slide-02.png" alt="The problem">
+  <Slide image="/posts/my-talk/slides/slide-02.png" alt="The problem">
     The notes for the second slide…
   </Slide>
 </ScrollSlides>
@@ -297,7 +297,7 @@ dedicated [Annotated talks](./annotated-talks.md) page. There's a live example i
 A single image with a caption underneath.
 
 ```mdx
-<Figure src="/posts/tech/my-post/diagram.jpg" alt="A diagram">
+<Figure src="/posts/my-post/diagram.jpg" alt="A diagram">
   The caption sits under the image.
 </Figure>
 ```
@@ -343,7 +343,7 @@ optional caption.
 Drops a vector illustration (an `.svg` file) neatly centered in the text.
 
 ```mdx
-<InlineSVG src="/posts/tech/my-post/figure.svg" />
+<InlineSVG src="/posts/my-post/figure.svg" />
 ```
 
 ---
@@ -454,7 +454,7 @@ Every chart takes an optional **`caption`** and **`source`** (the small grey not
 the caption). `DensityMap` also needs **`variant`** to pick the dataset.
 
 **Where the data lives.** These charts read their CSV/GeoJSON files at runtime from
-`public/posts/essays/overpopulation/data/`. Anything a chart fetches in the browser
+`public/posts/overpopulation/data/`. Anything a chart fetches in the browser
 **must sit under `public/`** (files inside the post folder in `src/content/` are not
 served). Keep raw source data out of the content folder so the build doesn't try to parse
 it as a post.
