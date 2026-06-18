@@ -71,6 +71,11 @@ export default defineConfig({
     // flat URL so there's no double hop.
     "/posts/life/12222025_kora": "/posts/12222025_kora",
     "/posts/life/29052026_greek": "/posts/29052026_greek",
+    // Posts shared publicly (e.g. on Twitter) under their current stream path. Pin
+    // these so the shared URL keeps resolving even if the post later moves streams
+    // (the auto list below only covers a post's *current* path).
+    "/posts/tech/16062026_aiwriting": "/posts/16062026_aiwriting",
+    "/posts/essays/overpopulation": "/posts/overpopulation",
     // Every /posts/<topic>/<folder> → /posts/<folder>.
     ...legacyPostRedirects,
   },
