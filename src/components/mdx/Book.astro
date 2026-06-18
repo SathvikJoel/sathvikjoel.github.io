@@ -3,9 +3,9 @@
 // Inspired by Maggie Appleton's book-card (e.g. /metaphor-books, /now-2024-12).
 // With a description it lays out cover + text side by side; use `small` for a
 // compact, centred card (good for stacking several into a reading list).
-// Covers render at a standard book size (a fixed 2:3 box, object-fill) so any
-// source image is normalised to the same dimensions and the title's cap-height
-// lines up with the top edge of the cover.
+// Covers render at a standard height (width follows each cover's own ratio) so
+// any source image stands the same height with no stretching or cropping, and
+// the title's cap-height lines up with the top edge of the cover.
 interface Props {
   cover?: string
   coverAlt?: string
@@ -58,17 +58,26 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
   }
   .book-cover {
     @apply flex-shrink-0 overflow-hidden rounded-md shadow-md;
-    width: 164px;
-    aspect-ratio: 2 / 3;
+    /* Standard cover SIZE = a fixed height; width follows each cover's own
+       proportions. So every book stands the same height in a tidy row (like a
+       shelf) with no stretching or cropping, whatever the source image's ratio.
+       The max-width guards against a stray non-portrait image blowing out wide. */
+    height: 232px;
+    max-width: 176px;
   }
   .book-card.is-small .book-cover {
-    width: 116px;
+    height: 168px;
   }
   .book-cover :global(img) {
-    @apply m-0 block h-full w-full rounded-md object-fill;
+    @apply m-0 block h-full w-auto rounded-md;
   }
   .book-cover.is-placeholder {
     @apply flex items-center justify-center rounded-md border border-clay/25 bg-clay/5 text-clay/45 shadow-none dark:border-white/15 dark:bg-white/[0.03] dark:text-white/30;
+    /* No image to set the width, so give the empty card a standard 2:3 footprint. */
+    width: 155px;
+  }
+  .book-card.is-small .book-cover.is-placeholder {
+    width: 112px;
   }
   .book-cover.is-placeholder :global(svg) {
     width: 50%;
@@ -84,11 +93,12 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
     @apply no-underline transition-colors;
   }
   .book-title {
-    @apply m-0 font-display text-2xl font-light leading-snug text-ink-light transition-colors dark:text-[#EAE8E5];
-    letter-spacing: -0.01em;
-    /* Trim the display font's top leading so the title's cap-height lines up with
-       the top edge of the (now fixed-ratio) cover instead of sitting below it. */
-    margin-top: -0.2em;
+    @apply m-0 font-display text-[1.7rem] font-light text-ink-light transition-colors dark:text-[#EAE8E5];
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    /* Trim the display font's top side-bearing so the title's cap-height lines up
+       with the very top edge of the cover (the Maggie Appleton book-card look). */
+    margin-top: -0.08em;
   }
   .book-title-link:hover .book-title {
     @apply text-crimson dark:text-crimson-dark;
@@ -106,20 +116,28 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
     @apply m-0;
   }
 
-  /* On narrow screens the fixed 164px cover + gap can exceed the available
-     width (especially inside the indented Now timeline) and push the page wide.
-     Shrink the cover and gap so the card always fits. */
+  /* On narrow screens shrink the cover height (and gap) so the card always fits,
+     especially inside the indented Now timeline. Width follows automatically. */
   @media (max-width: 600px) {
     .book-card:not(.is-small) {
       @apply gap-5;
     }
     .book-card:not(.is-small) .book-cover {
-      width: 128px;
+      height: 196px;
+    }
+    .book-card:not(.is-small) .book-cover.is-placeholder {
+      width: 131px;
+    }
+    .book-title {
+      @apply text-2xl;
     }
   }
   @media (max-width: 400px) {
     .book-card:not(.is-small) .book-cover {
-      width: 108px;
+      height: 168px;
+    }
+    .book-card:not(.is-small) .book-cover.is-placeholder {
+      width: 112px;
     }
   }
 </style>
