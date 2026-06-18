@@ -155,16 +155,21 @@ share card** — the picture WhatsApp / X / Discord / iMessage show when you pas
 - If the post has **no picture at all**, the card is built from the **title** (set in our
   Fraunces heading font) with the topic name and the JoeLogs mark. It still looks designed —
   so a text-only post shares just as cleanly as an illustrated one.
-- Want to supply your **own** ready-made share image (e.g. a Midjourney card)? Drop a
-  **1200×630** picture in the post's `public/posts/...` folder and point to it with the
-  **`ogImage`** front-matter field — it overrides both of the above:
+- Want to supply your **own** ready-made share image (e.g. a Midjourney card)? You have two
+  ways, and both expect a **1200×630** picture in the post's `public/posts/...` folder:
+  - **By convention (no front-matter):** just name the file **`share.png`** (or `share.jpg`,
+    `og.png`, …) and drop it in `public/posts/<post-name>/`. It's picked up automatically and
+    used full-bleed as the share card.
+  - **By front-matter (any filename + alt text):** point the **`ogImage`** field at it. This
+    always wins over the convention file, and lets you add `ogImageAlt`:
 
   ```yaml
-  ogImage: /posts/my-post/share.jpg   # used as-is, 1200×630
+  ogImage: /posts/my-post/anything.jpg   # used as-is, 1200×630
   ogImageAlt: "A short description of the card"
   ```
 
-  Priority: `ogImage` → `cover`/`image` → auto title card. **OG images are 1200×630 px.**
+  Priority: `ogImage` → `share.*`/`og.*` in the folder → `cover`/`image` → auto title card.
+  **OG images are 1200×630 px.**
 
 These cards are regenerated on every deploy; there's nothing to commit or maintain.
 

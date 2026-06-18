@@ -2,12 +2,15 @@
 // WhatsApp / X / Discord / iMessage / etc. always show a large, on-brand preview at
 // the exact dimensions every platform expects.
 //
-// Two card styles, chosen per post by priority:
+// Card styles, chosen per post by priority:
 //   1. Explicit `ogImage` front-matter → used full-bleed at 1200×630 (e.g. a hand-made
 //      or Midjourney card). This wins over everything.
-//   2. Posts with `cover`/`image` art  → the art is *contained* (never cropped) and
+//   2. Convention fallback: a `share.*` / `og.*` file sitting in the post's public folder
+//      (`public/posts/<slug>/`) → used full-bleed exactly like an explicit `ogImage`, so you
+//      can just drop the card in the folder with no front-matter. Explicit `ogImage` wins.
+//   3. Posts with `cover`/`image` art  → the art is *contained* (never cropped) and
 //      centered on a dark, on-brand canvas, so it reads as an intentional framed card.
-//   3. Posts with neither             → an auto-generated TITLE card: the post title set
+//   4. Posts with none of the above    → an auto-generated TITLE card: the post title set
 //      in Fraunces with a topic eyebrow + the J-vine wordmark, on the same canvas.
 //      The typography is the design — no illustration needed.
 //
@@ -192,6 +195,27 @@ async function buildTitleCard({ title, topic }, outPath) {
 
 // ---- Main ----------------------------------------------------------------
 
+// Find a conventionally-named image (e.g. share.*, og.*) in a post's public folder.
+// Case-insensitive; returns the first match in `names` priority, then IMG_EXTS order.
+const IMG_EXTS = [".png", ".jpg", ".jpeg", ".webp", ".avif"]
+function findAsset(dir, names) {
+  if (!existsSync(dir)) return null
+  let entries
+  try {
+    entries = readdirSync(dir)
+  } catch {
+    return null
+  }
+  const lower = new Map(entries.map((e) => [e.toLowerCase(), e]))
+  for (const name of names) {
+    for (const ext of IMG_EXTS) {
+      const hit = lower.get(`${name}${ext}`)
+      if (hit) return join(dir, hit)
+    }
+  }
+  return null
+}
+
 async function main() {
   setupFonts()
   const files = findPosts(postsDir)
@@ -218,6 +242,16 @@ async function main() {
         continue
       }
       console.warn(`[build-og] missing ogImage for ${relative(root, file)}: ${explicitRef} — falling back`)
+    }
+
+    // Convention fallback: an unlabelled share card dropped in the post folder
+    // (public/posts/<slug>/share.* or og.*) is used full-bleed, no front-matter needed.
+    const conventionOg = findAsset(join(publicDir, "posts", slug), ["share", "og"])
+    if (conventionOg) {
+      const size = await buildBleedCard(conventionOg, outPath)
+      og++
+      console.log(`[build-og] og    ${slug}.jpg  (${(size / 1024).toFixed(0)} KB, by convention)`)
+      continue
     }
 
     // Prefer the wide cover; fall back to the square tile illustration.

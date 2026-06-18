@@ -242,8 +242,11 @@ Discord / iMessage always render a large, branded preview at the exact size plat
   `public/og/<slug>.jpg` per post. Card chosen by priority:
   1. explicit **`ogImage`** front-matter → used full-bleed at 1200×630 (cover-fit), for a
      hand-made / Midjourney card;
-  2. `cover`/`image` art → *contained* (never cropped), centered on the dark `#161618` canvas;
-  3. neither → an auto-generated **title card** (title in Fraunces, topic eyebrow in Lato,
+  2. **convention fallback** → a `share.*` / `og.*` file in the post's `public/posts/<slug>/`
+     folder (case-insensitive, `findAsset()` in `build-og.mjs`), used full-bleed like `ogImage`.
+     Explicit `ogImage` always wins; this just lets you drop a card in with no front-matter;
+  3. `cover`/`image` art → *contained* (never cropped), centered on the dark `#161618` canvas;
+  4. none → an auto-generated **title card** (title in Fraunces, topic eyebrow in Lato,
      J-vine wordmark). The typography is the design — no illustration needed.
 - **`public/og/` is gitignored** (like `docs.enc.json`) — it is a build artifact, regenerated
   on every dev/build. Do not commit it.
