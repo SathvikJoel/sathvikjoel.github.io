@@ -158,7 +158,7 @@ The build fails loudly (rather than shipping broken output) on these:
 
 ## Interactive data-viz islands (ECharts + SolidJS)
 
-The *Overpopulation* essay (`posts/essays/overpopulation`) introduced four interactive
+The *Overpopulation* essay (`posts/overpopulation`) introduced four interactive
 charts. The pattern is reusable for any future data-driven post.
 
 - **Dependency:** `echarts` (full import — the islands are lazy, so the ~1 MB bundle only
@@ -176,7 +176,7 @@ charts. The pattern is reusable for any future data-driven post.
   (`VIZ`), the `INFERNO` ramp, a quoted-field-safe `parseCSV`, `prefersReducedMotion()`
   (charts pass `animation: !prefersReducedMotion()`), number formatting, and `normaliseIso`.
 - **Data must live under `public/`.** Islands fetch from
-  `public/posts/essays/overpopulation/data/` at runtime; files inside the post's
+  `public/posts/overpopulation/data/` at runtime; files inside the post's
   `src/content` folder are **not** served. Keep raw source data (the draft `.md`, the build
   CSVs/GeoJSON) **out of `src/content/posts/**`** entirely — a stray `.md` there is parsed as
   a post and fails schema validation; CSVs just bloat the collection. (For this essay the
