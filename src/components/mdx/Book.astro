@@ -202,17 +202,23 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
     @apply m-0;
   }
 
-  /* On narrow screens shrink the cover height (and gap) so the card always fits,
-     especially inside the indented Now timeline. Width follows automatically. */
+  /* On phones, stack the book on top with the title, author and blurb below it
+     (the side-by-side row gets too cramped, and the angled 3D book needs the full
+     width to show its thickness without clipping). */
   @media (max-width: 600px) {
     .book-card:not(.is-small) {
-      @apply gap-5;
+      @apply flex-col items-start gap-6;
     }
     .book-card:not(.is-small) .book-cover {
-      height: 270px;
+      height: 300px;
+      /* the angled book leans a few px past its box; nudge in so it never clips */
+      margin-left: 0.4rem;
     }
     .book-card:not(.is-small) .book-cover.is-placeholder {
-      width: 180px;
+      width: 200px;
+    }
+    .book-card:not(.is-small) .book-meta {
+      @apply items-start;
     }
     .book-title {
       @apply text-2xl;
@@ -220,10 +226,10 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
   }
   @media (max-width: 400px) {
     .book-card:not(.is-small) .book-cover {
-      height: 230px;
+      height: 270px;
     }
     .book-card:not(.is-small) .book-cover.is-placeholder {
-      width: 153px;
+      width: 180px;
     }
   }
 </style>

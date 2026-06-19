@@ -234,9 +234,10 @@ or `star`.
 ### Book
 
 A book reference — cover, title, author, and an optional description. With a description
-it lays the cover beside the text; add `small` for a compact, centred card you can stack
-into a reading list. Put the cover image under `public/...` and link it by absolute path.
-The `cover` is optional — leave it off and the card draws a tidy book glyph in its place.
+it lays the cover beside the text on desktop (and stacks the cover above the text on
+phones); add `small` for a compact, centred card you can stack into a reading list. Put
+the cover image under `public/...` and link it by absolute path. The `cover` is optional —
+leave it off and the card draws a tidy book glyph in its place.
 
 Every cover renders at a **standard height**, so books of any source dimensions stand the
 same height in a tidy row (like a shelf) — with no stretching or cropping, whatever the
