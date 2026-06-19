@@ -116,34 +116,15 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
     width: calc(var(--book-thickness) * 2);
     height: 98%;
     transform: translateX(-55%) rotateY(90deg);
-    background: linear-gradient(
+    /* Fine page leaves: vertical lines stacked left-to-right (the fore-edge of a
+       book seen side-on). Darker separators give the edge crisp definition rather
+       than washing out to a flat grey. */
+    background: repeating-linear-gradient(
       90deg,
-      #f4eede 0%,
-      #d8d0b8 4%,
-      #f4eede 8%,
-      #d8d0b8 12%,
-      #f4eede 16%,
-      #d8d0b8 20%,
-      #f4eede 24%,
-      #d8d0b8 28%,
-      #f4eede 32%,
-      #d8d0b8 36%,
-      #f4eede 40%,
-      #d8d0b8 44%,
-      #f4eede 48%,
-      #d8d0b8 52%,
-      #f4eede 56%,
-      #d8d0b8 60%,
-      #f4eede 64%,
-      #d8d0b8 68%,
-      #f4eede 72%,
-      #d8d0b8 76%,
-      #f4eede 80%,
-      #d8d0b8 84%,
-      #f4eede 88%,
-      #d8d0b8 92%,
-      #f4eede 96%,
-      #d8d0b8 100%
+      #f1ebd9 0,
+      #f1ebd9 1.5px,
+      #4a4334 2.6px,
+      #f1ebd9 3.7px
     );
   }
   /* Rear cover, set back by the book's thickness behind the front. It is placed
@@ -231,24 +212,26 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
     .book-3d__rear {
       display: none;
     }
-    /* Flat page-edge: a thin strip of stacked-paper lines on the cover's right. */
+    /* Flat page-edge on the cover's right: vertical page-lines stacked
+       left-to-right (the fore-edge seen side-on), matching the desktop book.
+       Earlier this used `to bottom`, which stacked the lines top-to-bottom. */
     .book-3d__pages {
       left: auto;
-      right: -8px;
+      right: -11px;
       top: 1.5%;
       height: 97%;
-      width: 8px;
+      width: 12px;
       transform: skewY(-1.5deg);
       transform-origin: left center;
       border-radius: 0 2px 2px 0;
       background: repeating-linear-gradient(
-        to bottom,
-        #f4eede 0,
-        #f4eede 1.5px,
-        #cdc4a9 3px,
-        #f4eede 4.5px
+        90deg,
+        #ece4cf 0,
+        #ece4cf 1.5px,
+        #3a3327 2.6px,
+        #ece4cf 3.7px
       );
-      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15);
+      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.28);
     }
     .book-card:not(.is-small) .book-cover.is-placeholder {
       width: 200px;
