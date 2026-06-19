@@ -24,6 +24,8 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
     {
       cover ? (
         <div class="book-3d__inner">
+          <span class="book-3d__rear" aria-hidden="true" />
+          <span class="book-3d__pages" aria-hidden="true" />
           <img class="book-3d__cover" src={cover} alt={coverAlt ?? title} loading="lazy" decoding="async" />
         </div>
       ) : (
@@ -106,7 +108,7 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
       0 16px 30px -18px rgba(255, 255, 255, 0.08);
   }
   /* Page leaves bridging the front and rear cover on the book's right edge. */
-  .book-3d__inner::before {
+  .book-3d__pages {
     content: "";
     position: absolute;
     left: 100%;
@@ -144,8 +146,12 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
       #d8d0b8 100%
     );
   }
-  /* Rear cover, set back by the book's thickness behind the front. */
-  .book-3d__inner::after {
+  /* Rear cover, set back by the book's thickness behind the front. It is placed
+     before the cover img in the DOM on purpose: where a browser flattens the 3D
+     scene (common on mobile), paint order wins, so the front cover still draws on
+     top instead of being hidden behind this dark panel — the book just falls back
+     to a flat cover rather than disappearing. */
+  .book-3d__rear {
     content: "";
     position: absolute;
     top: 0;
@@ -202,23 +208,21 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
     @apply m-0;
   }
 
-  /* On phones, stack the book on top with the title, author and blurb below it
-     (the side-by-side row gets too cramped, and the angled 3D book needs the full
-     width to show its thickness without clipping). */
+  /* On phones, stack the book on top with the title, author and blurb below it,
+     all centred in the column (the side-by-side row gets too cramped, and the
+     angled 3D book needs the full width to show its thickness without clipping). */
   @media (max-width: 600px) {
     .book-card:not(.is-small) {
-      @apply flex-col items-start gap-6;
+      @apply flex-col items-center gap-6 text-center;
     }
     .book-card:not(.is-small) .book-cover {
       height: 300px;
-      /* the angled book leans a few px past its box; nudge in so it never clips */
-      margin-left: 0.4rem;
     }
     .book-card:not(.is-small) .book-cover.is-placeholder {
       width: 200px;
     }
     .book-card:not(.is-small) .book-meta {
-      @apply items-start;
+      @apply items-center;
     }
     .book-title {
       @apply text-2xl;
