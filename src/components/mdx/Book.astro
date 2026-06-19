@@ -5,7 +5,8 @@
 // compact, centred card (good for stacking several into a reading list).
 // Covers render at a standard height (width follows each cover's own ratio) so
 // any source image stands the same height with no stretching or cropping, and
-// the title's cap-height lines up with the top edge of the cover.
+// the flat cover is turned into a slightly angled 3D book (thickness, page
+// leaves, rear cover) that floats just above the dark page. Use ~2:3 covers.
 interface Props {
   cover?: string
   coverAlt?: string
@@ -22,7 +23,9 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
   <div class:list={["book-cover", !cover && "is-placeholder"]}>
     {
       cover ? (
-        <img src={cover} alt={coverAlt ?? title} loading="lazy" decoding="async" />
+        <div class="book-3d__inner">
+          <img class="book-3d__cover" src={cover} alt={coverAlt ?? title} loading="lazy" decoding="async" />
+        </div>
       ) : (
         <svg viewBox="0 0 48 64" fill="none" aria-hidden="true">
           <rect x="6" y="4" width="36" height="56" rx="2" stroke="currentColor" stroke-width="2" />
@@ -51,30 +54,113 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
 
 <style>
   .book-card {
-    @apply mx-auto my-8 flex w-full max-w-md items-start gap-7;
+    @apply mx-auto my-8 flex w-full max-w-md items-start gap-10;
   }
   .book-card.is-small {
     @apply my-6 flex-col items-center gap-3 text-center;
   }
   .book-cover {
-    @apply flex-shrink-0 overflow-hidden rounded-md shadow-md;
+    @apply flex-shrink-0;
     /* Standard cover SIZE = a fixed height; width follows each cover's own
        proportions. So every book stands the same height in a tidy row (like a
        shelf) with no stretching or cropping, whatever the source image's ratio.
-       The max-width guards against a stray non-portrait image blowing out wide. */
-    height: 232px;
-    max-width: 176px;
+       `perspective` + `--book-thickness` set up the 3D book block inside. */
+    height: 348px;
+    max-width: 280px;
+    perspective: 1100px;
+    --book-thickness: 24px;
   }
   .book-card.is-small .book-cover {
     height: 168px;
+    --book-thickness: 16px;
   }
-  .book-cover :global(img) {
-    @apply m-0 block h-full w-auto rounded-md;
+
+  /* A real 3D book built from a flat cover (technique inspired by Heydon/Max
+     Böck's CSS bookstore): the cover is pushed forward by the book's thickness,
+     a rear cover sits the same distance back, and a band of page leaves bridges
+     their right edges. Turned a little so the thickness reads like a hardcover. */
+  .book-3d__inner {
+    @apply relative inline-block h-full align-top;
+    transform-style: preserve-3d;
+    transform: rotateY(-25deg);
+    transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .book-card:hover .book-3d__inner {
+    transform: rotateY(-16deg);
+  }
+  .book-3d__cover {
+    @apply relative m-0 block h-full;
+    /* Render at the cover's own proportions: fixed height, width follows
+       naturally. Override the global `article img` rule (20px top/bottom padding)
+       and the prose max-width/object-fit that otherwise squeeze the art. */
+    width: auto;
+    max-width: none;
+    padding: 0;
+    object-fit: contain;
+    border-radius: 1px 4px 4px 1px;
+    transform: translateZ(var(--book-thickness));
+    /* The page is pure black, so a dark cast shadow is invisible; a soft luminous
+       lift below/around makes the book float just above a faintly lit surface. */
+    box-shadow:
+      0 38px 58px -28px rgba(255, 255, 255, 0.13),
+      0 16px 30px -18px rgba(255, 255, 255, 0.08);
+  }
+  /* Page leaves bridging the front and rear cover on the book's right edge. */
+  .book-3d__inner::before {
+    content: "";
+    position: absolute;
+    left: 100%;
+    top: 1%;
+    width: calc(var(--book-thickness) * 2);
+    height: 98%;
+    transform: translateX(-55%) rotateY(90deg);
+    background: linear-gradient(
+      90deg,
+      #f4eede 0%,
+      #d8d0b8 4%,
+      #f4eede 8%,
+      #d8d0b8 12%,
+      #f4eede 16%,
+      #d8d0b8 20%,
+      #f4eede 24%,
+      #d8d0b8 28%,
+      #f4eede 32%,
+      #d8d0b8 36%,
+      #f4eede 40%,
+      #d8d0b8 44%,
+      #f4eede 48%,
+      #d8d0b8 52%,
+      #f4eede 56%,
+      #d8d0b8 60%,
+      #f4eede 64%,
+      #d8d0b8 68%,
+      #f4eede 72%,
+      #d8d0b8 76%,
+      #f4eede 80%,
+      #d8d0b8 84%,
+      #f4eede 88%,
+      #d8d0b8 92%,
+      #f4eede 96%,
+      #d8d0b8 100%
+    );
+  }
+  /* Rear cover, set back by the book's thickness behind the front. */
+  .book-3d__inner::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateZ(calc(var(--book-thickness) * -1));
+    background-color: #25221e;
+    border-radius: 0 4px 4px 0;
+    box-shadow: -10px 0 50px 10px rgba(0, 0, 0, 0.3);
   }
   .book-cover.is-placeholder {
     @apply flex items-center justify-center rounded-md border border-clay/25 bg-clay/5 text-clay/45 shadow-none dark:border-white/15 dark:bg-white/[0.03] dark:text-white/30;
     /* No image to set the width, so give the empty card a standard 2:3 footprint. */
-    width: 155px;
+    width: 232px;
   }
   .book-card.is-small .book-cover.is-placeholder {
     width: 112px;
@@ -123,10 +209,10 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
       @apply gap-5;
     }
     .book-card:not(.is-small) .book-cover {
-      height: 196px;
+      height: 270px;
     }
     .book-card:not(.is-small) .book-cover.is-placeholder {
-      width: 131px;
+      width: 180px;
     }
     .book-title {
       @apply text-2xl;
@@ -134,10 +220,10 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
   }
   @media (max-width: 400px) {
     .book-card:not(.is-small) .book-cover {
-      height: 168px;
+      height: 230px;
     }
     .book-card:not(.is-small) .book-cover.is-placeholder {
-      width: 112px;
+      width: 153px;
     }
   }
 </style>

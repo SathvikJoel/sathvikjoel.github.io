@@ -240,9 +240,18 @@ The `cover` is optional — leave it off and the card draws a tidy book glyph in
 
 Every cover renders at a **standard height**, so books of any source dimensions stand the
 same height in a tidy row (like a shelf) — with no stretching or cropping, whatever the
-image's proportions — and the title's top edge always lines up with the top of the cover.
-No need to pre-crop or resize your image; just use a normal portrait book cover and drop
-it in.
+image's proportions. The flat cover image is turned into a slightly angled **3D book**
+(with thickness, page leaves down the right edge, and a rear cover) that floats just above
+the dark page. No need to pre-crop or resize; just use a normal portrait book cover.
+
+**Cover image size.** Real book covers sit around a **2:3 aspect ratio (~0.667)**. For a
+crisp, undistorted result, download covers at roughly **600×900px or larger** (a 2:3
+portrait); anything portrait works since the width follows naturally, but 2:3 looks
+cleanest. Best high-res source: the Apple Books artwork — search
+`https://itunes.apple.com/search?term=<book+title>&entity=ebook`, take the `artworkUrl100`
+link, and swap its trailing `/100x100bb.jpg` for `/1200x1200bb.jpg` to get the full-size
+cover. Open Library (`https://covers.openlibrary.org/b/isbn/<ISBN>-L.jpg`) also works but
+caps around 500px tall. Store covers under `public/...` (e.g. `public/now/<book>.jpg`).
 
 ```mdx
 <Book cover="/covers/metaphors.jpg" title="Metaphors We Live By"
