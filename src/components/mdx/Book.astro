@@ -26,7 +26,7 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
         <div class="book-3d__inner">
           <span class="book-3d__rear" aria-hidden="true" />
           <span class="book-3d__pages" aria-hidden="true" />
-          <img class="book-3d__cover" src={cover} alt={coverAlt ?? title} loading="lazy" decoding="async" />
+          <img class="book-3d__cover" src={cover} alt={coverAlt ?? title} loading="eager" decoding="async" />
         </div>
       ) : (
         <svg viewBox="0 0 48 64" fill="none" aria-hidden="true">
@@ -209,14 +209,46 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
   }
 
   /* On phones, stack the book on top with the title, author and blurb below it,
-     all centred in the column (the side-by-side row gets too cramped, and the
-     angled 3D book needs the full width to show its thickness without clipping). */
+     all centred in the column. The 3D book (perspective + preserve-3d) is dropped
+     here: mobile browsers often fail to load/size an <img> inside a transformed
+     3D context, leaving only the page-edge visible. So phones get a plain, flat,
+     reliably-rendered cover, centred, with a flat faux page-edge on the right. */
   @media (max-width: 600px) {
     .book-card:not(.is-small) {
       @apply flex-col items-center gap-6 text-center;
     }
     .book-card:not(.is-small) .book-cover {
       height: 300px;
+      perspective: none;
+    }
+    .book-3d__inner {
+      transform: none;
+      transform-style: flat;
+    }
+    .book-3d__cover {
+      transform: none;
+    }
+    .book-3d__rear {
+      display: none;
+    }
+    /* Flat page-edge: a thin strip of stacked-paper lines on the cover's right. */
+    .book-3d__pages {
+      left: auto;
+      right: -8px;
+      top: 1.5%;
+      height: 97%;
+      width: 8px;
+      transform: skewY(-1.5deg);
+      transform-origin: left center;
+      border-radius: 0 2px 2px 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        #f4eede 0,
+        #f4eede 1.5px,
+        #cdc4a9 3px,
+        #f4eede 4.5px
+      );
+      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15);
     }
     .book-card:not(.is-small) .book-cover.is-placeholder {
       width: 200px;
