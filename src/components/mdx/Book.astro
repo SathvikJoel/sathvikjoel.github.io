@@ -191,10 +191,10 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
   }
 
   /* On phones, stack the book on top with the title, author and blurb below it,
-     all centred in the column. The 3D book (perspective + preserve-3d) is dropped
-     here: mobile browsers often fail to load/size an <img> inside a transformed
-     3D context, leaving only the page-edge visible. So phones get a plain, flat,
-     reliably-rendered cover, centred, with a flat faux page-edge on the right. */
+     all centred in the column. The 3D book (perspective + preserve-3d + page
+     leaves) is dropped here: mobile browsers often fail to load/size an <img>
+     inside a transformed 3D context, and the faux page-edge never read cleanly.
+     So phones get a plain, flat, reliably-rendered 2D cover, centred. */
   @media (max-width: 600px) {
     .book-card:not(.is-small) {
       @apply flex-col items-center gap-6 text-center;
@@ -213,26 +213,10 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
     .book-3d__rear {
       display: none;
     }
-    /* Flat page-edge on the cover's right: vertical page-lines stacked
-       left-to-right (the fore-edge seen side-on), matching the desktop book.
-       Earlier this used `to bottom`, which stacked the lines top-to-bottom. */
+    /* Phone/narrow: a plain flat 2D cover, no 3D and no page-edge — just the
+       cover art, centred. (Desktop keeps the full 3D book above.) */
     .book-3d__pages {
-      left: auto;
-      right: -17px;
-      top: 1.5%;
-      height: 97%;
-      width: 18px;
-      transform: skewY(-1.5deg);
-      transform-origin: left center;
-      border-radius: 0 2px 2px 0;
-      background: repeating-linear-gradient(
-        90deg,
-        #ece4cf 0,
-        #ece4cf 1.8px,
-        #cabf9d 3px,
-        #ece4cf 4.2px
-      );
-      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+      display: none;
     }
     .book-card:not(.is-small) .book-cover.is-placeholder {
       width: 200px;

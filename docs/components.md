@@ -243,7 +243,9 @@ Every cover renders at a **standard height**, so books of any source dimensions 
 same height in a tidy row (like a shelf) — with no stretching or cropping, whatever the
 image's proportions. The flat cover image is turned into a slightly angled **3D book**
 (with thickness, page leaves down the right edge, and a rear cover) that floats just above
-the dark page. No need to pre-crop or resize; just use a normal portrait book cover.
+the dark page **on desktop**. On phones and narrow windows it falls back to a plain, flat
+2D cover (no 3D, no page edge), centred above the text — which renders reliably on mobile
+browsers. No need to pre-crop or resize; just use a normal portrait book cover.
 
 **Cover image size.** Real book covers sit around a **2:3 aspect ratio (~0.667)**. For a
 crisp, undistorted result, download covers at roughly **600×900px or larger** (a 2:3
