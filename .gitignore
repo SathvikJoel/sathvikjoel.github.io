@@ -26,3 +26,6 @@ pnpm-debug.log*
 # Generated encrypted docs bundle (rebuilt by prebuild/predev)
 public/docs.enc.json
 public/og/
+
+# Scratch drop folder for work-in-progress (never committed)
+_incoming/
