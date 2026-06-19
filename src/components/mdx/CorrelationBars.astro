@@ -1,0 +1,22 @@
+---
+import CorrelationBars from "@components/viz/CorrelationBars"
+
+interface Props {
+  caption?: string
+  source?: string
+}
+const base = "/posts/overpopulation/data"
+const { caption, source } = Astro.props
+---
+
+<figure class="viz-figure viz-narrow not-prose my-10">
+  <CorrelationBars client:visible src={`${base}/predictor_observable_correlations.csv`} />
+  {
+    (caption || source) && (
+      <figcaption class="viz-caption">
+        {caption && <span>{caption}</span>}
+        {source && <span class="viz-source">{source}</span>}
+      </figcaption>
+    )
+  }
+</figure>

@@ -1,0 +1,22 @@
+---
+import CityDensityTable from "@components/viz/CityDensityTable"
+
+interface Props {
+  caption?: string
+  source?: string
+}
+const base = "/posts/overpopulation/data"
+const { caption, source } = Astro.props
+---
+
+<figure class="viz-figure viz-narrow not-prose my-10">
+  <CityDensityTable client:visible src={`${base}/world_city_lived_density.csv`} />
+  {
+    (caption || source) && (
+      <figcaption class="viz-caption">
+        {caption && <span>{caption}</span>}
+        {source && <span class="viz-source">{source}</span>}
+      </figcaption>
+    )
+  }
+</figure>

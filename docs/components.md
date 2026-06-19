@@ -276,6 +276,70 @@ its own or nested inside a `Card`.
 <Tweet url="https://twitter.com/user/status/1234567890" />
 ```
 
+### VideoCard
+
+A compact "watch this" card: a 16:9 YouTube thumbnail on the left, the title and source
+on the right, with a small play glyph tucked into the corner of the thumbnail. The whole
+card links out to the video and opens in a new tab.
+
+Pass the YouTube `id` and both the thumbnail and the link are derived from it (the
+thumbnail uses `maxresdefault.jpg` for a crisp, full-bleed 16:9 frame). `title` is
+required; `source` (the channel or publisher line) is optional.
+
+| Prop | Required | What it does |
+| --- | --- | --- |
+| `id` | yes | YouTube video id; used to build the link and thumbnail |
+| `title` | yes | The headline shown beside the thumbnail |
+| `source` | no | A small attribution line under the title (e.g. channel name) |
+| `href` | no | Override the derived `https://youtu.be/<id>` link |
+| `thumb` | no | Override the derived thumbnail URL |
+
+```mdx
+<VideoCard
+  id="-kp3h1Vc9wo"
+  title="Dug Up and Fed up: What's Really Happening To Mumbai's Roads"
+  source="Times of India | I Witness"
+/>
+```
+
+Note: a post-wide rule adds vertical padding to `article img`, which would letterbox the
+thumbnail; the component cancels that on its own image, so don't be surprised to see
+`padding: 0` in its styles.
+
+### ShortCard
+
+A sidenote-style card for a YouTube **Short**: a small vertical (9:16) thumbnail with the
+title and source below it, floated into the right margin on wide screens and hugging the
+right of the column on narrow ones, so the surrounding prose wraps around it. The play
+glyph sits in the thumbnail's bottom-right corner and the whole card links to the Short.
+
+Pass the Short `id`. The vertical thumbnail uses YouTube's `oardefault.jpg` ("original
+aspect ratio") frame, so it stays portrait with **no letterbox bars**. `title` is required;
+`source` (channel/author) is optional, and an optional default slot adds a short
+description line under the source.
+
+| Prop | Required | What it does |
+| --- | --- | --- |
+| `id` | yes | YouTube Short id; builds the link and the vertical thumbnail |
+| `title` | yes | The headline shown under the thumbnail |
+| `source` | no | A small attribution line under the title (e.g. channel name) |
+| `href` | no | Override the derived `https://www.youtube.com/shorts/<id>` link |
+| `thumb` | no | Override the derived `oardefault.jpg` thumbnail URL |
+| `ref` | no | A superscript marker (e.g. `"*"` or a number) dropped inline in the prose and on the card, tying the two together like a sidenote |
+
+```mdx
+the pollution alone will make you sick.<ShortCard
+  ref="*"
+  id="bQV3zAq9cmA"
+  title="BMC vs Mumbai Roads"
+  source="Azeem Banatwalla"
+/>
+```
+
+Place the tag **inline, on the same line** as the sentence it should mark (no blank line
+before it), so the superscript sits against the right word and the card floats alongside
+the following paragraph. Omit `ref` to drop it in as a plain block between paragraphs.
+
 ---
 
 ## Annotated talks
@@ -441,7 +505,7 @@ away.
 For data-driven essays you can drop in interactive, dark-themed charts powered by
 [ECharts](https://echarts.apache.org/). They render on the pitch-black page with a
 transparent background, off-white labels, and hover tooltips, and they only load when
-scrolled into view, so they don't slow the rest of the page. There are four, all built
+scrolled into view, so they don't slow the rest of the page. There are eight, all built
 for the *Overpopulation* essay but reusable:
 
 | Block | What it draws |
@@ -450,6 +514,12 @@ for the *Overpopulation* essay but reusable:
 | `DensityMap` | A world choropleth shaded by a density column (`variant="arithmetic"` or `"lived"`) |
 | `DensitySlope` | A slope chart connecting each country's "on paper" and "as lived" density |
 | `DensityTable` | A sortable, searchable table with a live "compare against" column |
+| `CityLivedBars` | A horizontal bar chart of the study cities' lived density, coloured by group |
+| `CityDensityTable` | A sortable, searchable table of all 520 major cities, India's rows highlighted |
+| `CorrelationBars` | A diverging bar "money plot" of Spearman ρ for each predictor against each urban problem |
+| `CityScatter` | Twin scatter panels (crowding vs lived density, and vs road space per person) coloured by group |
+| `RoadsReality` | Three small-multiple bar panels (road per person, vehicles per 1,000, minutes to drive 10 km), each sorted independently worst-on-top |
+| `MetroPerMillion` | A single horizontal bar chart of metro km per million people, each bar labelled with the value and its multiple of Bengaluru |
 
 ```mdx
 <PopulationTreemap
@@ -466,6 +536,18 @@ for the *Overpopulation* essay but reusable:
 <DensitySlope caption="Left: density on paper. Right: density as it is lived." />
 
 <DensityTable source="Lived density from the GHS-POP 1 km grid; 242 countries." />
+
+<CityLivedBars caption="Our 15 study cities span ~4,800 to ~58,900 people/km² lived." />
+
+<CityDensityTable source="GHS-POP 1 km grid clipped to GHS-UCDB urban centres; 520 cities." />
+
+<CorrelationBars caption="Density rises with every urban problem; infrastructure per person falls against it." />
+
+<CityScatter caption="Crowding barely sorts the cities; road space per person sorts them sharply." />
+
+<RoadsReality caption="India's metros sit at the wrong end of every road metric at once." source="TomTom Traffic Index 2024; city road and vehicle statistics" />
+
+<MetroPerMillion caption="Bengaluru has built almost no metro for its size: 4.9 km per million people." source="Metro network length per million residents, 2024." />
 ```
 
 Every chart takes an optional **`caption`** and **`source`** (the small grey note under
@@ -496,6 +578,8 @@ it as a post.
 | `IconList` | A list with hand-drawn marker bullets |
 | `Book` | A book reference with cover, author, and blurb |
 | `Tweet` | An embedded post |
+| `VideoCard` | A YouTube card: thumbnail left, title and source right, links to the video |
+| `ShortCard` | A sidenote-style card for a YouTube Short: small vertical thumbnail, title and source below, floats right |
 | `Details` | A collapsible accordion section |
 | `Excursion` | A gentler set-apart digression |
 | `Appendix` | Collapsible end matter (one per post) with a centred rule label |
@@ -513,3 +597,9 @@ it as a post.
 | `DensityMap` | An interactive world choropleth (`variant="arithmetic"`/`"lived"`) |
 | `DensitySlope` | An interactive "on paper vs as lived" slope chart |
 | `DensityTable` | A sortable, searchable density table with a live comparison column |
+| `CityLivedBars` | A bar chart of the study cities' lived density, coloured by group |
+| `CityDensityTable` | A sortable, searchable table of all 520 major cities (India highlighted) |
+| `CorrelationBars` | A diverging "money plot" of Spearman ρ: each predictor vs each urban problem |
+| `CityScatter` | Twin scatter panels of crowding vs density and vs road space per person |
+| `RoadsReality` | Three small-multiple bar panels: road per person, vehicles per 1,000, minutes to drive 10 km |
+| `MetroPerMillion` | A horizontal bar chart of metro km per million people, labelled with each city's multiple of Bengaluru |

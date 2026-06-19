@@ -22,6 +22,8 @@ import Card from "./Card.astro"
 import Tweet from "./Tweet.astro"
 import Book from "./Book.astro"
 import Aside from "./Aside.astro"
+import VideoCard from "./VideoCard.astro"
+import ShortCard from "./ShortCard.astro"
 import ScrollSlides from "./ScrollSlides.astro"
 import Slide from "./Slide.astro"
 import Chat from "./Chat.astro"
@@ -31,6 +33,12 @@ import PopulationTreemap from "./PopulationTreemap.astro"
 import DensityMap from "./DensityMap.astro"
 import DensitySlope from "./DensitySlope.astro"
 import DensityTable from "./DensityTable.astro"
+import CityLivedBars from "./CityLivedBars.astro"
+import CityDensityTable from "./CityDensityTable.astro"
+import CorrelationBars from "./CorrelationBars.astro"
+import CityScatter from "./CityScatter.astro"
+import RoadsReality from "./RoadsReality.astro"
+import MetroPerMillion from "./MetroPerMillion.astro"
 
 export const mdxComponents = {
   Figure,
@@ -56,6 +64,8 @@ export const mdxComponents = {
   Tweet,
   Book,
   Aside,
+  VideoCard,
+  ShortCard,
   ScrollSlides,
   Slide,
   Chat,
@@ -65,4 +75,10 @@ export const mdxComponents = {
   DensityMap,
   DensitySlope,
   DensityTable,
+  CityLivedBars,
+  CityDensityTable,
+  CorrelationBars,
+  CityScatter,
+  RoadsReality,
+  MetroPerMillion,
 }

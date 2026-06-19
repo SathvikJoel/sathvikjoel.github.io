@@ -1,0 +1,16 @@
+city,country,lived_density,group
+Mumbai,India,58855.0,india
+Bengaluru,India,46588.0,india
+Kolkata,India,44009.0,india
+Delhi,India,31478.0,india
+Hong Kong,China,56895.0,livable
+Singapore,Singapore,38975.0,livable
+Seoul,South Korea,19829.0,developed
+Tokyo,Japan,10264.0,developed
+Paris,France,14016.0,developed
+New York,United States,13617.0,developed
+Amsterdam,Netherlands,7257.0,developed
+Los Angeles,United States,4832.0,developed
+Dhaka,Bangladesh,46752.0,developing
+Lagos,Nigeria,24035.0,developing
+Jakarta,Indonesia,14212.0,developing

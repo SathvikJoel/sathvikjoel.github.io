@@ -1,0 +1,90 @@
+---
+// A compact "watch this" card: a YouTube thumbnail on the left, the title and source
+// on the right. The whole card links out to the video. Pass the YouTube id; the
+// thumbnail and link are derived from it (override with `thumb` / `href` if needed).
+interface Props {
+  id: string
+  title: string
+  source?: string
+  href?: string
+  thumb?: string
+}
+const { id, title, source, href, thumb } = Astro.props
+const link = href ?? `https://youtu.be/${id}`
+const image = thumb ?? `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
+---
+
+<a
+  class="video-card depth-card not-prose"
+  href={link}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={`Watch on YouTube: ${title}`}
+>
+  <div class="video-thumb">
+    <img src={image} alt="" loading="lazy" decoding="async" width="1280" height="720" />
+    <span class="video-play" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"></path></svg>
+    </span>
+  </div>
+  <div class="video-meta">
+    <p class="video-title">{title}</p>
+    {source && <p class="video-source">{source}</p>}
+  </div>
+</a>
+
+<style>
+  .video-card {
+    @apply my-8 flex items-stretch gap-5 overflow-hidden rounded-sm border border-clay/20 bg-surface-light p-3 no-underline transition-colors dark:border-white/15 dark:bg-surface-dark sm:gap-7 sm:p-4;
+  }
+  .video-card:hover {
+    @apply border-clay/40 dark:border-white/30;
+  }
+  .video-thumb {
+    @apply relative aspect-video flex-shrink-0 overflow-hidden rounded-sm;
+    width: 30%;
+    max-width: 168px;
+    min-width: 104px;
+    background: #000;
+  }
+  .video-thumb img {
+    @apply h-full w-full object-cover;
+    padding: 0;
+    margin: 0;
+  }
+  .video-play {
+    @apply absolute flex items-center justify-center text-white;
+    right: 0.3rem;
+    bottom: 0.3rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.7));
+    transition: color 0.18s ease, transform 0.18s ease;
+  }
+  .video-card:hover .video-play {
+    color: theme(colors.crimson.dark);
+    transform: scale(1.12);
+  }
+  .video-play svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+  .video-meta {
+    @apply flex min-w-0 flex-col justify-center gap-1;
+  }
+  .video-title {
+    @apply m-0 font-display text-ink-light dark:text-[#EAE8E5];
+    font-weight: 300;
+    font-size: 1.15rem;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+  .video-source {
+    @apply m-0 font-sans text-sm text-ink-light/55 dark:text-ink-dark/50;
+  }
+  @media (min-width: 640px) {
+    .video-title {
+      font-size: 1.3rem;
+    }
+  }
+</style>

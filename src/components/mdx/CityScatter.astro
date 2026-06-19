@@ -1,0 +1,22 @@
+---
+import CityScatter from "@components/viz/CityScatter"
+
+interface Props {
+  caption?: string
+  source?: string
+}
+const base = "/posts/overpopulation/data"
+const { caption, source } = Astro.props
+---
+
+<figure class="viz-figure viz-narrow not-prose my-10">
+  <CityScatter client:visible src={`${base}/cities_master.csv`} />
+  {
+    (caption || source) && (
+      <figcaption class="viz-caption">
+        {caption && <span>{caption}</span>}
+        {source && <span class="viz-source">{source}</span>}
+      </figcaption>
+    )
+  }
+</figure>

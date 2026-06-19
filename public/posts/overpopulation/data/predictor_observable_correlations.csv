@@ -1,0 +1,16 @@
+predictor,predictor_type,observable,spearman,n
+Lived density,Density,Congestion,0.38,12
+Lived density,Density,Commute,0.59,15
+Lived density,Density,Air (PM2.5),0.7,15
+Road per person,Infrastructure,Congestion,-0.44,12
+Road per person,Infrastructure,Commute,-0.73,15
+Road per person,Infrastructure,Air (PM2.5),-0.85,15
+Metro per million,Infrastructure,Congestion,-0.66,12
+Metro per million,Infrastructure,Commute,-0.55,15
+Metro per million,Infrastructure,Air (PM2.5),-0.47,15
+Built per person,Infrastructure,Congestion,-0.34,12
+Built per person,Infrastructure,Commute,-0.53,15
+Built per person,Infrastructure,Air (PM2.5),-0.72,15
+Intersection density,Infrastructure,Congestion,-0.64,12
+Intersection density,Infrastructure,Commute,-0.56,15
+Intersection density,Infrastructure,Air (PM2.5),-0.73,15

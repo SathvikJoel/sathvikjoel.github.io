@@ -1,0 +1,16 @@
+city,country,group,road_m_per_person,vehicles_per_1000_people,time_per_10km_min
+Mumbai,India,India's metros,0.45,200,28.8
+Dhaka,Bangladesh,Developing cities,0.55,120,
+Kolkata,India,India's metros,0.95,150,35.3
+Hong Kong,China,Dense and livable,1.07,110,24.7
+Lagos,Nigeria,Developing cities,1.16,180,
+Delhi,India,India's metros,1.28,600,24.0
+Bengaluru,India,India's metros,1.35,800,36.1
+Jakarta,Indonesia,Developing cities,1.81,900,26.3
+Seoul,South Korea,Lower-density developed,1.83,310,
+Singapore,Singapore,Dense and livable,2.42,168,21.4
+Tokyo,Japan,Lower-density developed,3.91,340,27.5
+Paris,France,Lower-density developed,4.05,400,30.0
+New York,United States,Lower-density developed,5.18,450,31.6
+Amsterdam,Netherlands,Lower-density developed,6.76,247,26.4
+Los Angeles,United States,Lower-density developed,7.23,840,15.5
