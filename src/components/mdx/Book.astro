@@ -117,14 +117,15 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
     height: 98%;
     transform: translateX(-55%) rotateY(90deg);
     /* Fine page leaves: vertical lines stacked left-to-right (the fore-edge of a
-       book seen side-on). Darker separators give the edge crisp definition rather
-       than washing out to a flat grey. */
+       book seen side-on). The page is ivory with soft warm tonal separators (not
+       hard black lines, which fight the cream against the black page) and a little
+       breathing room between leaves so the edge reads clean, not dense. */
     background: repeating-linear-gradient(
       90deg,
-      #f1ebd9 0,
-      #f1ebd9 1.5px,
-      #4a4334 2.6px,
-      #f1ebd9 3.7px
+      #efe8d4 0,
+      #efe8d4 2.4px,
+      #cabf9d 4px,
+      #efe8d4 5.6px
     );
   }
   /* Rear cover, set back by the book's thickness behind the front. It is placed
@@ -227,11 +228,11 @@ const hasDesc = !!Astro.slots.default && (await Astro.slots.render("default")).t
       background: repeating-linear-gradient(
         90deg,
         #ece4cf 0,
-        #ece4cf 1.5px,
-        #3a3327 2.6px,
-        #ece4cf 3.7px
+        #ece4cf 2.4px,
+        #cabf9d 4px,
+        #ece4cf 5.6px
       );
-      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.28);
+      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
     }
     .book-card:not(.is-small) .book-cover.is-placeholder {
       width: 200px;
