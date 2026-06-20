@@ -15,7 +15,30 @@ const { url, theme = "dark" } = Astro.props
   </blockquote>
 </div>
 
-<script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script>
+  // Load (or re-process) the X/Twitter widget. Runs on the initial load and again
+  // after every client-side navigation (astro:page-load), so embeds still upgrade
+  // when you arrive at a post through Astro's view transitions instead of a hard load.
+  function loadTweets() {
+    if (!document.querySelector(".twitter-tweet")) return
+    const w = (window as any).twttr
+    if (w && w.widgets) {
+      w.widgets.load()
+      return
+    }
+    if (!document.getElementById("x-widgets-js")) {
+      const s = document.createElement("script")
+      s.id = "x-widgets-js"
+      s.src = "https://platform.x.com/widgets.js"
+      s.async = true
+      s.charset = "utf-8"
+      document.head.appendChild(s)
+    }
+  }
+
+  loadTweets()
+  document.addEventListener("astro:page-load", loadTweets)
+</script>
 
 <style>
   .tweet-embed {
@@ -24,5 +47,12 @@ const { url, theme = "dark" } = Astro.props
   }
   .tweet-embed :global(.twitter-tweet) {
     margin-inline: auto;
+  }
+  /* The X embed iframe paints white triangles in its corners (the cross-origin
+     content's default backdrop sits behind its own rounded card). Clip the iframe
+     to the same radius so those white corners are removed against the dark page. */
+  .tweet-embed :global(.twitter-tweet-rendered iframe) {
+    border-radius: 12px;
+    overflow: hidden;
   }
 </style>

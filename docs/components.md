@@ -310,8 +310,8 @@ thumbnail; the component cancels that on its own image, so don't be surprised to
 
 A sidenote-style card for a YouTube **Short**: a small vertical (9:16) thumbnail with the
 title and source below it, floated into the right margin on wide screens and hugging the
-right of the column on narrow ones, so the surrounding prose wraps around it. The play
-glyph sits in the thumbnail's bottom-right corner and the whole card links to the Short.
+right of the column on narrow ones, so the surrounding prose wraps around it. The whole
+card links to the Short.
 
 Pass the Short `id`. The vertical thumbnail uses YouTube's `oardefault.jpg` ("original
 aspect ratio") frame, so it stays portrait with **no letterbox bars**. `title` is required;
@@ -325,11 +325,11 @@ description line under the source.
 | `source` | no | A small attribution line under the title (e.g. channel name) |
 | `href` | no | Override the derived `https://www.youtube.com/shorts/<id>` link |
 | `thumb` | no | Override the derived `oardefault.jpg` thumbnail URL |
-| `ref` | no | A superscript marker (e.g. `"*"` or a number) dropped inline in the prose and on the card, tying the two together like a sidenote |
+| `ref` | no | A superscript marker dropped inline in the prose **and** on the card, tying the two together like a sidenote. A bare `ref` (or `ref="play"`) renders the standard crimson **play glyph** (the Short's own family symbol); pass a value (e.g. `ref={1}` or `ref="*"`) to use that number/symbol instead |
 
 ```mdx
 the pollution alone will make you sick.<ShortCard
-  ref="*"
+  ref
   id="bQV3zAq9cmA"
   title="BMC vs Mumbai Roads"
   source="Azeem Banatwalla"

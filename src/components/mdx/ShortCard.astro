@@ -4,22 +4,38 @@
 // hugging the right edge of the column on narrow ones. The whole card links to the Short.
 // Pass the Short id; the vertical thumbnail uses YouTube's `oardefault` (original aspect
 // ratio) frame so there are no letterbox bars. Override with `thumb` / `href` if needed.
-// Pass `ref` (e.g. "*" or a number) to drop a matching superscript marker inline in the
-// prose, the way a Tufte sidenote ties its margin note back to a point in the text.
+// Marker: like a Tufte sidenote, the card ties back to a point in the prose with a small
+// crimson superscript. Pass the `ref` prop to show one: bare `ref` (or ref="play") gives
+// the standard play glyph that signals "watch this short"; ref={1} (or any value) shows
+// that number/symbol instead, so it can share the Sidenote's numbering family.
 interface Props {
   id: string
   title: string
   source?: string
   href?: string
   thumb?: string
-  ref?: string | number
+  ref?: string | number | boolean
 }
 const { id, title, source, href, thumb, ref } = Astro.props
 const link = href ?? `https://www.youtube.com/shorts/${id}`
 const image = thumb ?? `https://i.ytimg.com/vi/${id}/oardefault.jpg`
+// Show a marker whenever `ref` is present (and not explicitly false). A bare `ref`, an
+// empty string, or "play" renders the play glyph; anything else renders verbatim.
+const hasMarker = ref !== undefined && ref !== null && ref !== false
+const useGlyph = ref === true || ref === "" || ref === "play"
 ---
 
-{ref != null && <sup class="short-ref">{ref}</sup>}
+{
+  hasMarker && (
+    <sup class="short-ref">
+      {useGlyph ? (
+        <svg class="short-ref-glyph" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" /></svg>
+      ) : (
+        ref
+      )}
+    </sup>
+  )
+}
 <a
   class="short-card not-prose"
   href={link}
@@ -29,12 +45,16 @@ const image = thumb ?? `https://i.ytimg.com/vi/${id}/oardefault.jpg`
 >
   <span class="short-thumb">
     <img src={image} alt="" loading="lazy" decoding="async" width="1080" height="1920" />
-    <span class="short-play" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"></path></svg>
-    </span>
   </span>
   <span class="short-meta">
-    <span class="short-title">{ref != null && <sup class="short-num">{ref}</sup>}{title}</span>
+    <span class="short-title">
+      {hasMarker && (
+        <span class="short-num">
+          {useGlyph ? "\u25B6\uFE0E" : ref}
+        </span>
+      )}
+      {title}
+    </span>
     {source && <span class="short-source">{source}</span>}
     {Astro.slots.has("default") && <span class="short-desc"><slot /></span>}
   </span>
@@ -49,13 +69,22 @@ const image = thumb ?? `https://i.ytimg.com/vi/${id}/oardefault.jpg`
     transition: opacity 0.2s ease;
   }
   .short-ref {
-    @apply align-super text-[0.7em] font-sans font-medium text-crimson dark:text-crimson-dark;
+    @apply font-sans font-medium text-crimson dark:text-crimson-dark;
+    font-size: 1em;
     line-height: 0;
+    vertical-align: baseline;
+    margin-left: 0.1em;
   }
   .short-num {
-    @apply align-super text-[0.7em] font-sans font-medium text-crimson dark:text-crimson-dark;
-    line-height: 0;
-    margin-right: 0.15rem;
+    @apply font-sans text-crimson dark:text-crimson-dark;
+    font-size: 1em;
+    margin-right: 0.28em;
+  }
+  .short-ref-glyph {
+    @apply inline-block text-crimson dark:text-crimson-dark;
+    width: 0.92em;
+    height: 0.92em;
+    vertical-align: -0.12em;
   }
   .short-card:hover {
     opacity: 1;
@@ -68,23 +97,6 @@ const image = thumb ?? `https://i.ytimg.com/vi/${id}/oardefault.jpg`
     @apply h-full w-full object-cover;
     padding: 0;
     margin: 0;
-  }
-  .short-play {
-    @apply absolute flex items-center justify-center text-white/90;
-    right: 0.3rem;
-    bottom: 0.3rem;
-    width: 1.15rem;
-    height: 1.15rem;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.75));
-    transition: color 0.18s ease, transform 0.18s ease;
-  }
-  .short-card:hover .short-play {
-    color: theme(colors.crimson.dark);
-    transform: scale(1.12);
-  }
-  .short-play svg {
-    width: 1.15rem;
-    height: 1.15rem;
   }
   .short-meta {
     @apply mt-1.5 block;
