@@ -16,9 +16,10 @@ const { url, theme = "dark" } = Astro.props
 </div>
 
 <script>
-  // Load (or re-process) the X/Twitter widget. Runs on the initial load and again
-  // after every client-side navigation (astro:page-load), so embeds still upgrade
-  // when you arrive at a post through Astro's view transitions instead of a hard load.
+  // Load (or re-process) the X/Twitter widget. Runs once on this full page load and,
+  // defensively, on astro:page-load (dormant today since the site has no ClientRouter,
+  // but ready if view transitions are ever enabled). Calling twttr.widgets.load()
+  // explicitly is what reliably upgrades the blockquote into the rendered card.
   function loadTweets() {
     if (!document.querySelector(".twitter-tweet")) return
     const w = (window as any).twttr

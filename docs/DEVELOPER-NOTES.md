@@ -134,6 +134,12 @@ The build fails loudly (rather than shipping broken output) on these:
   `astro:before-swap` listeners in `BaseHead.astro` and `Footer.astro` are **dormant** —
   they only matter if someone later adds the ViewTransitions router. Navigation is a full
   page load today, which is why `animate.js` also listens for `astro:after-swap` defensively.
+- **Third-party embeds** (`Tweet.astro`) load `platform.x.com/widgets.js` **once** and then
+  call `twttr.widgets.load()` to upgrade the `.twitter-tweet` blockquote; it re-runs on
+  `astro:page-load` too (dormant today, future-proof for view transitions). Use the
+  `platform.x.com` host, **not** `platform.twitter.com` — the older host can be blocked or
+  slow on some networks and then the embed silently stays a plain link. The embed iframe is
+  clipped with `border-radius` to hide the white corners the widget paints behind its card.
 
 ## Fonts are self-hosted (not Google Fonts)
 
@@ -302,6 +308,14 @@ The `/docs` route is a **password-gated writer handbook**, encrypted at build ti
 - `build-docs.mjs` also **rewrites intra-doc links** (`./streams.md#x` → `#/streams#x`) so
   the single-page docs viewer can navigate between sections. Keep cross-doc links in that
   `./file.md` form.
+- **Viewer layout (`docs.astro`).** After unlock the handbook renders as a three-column
+  documentation app: left **page nav** (the `MANIFEST` order), centre **content**, right
+  **"On this page" TOC**. The TOC is built client-side from the rendered `h2[id]`/`h3[id]`
+  (IDs come from `markdown-it-anchor` in `build-docs.mjs`) and tracks the current section
+  with an `IntersectionObserver` scroll-spy. It collapses on screens below `lg` and hides
+  itself when a doc has fewer than two headings. So a TOC appears automatically, **headings
+  in the handbook just need to stay as real `##`/`###` Markdown** (the anchor plugin slugs them).
+
 
 ## Dates: use the IST offset
 

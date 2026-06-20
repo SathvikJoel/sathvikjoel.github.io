@@ -46,6 +46,19 @@ A large, emphasised quote to give a line room to breathe. The citation is option
 </Pullquote>
 ```
 
+### Verse
+
+A clean, centred scripture card: the verse in the display serif, a short rule, then the
+`reference` beneath it. Borderless and quiet, so a single line reads like an inscription.
+The slot holds the verse text; `reference` is the citation and `translation` (e.g. `NIV`)
+is optional.
+
+```mdx
+<Verse reference="Romans 3:12">
+There is no one righteous, not even one.
+</Verse>
+```
+
 ---
 
 ## Callouts & collapsibles
@@ -571,6 +584,7 @@ it as a post.
 | `Sidenote` | A margin aside or citation |
 | `Y` | A self-updating "years ago" |
 | `Pullquote` | A big emphasised quote |
+| `Verse` | A clean centred scripture card: verse in the display serif, reference beneath |
 | `Reference` / `Callout` | A linked card to an external source |
 | `Aside` | A labelled note/caveat box before the piece |
 | `Card` | A bordered feature card with optional `From:` source |

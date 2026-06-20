@@ -24,6 +24,7 @@ import Book from "./Book.astro"
 import Aside from "./Aside.astro"
 import VideoCard from "./VideoCard.astro"
 import ShortCard from "./ShortCard.astro"
+import Verse from "./Verse.astro"
 import ScrollSlides from "./ScrollSlides.astro"
 import Slide from "./Slide.astro"
 import Chat from "./Chat.astro"
@@ -66,6 +67,7 @@ export const mdxComponents = {
   Aside,
   VideoCard,
   ShortCard,
+  Verse,
   ScrollSlides,
   Slide,
   Chat,

@@ -1,0 +1,48 @@
+---
+// A clean, centred scripture / verse card: the verse text in the display serif,
+// a short rule, then the reference (and optional translation) beneath it. Borderless
+// and quiet by design so a single line of scripture reads like an inscription.
+// Slot = the verse text. Pass `reference` (e.g. "Romans 3:12") and optionally
+// `translation` (e.g. "NIV").
+interface Props {
+  reference?: string
+  translation?: string
+}
+const { reference, translation } = Astro.props
+---
+
+<figure class="verse not-prose">
+  <blockquote class="verse-text"><slot /></blockquote>
+  {
+    reference && (
+      <figcaption class="verse-ref">
+        <span class="verse-rule" aria-hidden="true" />
+        <span class="verse-cite">
+          {reference}
+          {translation && <span class="verse-translation"> · {translation}</span>}
+        </span>
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .verse {
+    @apply my-10 mx-auto flex max-w-xl flex-col items-center text-center;
+  }
+  .verse-text {
+    @apply m-0 font-display text-2xl font-light italic leading-snug text-ink-light dark:text-ink-dark sm:text-3xl;
+  }
+  .verse-ref {
+    @apply mt-6 flex flex-col items-center gap-4;
+  }
+  .verse-rule {
+    @apply block h-px w-8 bg-crimson/40 dark:bg-crimson-dark/40;
+  }
+  .verse-cite {
+    @apply font-sans text-xs uppercase tracking-[0.18em] text-crimson dark:text-crimson-dark;
+  }
+  .verse-translation {
+    @apply text-ink-light/40 dark:text-ink-dark/40;
+  }
+</style>

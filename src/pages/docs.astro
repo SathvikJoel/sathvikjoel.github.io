@@ -57,9 +57,13 @@ const DESCRIPTION = "The private writer's handbook for this site."
         </button>
       </header>
 
-      <div class="grid grid-cols-1 md:grid-cols-[14rem_1fr] gap-10">
+      <div class="grid grid-cols-1 md:grid-cols-[13rem_minmax(0,1fr)] lg:grid-cols-[13rem_minmax(0,1fr)_12rem] gap-x-10 gap-y-8">
         <nav id="docs-nav" class="md:sticky md:top-24 md:self-start flex md:flex-col gap-1 overflow-x-auto md:overflow-visible"></nav>
         <article id="docs-content" class="prose dark:prose-invert max-w-none min-w-0 no-dropcap"></article>
+        <aside id="docs-toc" class="hidden lg:block lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto">
+          <p class="docs-toc-label">On this page</p>
+          <ul id="docs-toc-list" class="docs-toc-list"></ul>
+        </aside>
       </div>
     </section>
   </div>
@@ -74,14 +78,40 @@ const DESCRIPTION = "The private writer's handbook for this site."
     @apply bg-black/5 dark:bg-white/10 text-crimson dark:text-crimson-dark font-medium;
   }
   /* Tidy up the rendered markdown a touch (tables, code) */
+  #docs-content {
+    /* The global `article{ margin-inline:auto }` rule makes this grid item size to its
+       max-content (a wide code block) instead of the column; pin the margins so it fills
+       the track. */
+    margin-inline: 0;
+  }
   #docs-content :global(table) {
-    @apply text-sm;
+    @apply block max-w-full overflow-x-auto text-sm;
   }
   #docs-content :global(pre) {
-    @apply rounded-lg border border-black/10 dark:border-white/15;
+    @apply max-w-full overflow-x-auto rounded-lg border border-black/10 dark:border-white/15;
   }
   #docs-content :global(:where(h1, h2, h3))::before {
     content: none;
+  }
+  /* Give headings room so TOC jumps don't tuck them under the top of the viewport. */
+  #docs-content :global(:where(h1, h2, h3, h4)) {
+    scroll-margin-top: 6rem;
+  }
+  /* On-this-page table of contents */
+  .docs-toc-label {
+    @apply m-0 mb-3 font-sans text-xs uppercase tracking-[0.2em] text-sage dark:text-sage-dark;
+  }
+  .docs-toc-list {
+    @apply m-0 list-none border-l border-black/10 dark:border-white/15 p-0;
+  }
+  #docs-toc :global(a) {
+    @apply block border-l border-transparent -ml-px py-1 pl-4 font-sans text-sm leading-snug text-ink-light/55 dark:text-ink-dark/55 no-underline transition-colors hover:text-ink-light dark:hover:text-ink-dark;
+  }
+  #docs-toc :global(a.is-sub) {
+    @apply pl-7 text-[0.8rem];
+  }
+  #docs-toc :global(a.is-active) {
+    @apply border-crimson dark:border-crimson-dark text-crimson dark:text-crimson-dark;
   }
 </style>
 
@@ -136,10 +166,13 @@ const DESCRIPTION = "The private writer's handbook for this site."
     const error = document.getElementById("docs-error")
     const nav = document.getElementById("docs-nav")
     const content = document.getElementById("docs-content")
+    const tocList = document.getElementById("docs-toc-list")
+    const toc = document.getElementById("docs-toc")
     const lockBtn = document.getElementById("docs-lockbtn")
     if (!lock || !app || !form || !passEl || !nav || !content) return
 
     let docs: Doc[] = []
+    let spy: IntersectionObserver | null = null
 
     function show(unlocked: boolean) {
       lock!.classList.toggle("hidden", unlocked)
@@ -150,6 +183,55 @@ const DESCRIPTION = "The private writer's handbook for this site."
       const h = location.hash.replace(/^#\//, "")
       const slug = h.split("#")[0]
       return slug || (docs[0]?.slug ?? "")
+    }
+
+    // Build the "On this page" TOC from the rendered headings, and wire up a
+    // scroll-spy that highlights the section currently in view.
+    function buildToc(slug: string) {
+      if (!tocList || !toc) return
+      spy?.disconnect()
+      tocList.innerHTML = ""
+      const headings = Array.from(
+        content!.querySelectorAll<HTMLElement>("h2[id], h3[id]")
+      )
+      if (headings.length < 2) {
+        toc.classList.add("lg:hidden")
+        return
+      }
+      toc.classList.remove("lg:hidden")
+      const linkFor = new Map<string, HTMLAnchorElement>()
+      for (const h of headings) {
+        const li = document.createElement("li")
+        const a = document.createElement("a")
+        a.textContent = h.textContent ?? ""
+        a.href = `#/${slug}#${h.id}`
+        if (h.tagName === "H3") a.classList.add("is-sub")
+        a.addEventListener("click", (e) => {
+          e.preventDefault()
+          history.replaceState(null, "", `#/${slug}#${h.id}`)
+          h.scrollIntoView({ behavior: "smooth", block: "start" })
+        })
+        li.appendChild(a)
+        tocList.appendChild(li)
+        linkFor.set(h.id, a)
+      }
+      // Scroll-spy: mark the last heading whose top has passed the trigger line.
+      spy = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            const a = linkFor.get((entry.target as HTMLElement).id)
+            if (!a) continue
+            if (entry.isIntersecting) {
+              tocList.querySelectorAll("a.is-active").forEach((el) =>
+                el.classList.remove("is-active")
+              )
+              a.classList.add("is-active")
+            }
+          }
+        },
+        { rootMargin: "-80px 0px -70% 0px", threshold: 0 }
+      )
+      headings.forEach((h) => spy!.observe(h))
     }
 
     function render() {
@@ -170,6 +252,7 @@ const DESCRIPTION = "The private writer's handbook for this site."
       }
       // Content
       content!.innerHTML = doc.html
+      buildToc(doc.slug)
       // Scroll to in-doc anchor if present (#/slug#anchor) else top of content
       const anchor = location.hash.split("#")[2]
       if (anchor) {

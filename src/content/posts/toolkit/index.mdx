@@ -62,6 +62,20 @@ Cite an external article, paper, or link as a prominent card:
 <Pullquote cite="Author">A big, emphasised quote.</Pullquote>
 ```
 
+## Verse
+
+A clean, centred scripture card — the verse in the display serif, a short rule, then the reference beneath it. Borderless and quiet, so a single line reads like an inscription. Pass `reference` and an optional `translation`.
+
+<Verse reference="Romans 3:12">
+There is no one righteous, not even one.
+</Verse>
+
+```mdx
+<Verse reference="Romans 3:12" translation="NIV">
+There is no one righteous, not even one.
+</Verse>
+```
+
 ## Coming soon
 
 Mark an unfinished post so readers know it's still growing:
@@ -170,6 +184,35 @@ Embed a post by passing its full URL. Renders the standard embed (a plain link i
 
 ```mdx
 <Tweet url="https://twitter.com/user/status/1234567890" />
+```
+
+## Video card
+
+A compact "watch this" card — a YouTube thumbnail on the left, the title and source on the right. The whole card links to the video. Pass the YouTube `id`; the thumbnail and link are derived from it.
+
+<VideoCard
+  id="-kp3h1Vc9wo"
+  title="Dug Up and Fed up: What's Really Happening To Mumbai's Roads"
+  source="Times of India | I Witness"
+/>
+
+```mdx
+<VideoCard id="-kp3h1Vc9wo" title="Video title" source="Channel name" />
+```
+
+## Short card
+
+A sidenote-style card for a YouTube **Short** — a small vertical thumbnail that floats into the right margin, with the title and source below. Place it **inline** at the end of a sentence so the prose wraps around it. Pass `ref` to drop a matching marker in the text and on the card: a bare `ref` shows the crimson play glyph; a value (e.g. `ref={1}`) shows that number/symbol instead.
+
+This sentence carries a Short out into the margin, like a video footnote.<ShortCard ref id="bQV3zAq9cmA" title="BMC vs Mumbai Roads" source="Azeem Banatwalla" />
+
+```mdx
+…the end of a sentence.<ShortCard
+  ref
+  id="bQV3zAq9cmA"
+  title="Short title"
+  source="Channel name"
+/>
 ```
 
 ## Book
