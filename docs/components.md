@@ -518,7 +518,7 @@ away.
 For data-driven essays you can drop in interactive, dark-themed charts powered by
 [ECharts](https://echarts.apache.org/). They render on the pitch-black page with a
 transparent background, off-white labels, and hover tooltips, and they only load when
-scrolled into view, so they don't slow the rest of the page. There are eight, all built
+scrolled into view, so they don't slow the rest of the page. There are twelve, all built
 for the *Overpopulation* essay but reusable:
 
 | Block | What it draws |
@@ -533,6 +533,8 @@ for the *Overpopulation* essay but reusable:
 | `CityScatter` | Twin scatter panels (crowding vs lived density, and vs road space per person) coloured by group |
 | `RoadsReality` | Three small-multiple bar panels (road per person, vehicles per 1,000, minutes to drive 10 km), each sorted independently worst-on-top |
 | `MetroPerMillion` | A single horizontal bar chart of metro km per million people, each bar labelled with the value and its multiple of Bengaluru |
+| `BuiltSpace` | A horizontal bar chart of built floor space (m²) per person, most-cramped on top |
+| `AirQuality` | A horizontal bar chart of annual-average PM2.5 (five most polluted vs five cleanest cities), India's cities highlighted, with a WHO safe-limit line at 5 |
 
 ```mdx
 <PopulationTreemap
@@ -561,6 +563,10 @@ for the *Overpopulation* essay but reusable:
 <RoadsReality caption="India's metros sit at the wrong end of every road metric at once." source="TomTom Traffic Index 2024; city road and vehicle statistics" />
 
 <MetroPerMillion caption="Bengaluru has built almost no metro for its size: 4.9 km per million people." source="Metro network length per million residents, 2024." />
+
+<BuiltSpace caption="A Mumbai resident's share of built space (6.6 m²) is smaller than a car parking spot." source="Built floor space per person, m², by city, 2024." />
+
+<AirQuality caption="The five most polluted against the five cleanest major cities (annual-average PM2.5)." source="Annual mean PM2.5, µg/m³, IQAir World Air Quality Report, 2024." />
 ```
 
 Every chart takes an optional **`caption`** and **`source`** (the small grey note under
@@ -574,6 +580,19 @@ it as a post.
 
 > Adding a *new* kind of chart is an engineering task, not just writing — see
 > `DEVELOPER-NOTES.md` ("Interactive data-viz islands").
+
+### The Infinity Gauntlet quiz
+
+`ThanosQuiz` is a self-contained interactive widget (not a chart) built for the
+*Overpopulation* essay. The reader picks an Indian metro — Bengaluru, Mumbai, or Delhi —
+and guesses how many "snaps" it takes to drag that city up to Amsterdam, where each snap
+may only **double or halve** a single livability factor (road, metro, built space, air).
+Each answer reveals the working (`round(log₂(ratio))`) and a running tally appears once
+all four are answered. It takes no props and carries its own data.
+
+```mdx
+<ThanosQuiz />
+```
 
 ---
 
@@ -617,3 +636,6 @@ it as a post.
 | `CityScatter` | Twin scatter panels of crowding vs density and vs road space per person |
 | `RoadsReality` | Three small-multiple bar panels: road per person, vehicles per 1,000, minutes to drive 10 km |
 | `MetroPerMillion` | A horizontal bar chart of metro km per million people, labelled with each city's multiple of Bengaluru |
+| `BuiltSpace` | A horizontal bar chart of built m² per person, most-cramped on top |
+| `AirQuality` | A horizontal bar chart of PM2.5 (most polluted vs cleanest cities), India highlighted, with a WHO safe-limit line |
+| `ThanosQuiz` | A self-contained interactive quiz: pick a city, guess how many doubling/halving "snaps" reach Amsterdam |

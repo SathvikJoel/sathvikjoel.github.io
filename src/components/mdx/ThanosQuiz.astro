@@ -1,0 +1,349 @@
+---
+// "The Infinity Gauntlet Challenge" — a self-contained interactive quiz for the
+// overpopulation essay. The reader picks an Indian metro, then guesses how many
+// snaps (each can only DOUBLE or HALVE a single livability factor) it takes to drag
+// that city up to Amsterdam. The answer is round(log2(ratio)) per factor.
+//
+// Pure DOM + a bundled Astro <script>; no island/runtime. The question cards are
+// built on the client when the city changes, so the styles live in `is:global`
+// (Astro's scoped styles only attach to template-time nodes, not script-created
+// ones). All class names are `tq-`-prefixed to stay collision-free.
+---
+
+<div id="thanos-quiz" class="tq not-prose my-10" data-tq>
+  <div class="tq-controls">
+    <label for="tq-city">Choose Thanos's target city:</label>
+    <select id="tq-city" data-tq-city>
+      <option value="Bengaluru" selected>Bengaluru</option>
+      <option value="Mumbai">Mumbai</option>
+      <option value="Delhi">Delhi</option>
+    </select>
+  </div>
+  <p class="tq-intro" data-tq-intro></p>
+  <div class="tq-questions" data-tq-questions></div>
+  <p class="tq-score" data-tq-score hidden></p>
+</div>
+
+<style is:global>
+  #thanos-quiz {
+    --tq-coral: #ff5470;
+    --tq-cyan: #4cc9f0;
+    --tq-gold: #ffd166;
+    --tq-grey: #8d99ae;
+    --tq-text: #e8e8e8;
+    --tq-ok: #4ade80;
+    color: var(--tq-text);
+    font-family: theme(fontFamily.sans);
+    max-width: 44rem;
+  }
+  #thanos-quiz .tq-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  #thanos-quiz label {
+    font-size: 0.95rem;
+    color: var(--tq-grey);
+  }
+  #thanos-quiz select {
+    background: #0a0a0a;
+    color: var(--tq-text);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 0.45rem 0.7rem;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  #thanos-quiz select:focus-visible {
+    outline: 2px solid var(--tq-cyan);
+    outline-offset: 1px;
+  }
+  #thanos-quiz .tq-intro {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #cfcfcf;
+    margin: 0 0 1.5rem;
+    padding: 0.9rem 1.1rem;
+    border-left: 2px solid var(--tq-coral);
+    background: rgba(255, 84, 112, 0.05);
+    border-radius: 0 8px 8px 0;
+  }
+  #thanos-quiz .tq-intro strong {
+    color: var(--tq-coral);
+  }
+  #thanos-quiz .tq-q {
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 1.1rem 1.2rem;
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 255, 0.015);
+  }
+  #thanos-quiz .tq-q h4 {
+    margin: 0 0 0.9rem;
+    font-size: 1.02rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: var(--tq-text);
+  }
+  #thanos-quiz .tq-q h4 b {
+    color: var(--tq-coral);
+    font-weight: 600;
+  }
+  #thanos-quiz .tq-opts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.55rem;
+  }
+  #thanos-quiz .tq-opt {
+    background: #0d0d0d;
+    border: 1px solid #2a2a2a;
+    color: var(--tq-text);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.98rem;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      border-color 0.15s ease,
+      background 0.15s ease;
+  }
+  #thanos-quiz .tq-opt:hover:not(:disabled) {
+    border-color: var(--tq-cyan);
+  }
+  #thanos-quiz .tq-opt:focus-visible {
+    outline: 2px solid var(--tq-cyan);
+    outline-offset: 1px;
+  }
+  #thanos-quiz .tq-opt:disabled {
+    cursor: default;
+    opacity: 0.85;
+  }
+  #thanos-quiz .tq-opt.correct {
+    border-color: var(--tq-ok);
+    background: rgba(74, 222, 128, 0.12);
+    color: var(--tq-ok);
+  }
+  #thanos-quiz .tq-opt.wrong {
+    border-color: var(--tq-coral);
+    background: rgba(255, 84, 112, 0.12);
+    color: var(--tq-coral);
+  }
+  #thanos-quiz .tq-exp {
+    margin-top: 0.9rem;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: #cfcfcf;
+    border-left: 2px solid #333;
+    padding-left: 0.8rem;
+  }
+  #thanos-quiz .tq-exp .mark {
+    font-weight: 700;
+  }
+  #thanos-quiz .tq-exp .mark.ok {
+    color: var(--tq-ok);
+  }
+  #thanos-quiz .tq-exp .mark.bad {
+    color: var(--tq-coral);
+  }
+  #thanos-quiz .tq-exp code,
+  #thanos-quiz .tq-score code {
+    color: var(--tq-gold);
+    background: rgba(255, 209, 102, 0.08);
+    padding: 0.05rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.92em;
+  }
+  #thanos-quiz .tq-score {
+    margin: 1.4rem 0 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--tq-text);
+    text-align: center;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid #222;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  @media (max-width: 520px) {
+    #thanos-quiz .tq-opts {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #thanos-quiz .tq-opt {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  type Factor = {
+    key: "road" | "metro" | "built" | "air"
+    label: string
+    unit: string
+    op: "double" | "halve"
+  }
+
+  const AMS: Record<Factor["key"], number> = {
+    road: 6.76,
+    metro: 34.8,
+    built: 54.0,
+    air: 7.5,
+  }
+
+  // City livability factors. Road / metro / built / Indian-city air match the essay's
+  // chart data; Amsterdam's metro and Bengaluru's PM2.5 are real-world reference values.
+  const CITIES: Record<string, Record<Factor["key"], number>> = {
+    Bengaluru: { road: 1.35, metro: 4.9, built: 16.5, air: 28.6 },
+    Mumbai: { road: 0.45, metro: 23.2, built: 6.6, air: 43.8 },
+    Delhi: { road: 1.28, metro: 12.5, built: 16.8, air: 92.7 },
+  }
+
+  const PERSONA: Record<string, { name: string; area: string }> = {
+    Bengaluru: { name: "Thanos Reddy", area: "Marathahalli" },
+    Mumbai: { name: "Thanos Agarwal", area: "Andheri" },
+    Delhi: { name: "Thanos Kumar", area: "Anand Vihar" },
+  }
+
+  const FACTORS: Factor[] = [
+    { key: "road", label: "metres of road per person", unit: "m", op: "double" },
+    { key: "metro", label: "kilometres of metro per million people", unit: "km", op: "double" },
+    { key: "built", label: "square metres of built space per person", unit: "m\u00b2", op: "double" },
+    { key: "air", label: "PM2.5 air pollution (lower is better)", unit: "\u00b5g/m\u00b3", op: "halve" },
+  ]
+
+  const fmt = (n: number): string => {
+    const r = Math.round(n * 100) / 100
+    return Number.isInteger(r) ? String(r) : String(r)
+  }
+  const snapWord = (n: number) => (n === 1 ? "snap" : "snaps")
+
+  function snapsNeeded(from: number, to: number, op: Factor["op"]): number {
+    const ratio = op === "double" ? to / from : from / to
+    return Math.max(0, Math.round(Math.log(ratio) / Math.LN2))
+  }
+
+  function chain(val: number, snaps: number, op: Factor["op"]): string {
+    let v = val
+    const out = [fmt(v)]
+    for (let i = 0; i < snaps; i++) {
+      v = op === "double" ? v * 2 : v / 2
+      out.push(fmt(v))
+    }
+    return out.join(" \u2192 ")
+  }
+
+  // Four consecutive choices that always contain the correct answer.
+  function options(correct: number): number[] {
+    const start = Math.max(0, correct - 1)
+    return [start, start + 1, start + 2, start + 3]
+  }
+
+  function setupQuiz(root: HTMLElement) {
+    if (root.dataset.tqInit) return
+    root.dataset.tqInit = "1"
+
+    const select = root.querySelector<HTMLSelectElement>("[data-tq-city]")!
+    const intro = root.querySelector<HTMLParagraphElement>("[data-tq-intro]")!
+    const box = root.querySelector<HTMLDivElement>("[data-tq-questions]")!
+    const scoreEl = root.querySelector<HTMLParagraphElement>("[data-tq-score]")!
+
+    function render(city: string) {
+      const p = PERSONA[city]
+      const data = CITIES[city]
+      intro.innerHTML =
+        `<strong>${p.name}</strong> from ${p.area} has the Gauntlet. His mission: drag ${city} ` +
+        `all the way up to Amsterdam. Remember the catch — every snap only doubles or halves one ` +
+        `factor. How many snaps does he need?`
+
+      box.innerHTML = ""
+      scoreEl.hidden = true
+      let answered = 0
+      let correctCount = 0
+
+      FACTORS.forEach((f, qi) => {
+        const from = data[f.key]
+        const to = AMS[f.key]
+        const correct = snapsNeeded(from, to, f.op)
+        const verb = f.op === "double" ? "doubles" : "halves"
+
+        const card = document.createElement("div")
+        card.className = "tq-q"
+
+        const h = document.createElement("h4")
+        h.innerHTML =
+          `Q${qi + 1}. How many snaps to bring <b>${city}</b>\u2019s ${f.label} ` +
+          `on par with Amsterdam?`
+        card.appendChild(h)
+
+        const grid = document.createElement("div")
+        grid.className = "tq-opts"
+        const exp = document.createElement("div")
+        exp.className = "tq-exp"
+        exp.hidden = true
+
+        options(correct).forEach((val) => {
+          const b = document.createElement("button")
+          b.className = "tq-opt"
+          b.type = "button"
+          b.textContent = `${val} ${snapWord(val)}`
+          b.addEventListener("click", () => {
+            Array.from(grid.children).forEach((c) => ((c as HTMLButtonElement).disabled = true))
+            const isCorrect = val === correct
+            b.classList.add(isCorrect ? "correct" : "wrong")
+            if (!isCorrect) {
+              Array.from(grid.children).forEach((c) => {
+                if ((c as HTMLButtonElement).textContent === `${correct} ${snapWord(correct)}`)
+                  c.classList.add("correct")
+              })
+            }
+
+            const finalVal = fmt(
+              f.op === "double" ? from * Math.pow(2, correct) : from / Math.pow(2, correct)
+            )
+            const mark = isCorrect
+              ? '<span class="mark ok">\u2713 Correct.</span> '
+              : `<span class="mark bad">\u2717 Not quite.</span> The answer is <code>${correct} ${snapWord(correct)}</code>. `
+            exp.innerHTML =
+              `${mark}${city} sits at <code>${fmt(from)} ${f.unit}</code>, Amsterdam at ` +
+              `<code>${fmt(to)} ${f.unit}</code>. Each snap ${verb} it: <code>${chain(from, correct, f.op)}</code>. ` +
+              `After ${correct} ${snapWord(correct)} you reach <code>${finalVal} ${f.unit}</code>, the closest a ` +
+              `2&times; jump gets you to Amsterdam.`
+            exp.hidden = false
+
+            answered++
+            if (isCorrect) correctCount++
+            if (answered === FACTORS.length) {
+              scoreEl.innerHTML =
+                `Four snaps planned. You called <code>${correctCount} of ${FACTORS.length}</code> right. ` +
+                (correctCount === FACTORS.length
+                  ? "Even Thanos would be impressed."
+                  : "Powers of two are sneakier than they look.")
+              scoreEl.hidden = false
+            }
+          })
+          grid.appendChild(b)
+        })
+
+        card.appendChild(grid)
+        card.appendChild(exp)
+        box.appendChild(card)
+      })
+    }
+
+    select.addEventListener("change", (e) => render((e.target as HTMLSelectElement).value))
+    render(select.value || "Bengaluru")
+  }
+
+  function init() {
+    document.querySelectorAll<HTMLElement>("[data-tq]").forEach(setupQuiz)
+  }
+
+  document.addEventListener("DOMContentLoaded", init)
+  document.addEventListener("astro:after-swap", init)
+  init()
+</script>

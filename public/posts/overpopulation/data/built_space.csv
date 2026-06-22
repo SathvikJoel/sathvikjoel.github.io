@@ -1,0 +1,16 @@
+city,country,group,built_pc_m2
+Hong Kong,China,Dense and livable,6.0
+Mumbai,India,India's metros,6.6
+Dhaka,Bangladesh,Developing cities,10.5
+Kolkata,India,India's metros,14.3
+Bengaluru,India,India's metros,16.5
+Delhi,India,India's metros,16.8
+Singapore,Singapore,Dense and livable,17.9
+Seoul,South Korea,Lower-density developed,21.0
+Jakarta,Indonesia,Developing cities,24.0
+Lagos,Nigeria,Developing cities,32.4
+Paris,France,Lower-density developed,38.5
+Tokyo,Japan,Lower-density developed,43.9
+New York,United States,Lower-density developed,48.5
+Amsterdam,Netherlands,Lower-density developed,54.0
+Los Angeles,United States,Lower-density developed,101.2

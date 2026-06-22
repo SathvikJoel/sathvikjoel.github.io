@@ -1,0 +1,22 @@
+---
+import BuiltSpace from "@components/viz/BuiltSpace"
+
+interface Props {
+  caption?: string
+  source?: string
+}
+const base = "/posts/overpopulation/data"
+const { caption, source } = Astro.props
+---
+
+<figure class="viz-figure not-prose my-10">
+  <BuiltSpace client:visible src={`${base}/built_space.csv`} />
+  {
+    (caption || source) && (
+      <figcaption class="viz-caption">
+        {caption && <span>{caption}</span>}
+        {source && <span class="viz-source">{source}</span>}
+      </figcaption>
+    )
+  }
+</figure>

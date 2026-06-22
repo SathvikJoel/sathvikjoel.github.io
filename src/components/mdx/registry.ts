@@ -40,6 +40,9 @@ import CorrelationBars from "./CorrelationBars.astro"
 import CityScatter from "./CityScatter.astro"
 import RoadsReality from "./RoadsReality.astro"
 import MetroPerMillion from "./MetroPerMillion.astro"
+import BuiltSpace from "./BuiltSpace.astro"
+import AirQuality from "./AirQuality.astro"
+import ThanosQuiz from "./ThanosQuiz.astro"
 
 export const mdxComponents = {
   Figure,
@@ -83,4 +86,7 @@ export const mdxComponents = {
   CityScatter,
   RoadsReality,
   MetroPerMillion,
+  BuiltSpace,
+  AirQuality,
+  ThanosQuiz,
 }
