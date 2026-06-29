@@ -355,27 +355,19 @@ If you still think there's hope for this country, I don't know how else to convi
 
 <Appendix>
 
-# How lived density is calculated, and the full table
+# How lived density is calculated
 
-The formula above asks us to chop a country into 1 km² patches, find each patch's density, and take a population-weighted average. In practice we don't draw those patches by hand, since a satellite dataset already provides them.
+The formula chops a country into 1 km² patches, finds each patch's density, and takes a population-weighted average. We don't draw those patches by hand: **GHS-POP**, the EU Joint Research Centre's population grid, already estimates how many people live in every **1 km × 1 km** cell on Earth. Since each cell is fixed at 1 km², its population $P_i$ *is* its density $D_i$.
 
-**The data.** We use **GHS-POP** (the EU Joint Research Centre's Global Human Settlement population grid), which estimates how many people live in every **1 km × 1 km** cell on Earth. Each cell $i$ is one patch in the formula: its area is fixed at 1 km², so the cell's population $P_i$ *is* its density $D_i$ (people per km²).
-
-**The calculation.** For a given country we:
-
-1. **Clip** the global grid to that country's borders, keeping only the cells inside it.
-2. For each cell, read its population $P_i$ (which equals its density $D_i$, since the cell is 1 km²).
-3. Take the **population-weighted average**, where each cell counts in proportion to how many people live there:
+For a country we clip the grid to its borders and take the population-weighted average, where each cell counts in proportion to how many people live there:
 
 $$
 \bar{D} = \frac{\sum_i P_i \cdot D_i}{\sum_i P_i}
 $$
 
-Because empty desert and mountain cells hold almost no people, they barely count; the crowded cells where most people actually live dominate the average. That is why lived density reflects the experience of a *typical resident* rather than the *average square kilometre of land*.
+Empty desert and mountain cells hold almost no people, so they barely count; the crowded cells where most people actually live dominate the average. That is why lived density reflects the experience of a *typical resident* rather than the *average square kilometre of land*. As a sanity check, summing $P_i$ over all of India's cells reproduces its UN population to within **0.05%**.
 
-**Why it's trustworthy.** Summing $P_i$ over all of India's cells reproduces the country's total population to within a rounding error, about **1.4502 billion versus the UN's 1.4509 billion, a 0.05% match**, which tells us the grid is capturing essentially everyone in roughly the right places.
-
-**The two numbers, side by side.** For each country we report:
+For each country we report three numbers:
 
 | Quantity | Definition | What it answers |
 |---|---|---|
@@ -383,26 +375,56 @@ Because empty desert and mountain cells hold almost no people, they barely count
 | Lived density $\bar{D}$ | population-weighted cell density | "How dense is the average person's surroundings?" |
 | Concentration ratio $C = \bar{D}/\rho$ | lived ÷ arithmetic | "How clustered are the people?" |
 
-A large $C$ means people are squeezed into a small fraction of the land (Russia 620×, Brazil 250×); a small $C$ means they're spread evenly (Netherlands just 7×). India sits at **22×**: its 458/km² on paper becomes **~10,060/km² as actually lived**.
+A large $C$ means people are squeezed onto a small fraction of the land (Russia 620×, Brazil 250×); a small $C$ means they're spread evenly (Netherlands just 7×). India sits at **22×**: its 458/km² on paper becomes **~10,060/km² as actually lived**.
 
-*Source: GHS-POP 1 km population grid (GHS-POP R2023A, 2025 epoch), clipped to national boundaries.*
+### Every country's lived density
 
-### The full table: every country's lived density
-
-India is denser-lived than about 85% of all countries. The table is sortable and searchable, and the last column recomputes live against whichever country you pick, India by default, so you can see exactly how any place compares.
+India is denser-lived than about 85% of all countries. The table is sortable and searchable, and the last column recomputes live against whichever country you pick, India by default.
 
 <DensityTable
   source="Lived (population-weighted) density from the GHS-POP 1 km grid; 242 countries."
 />
 
-A few countries sit above India only for technical reasons.<Sidenote n="3">The very top of the table is mostly **city-states and tiny islands** (Macao, Hong Kong, Singapore, Monaco, the Maldives), places with almost no countryside, so their lived density is barely different from their arithmetic one. Most of the rest are **desert- or conflict-clustered countries** (Congo, Somalia, Egypt, Iran, Sudan) where people huddle onto a thin strip of habitable land while vast empty areas drag the arithmetic density toward zero, which is exactly why their concentration ratio $C$ is enormous, often 200× to 1700×. Strip those two groups out and only a handful of *ordinary, fully-inhabited* countries (Bangladesh, Pakistan, Taiwan and South Korea) are genuinely more densely lived than India.</Sidenote> Once you set them aside, India stands out as one of the most densely *lived* ordinary countries on Earth.
+A few countries sit above India only for technical reasons: city-states with no countryside, or desert and conflict countries where people huddle onto a thin habitable strip. Set those aside and India stands out as one of the most densely *lived* ordinary countries on Earth.
 
 ### Every major city's lived density
 
-The same method runs at the city scale. We clip the GHS-POP 1 km grid to each city's urban-centre boundary (GHS-UCDB) and take the population-weighted average, keeping the 520 cities with more than 1 million people. The table below lists every one, with India's 76 cities highlighted so they can be picked out at any sort order; tick "Show Indian cities only" to filter to them.<Sidenote n="4">Four cities were dropped because a single grid cell carried an impossible population spike that distorted their lived density.</Sidenote>
+The same method runs at the city scale. We clip the grid to each city's urban-centre boundary (GHS-UCDB), keeping the 520 cities over 1 million people, with India's 76 highlighted so they can be picked out at any sort order.<Sidenote n="3">Four cities were dropped because a single grid cell carried an impossible population spike that distorted their lived density.</Sidenote>
 
 <CityDensityTable
   source="Lived (population-weighted) density from the GHS-POP 1 km grid (R2023A, 2025 epoch) clipped to GHS-UCDB urban centres; 520 cities over 1 million people."
 />
+
+# Data and sources
+
+Every chart in this piece, in the order it appears, with the online source its numbers come from. The core datasets are:
+
+- [**GHS-POP**](https://ghsl.jrc.ec.europa.eu/), the Global Human Settlement population grid (R2023A) from the EU Joint Research Centre. All lived-density figures.
+- [**GHS-UCDB**](https://ghsl.jrc.ec.europa.eu/), the Urban Centre Database (R2024A) from the EU Joint Research Centre. City boundaries, built space per person, and road length (road network from [OpenStreetMap](https://www.openstreetmap.org/)).
+- [**UN World Population Prospects 2024**](https://population.un.org/wpp/). National populations.
+- [**Natural Earth**](https://www.naturalearthdata.com/) (10m admin-0). The arithmetic-density map.
+- [**TomTom Traffic Index 2024**](https://www.tomtom.com/traffic-index/). Congestion and driving speed.
+- [**IQAir World Air Quality Report**](https://www.iqair.com/world-air-quality-report). PM2.5.
+
+Transit, vehicle and commute figures come from each city's transport authority and national statistics office (for example [BMRCL](https://english.bmrc.co.in/), [DMRC](https://www.delhimetrorail.com/), [MMRDA](https://mmrda.maharashtra.gov.in/), [MoRTH](https://morth.nic.in/), [GVB](https://en.gvb.nl/) and [LTA](https://www.lta.gov.sg/)). Each figure is tagged with its specific authority and year.
+
+Chart by chart, in the order they appear:
+
+- **PopulationTreemap** (top 10 countries by population): UN World Population Prospects 2024.
+- **DensityMap, arithmetic** (world choropleth): population from Natural Earth (POP_EST) divided by land area; 249 countries.
+- **DensityMap, lived** (world choropleth): GHS-POP 1 km population grid (EU JRC), clipped to national borders; 242 countries.
+- **DensitySlope** (arithmetic vs lived, selected countries): Natural Earth (arithmetic) and GHS-POP (lived), as above.
+- **CityLivedBars** (the 15 study cities): GHS-POP 1 km grid clipped to GHS-UCDB urban-centre boundaries (EU JRC).
+- **CorrelationBars** (predictor vs observable): Spearman correlations across the study cities, computed from the per-city metrics above.
+- **CityScatter** (congestion vs density and vs road per person): density from GHS-POP / GHS-UCDB; congestion from the TomTom Traffic Index 2024.
+- **RoadsReality** (road per person, vehicles per 1,000, minutes to drive 10 km): road length from GHS-UCDB R2024A (network from OpenStreetMap); registered vehicles from national and city transport departments (MoRTH and state RTOs, US/EU DMVs and stats offices); minutes to drive 10 km derived from the TomTom Traffic Index 2024.
+- **MetroPerMillion** (metro km per million people): metro and suburban-rail route length from each city's transit authority (BMRCL, DMRC, MMRDA, Tokyo Metro, GVB, LTA, MTR, MTA, and so on), per population.
+- **BuiltSpace** (built m² per person): built-up area per capita from GHS-UCDB R2024A (EU JRC).
+- **AirQuality** (5 most polluted vs 5 cleanest of the study cities): annual mean PM2.5 from the IQAir World Air Quality Report. The 10 cities shown are the top-5 and bottom-5 of our 15 study cities, not a global ranking.
+- **DensityTable** (every country, 242 rows): GHS-POP 1 km grid (EU JRC), shown with arithmetic density (Natural Earth) and the concentration ratio.
+- **CityDensityTable** (every major city, 520 rows): GHS-POP 1 km grid clipped to GHS-UCDB urban centres (EU JRC); 520 cities over 1 million people.
+- **ThanosQuiz** (the Infinity Gauntlet challenge): road per person, metro per million, built space and PM2.5 for Bengaluru, Mumbai, Delhi and Amsterdam, from the same sources as the charts above.
+
+Media: the embedded video, short and tweet cards are credited inline to their creators (Times of India, Azeem Banatwalla, Mohak Mangal, Bryan Johnson); the Bengaluru traffic image is from Deccan Herald.
 
 </Appendix>
