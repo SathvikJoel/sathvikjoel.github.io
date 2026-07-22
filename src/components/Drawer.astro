@@ -9,7 +9,7 @@ const subpath = pathname.match(/[^/]+/g)
   <nav class="flex flex-col items-center space-y-2">
     {
       LINKS.map((LINK) => (
-        <a href={LINK.HREF} class={cn("flex items-center justify-center px-3 py-1 rounded-full", "text-current hover:text-black dark:hover:text-white", "hover:bg-black/5 dark:hover:bg-white/20", "transition-colors duration-300 ease-in-out", pathname === LINK.HREF || "/" + subpath?.[0] === LINK.HREF ? "pointer-events-none bg-black dark:bg-white text-white dark:text-black" : "")}>
+        <a href={LINK.HREF} target={LINK.EXTERNAL ? "_blank" : undefined} rel={LINK.EXTERNAL ? "noopener noreferrer" : undefined} class={cn("flex items-center justify-center px-3 py-1 rounded-full", "text-current hover:text-black dark:hover:text-white", "hover:bg-black/5 dark:hover:bg-white/20", "transition-colors duration-300 ease-in-out", pathname === LINK.HREF || "/" + subpath?.[0] === LINK.HREF ? "pointer-events-none bg-black dark:bg-white text-white dark:text-black" : "")}>
           {LINK.TEXT}
         </a>
       ))

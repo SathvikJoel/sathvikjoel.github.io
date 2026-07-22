@@ -21,7 +21,12 @@ import { cn } from "@lib/utils"
       {
         LINKS.map((LINK) => {
           return (
-            <a href={LINK.HREF} class="nav-link font-sans">
+            <a
+              href={LINK.HREF}
+              class="nav-link font-sans"
+              target={LINK.EXTERNAL ? "_blank" : undefined}
+              rel={LINK.EXTERNAL ? "noopener noreferrer" : undefined}
+            >
               {LINK.TEXT}
             </a>
           )

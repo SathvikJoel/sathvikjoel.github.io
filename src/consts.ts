@@ -74,6 +74,7 @@ export const LINKS: Links = [
   { TEXT: "The Garden", HREF: "/" },
   { TEXT: "Now", HREF: "/now" },
   { TEXT: "About", HREF: "/about" },
+  { TEXT: "Copilot", HREF: "https://copilot-vm.taildc79f0.ts.net/", EXTERNAL: true },
 ]
 
 // Socials
