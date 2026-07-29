@@ -29,6 +29,7 @@
     "@fontsource/hedvig-letters-serif": "^5.2.8",
     "@fontsource/lato": "^5.2.7",
     "@fontsource/spectral": "^5.2.8",
+    "@paper-design/shaders": "0.0.78",
     "@tailwindcss/typography": "^0.5.10",
     "astro": "^5.0.0",
     "astro-expressive-code": "^0.43.1",

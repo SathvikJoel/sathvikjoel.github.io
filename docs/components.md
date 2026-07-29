@@ -433,6 +433,32 @@ optional caption.
 <WideImage src="/collage.png" alt="" caption="A wide breakout image." />
 ```
 
+### Paper texture image
+
+`PaperTextureImage` applies the [Paper Design paper texture shader](https://shaders.paper.design/paper-texture)
+to a picture, adding paper fibers, folds, crumples, roughness, and speckles. It
+lazy-renders the effect as the picture nears the viewport, then releases the WebGL
+context. The original picture remains underneath as an accessible fallback.
+
+```mdx
+<PaperTextureImage
+  src="/posts/my-post/photo.webp"
+  alt="Describe the photo"
+  caption="Optional caption."
+/>
+```
+
+Keep the source image lightweight because it still has to be downloaded. A **1200×675
+WebP** is a good default for the component's 16:9 frame. Put it under
+`public/posts/<post-name>/` and use its slash-prefixed `/posts/...` path. The shader look
+is built in, so no imports or extra settings are needed inside a post.
+
+Use `HalftoneImage` instead when a photo should have the CMYK printed-dot treatment:
+
+```mdx
+<HalftoneImage src="/posts/my-post/photo.webp" alt="Describe the photo" />
+```
+
 ### Inline SVG
 
 Drops a vector illustration (an `.svg` file) neatly centered in the text.
@@ -621,6 +647,8 @@ all four are answered. It takes no props and carries its own data.
 | `ImageGrid` | Images side by side, each captioned |
 | `Gallery` | An image group with one shared caption |
 | `WideImage` | An image wider than the text column |
+| `PaperTextureImage` | A 16:9 image rendered with Paper Design's paper texture shader |
+| `HalftoneImage` | A 16:9 image rendered with Paper Design's CMYK halftone shader |
 | `InlineSVG` | A centered vector illustration |
 | `MediaList` / `MediaItem` | A list of text-plus-thumbnail rows |
 | `CodeCaption` | A titled header over a code block |

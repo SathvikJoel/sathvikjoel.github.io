@@ -13,6 +13,8 @@ import MediaList from "./MediaList.astro"
 import MediaItem from "./MediaItem.astro"
 import Year from "./Year.astro"
 import WideImage from "./WideImage.astro"
+import PaperTextureImage from "./PaperTextureImage.astro"
+import HalftoneImage from "./HalftoneImage.astro"
 import Reference from "./Reference.astro"
 import Pullquote from "./Pullquote.astro"
 import ComingSoon from "./ComingSoon.astro"
@@ -58,6 +60,8 @@ export const mdxComponents = {
   Year,
   Y: Year,
   WideImage,
+  PaperTextureImage,
+  HalftoneImage,
   Reference,
   Callout: Reference,
   Pullquote,

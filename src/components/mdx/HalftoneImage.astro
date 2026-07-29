@@ -1,0 +1,13 @@
+---
+import ShaderImage from "./ShaderImage.astro"
+
+interface Props {
+  src: string
+  alt: string
+  caption?: string
+}
+
+const props = Astro.props
+---
+
+<ShaderImage {...props} effect="halftone" />
