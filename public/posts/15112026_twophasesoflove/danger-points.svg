@@ -1,0 +1,52 @@
+<svg viewBox="0 0 640 340" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif, system-ui, sans-serif">
+  <!-- Axes -->
+  <g stroke="#C9C6C2" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.7">
+    <path d="M60 20 V300 H600" />
+  </g>
+  <text x="330" y="328" text-anchor="middle" font-size="15" fill="#C9C6C2" opacity="0.85">Time (6 months)</text>
+  <text x="26" y="160" text-anchor="middle" font-size="15" fill="#C9C6C2" opacity="0.85" transform="rotate(-90 26 160)">Intensity</text>
+
+  <!-- Passionate love: fast spike, crash, then fading oscillation (dotted, crimson) -->
+  <path
+    d="M62 292
+       C 95 270, 100 110, 132 62
+       C 160 38, 205 38, 232 58
+       C 248 72, 230 108, 258 148
+       C 278 176, 300 118, 322 150
+       C 344 182, 366 210, 390 190
+       C 412 172, 432 222, 456 214
+       C 480 206, 498 236, 520 228
+       C 542 220, 560 240, 598 246"
+    fill="none"
+    stroke="#FF6FB5"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-dasharray="1 9"
+  />
+  <text x="598" y="262" text-anchor="end" font-size="14" fill="#FF6FB5">Passionate</text>
+
+  <!-- Companionate love: slow, steady climb (solid, sage) -->
+  <path
+    d="M62 298
+       C 160 294, 260 280, 340 250
+       C 410 224, 470 202, 598 176"
+    fill="none"
+    stroke="#3DD6ED"
+    stroke-width="3"
+    stroke-linecap="round"
+  />
+  <text x="598" y="160" text-anchor="end" font-size="14" fill="#3DD6ED">Companionate</text>
+
+  <!-- Danger points callouts -->
+  <g stroke="#F0C27B" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <path d="M318 86 L246 61" />
+    <path d="M318 86 L264 142" />
+  </g>
+  <text x="330" y="84" font-size="14" fill="#F0C27B">Danger points</text>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#F0C27B" />
+    </marker>
+  </defs>
+</svg>
