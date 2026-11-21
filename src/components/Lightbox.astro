@@ -1,0 +1,1214 @@
+---
+// Shared fullscreen image viewer. Render <Lightbox /> once from any component that
+// exposes zoomable images (ComicShelf, ZoomImage) — Astro dedupes the script/styles
+// per page, and the overlay itself is built lazily on first open.
+//
+// Trigger contract: any element with `data-lightbox` opens the viewer on click.
+//   data-src             full-size image URL (falls back to the inner <img> src)
+//   data-title           heading shown top-left (optional)
+//   data-caption         line shown under the image (falls back to the enclosing
+//                        <figure>'s <figcaption> text)
+//   data-lightbox-group  elements sharing a value become one browsable set
+// The first <img> inside the trigger is its thumbnail: it gives the instant
+// placeholder, the aspect ratio, and the spot the image flies out of / back into.
+---
+
+<script>
+  type Item = {
+    el: HTMLElement
+    img: HTMLImageElement | null
+    src: string
+    thumb: string
+    title: string
+    caption: string
+  }
+  type Box = { x: number; y: number; w: number; h: number }
+  type Pan = {
+    id: number
+    sx: number
+    sy: number
+    tx0: number
+    ty0: number
+    t0: number
+    moved: boolean
+    axis: "" | "free" | "x" | "y"
+  }
+  type Pinch = { d0: number; s0: number; mx0: number; my0: number; tx0: number; ty0: number }
+
+  const w = window as unknown as { __lightbox?: boolean }
+
+  if (!w.__lightbox) {
+    w.__lightbox = true
+    init()
+  }
+
+  function init() {
+    type UI = ReturnType<typeof build>
+    const EASE = "cubic-bezier(0.2, 0.85, 0.25, 1)"
+    const DOUBLE_TAP_ZOOM = 2.6
+    const ICON: Record<string, string> = {
+      minus: '<path d="M5 12h14"/>',
+      plus: '<path d="M12 5v14M5 12h14"/>',
+      close: '<path d="M6 6l12 12M18 6L6 18"/>',
+      prev: '<path d="M15 5l-7 7 7 7"/>',
+      next: '<path d="M9 5l7 7-7 7"/>',
+      expand: '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>',
+      shrink: '<path d="M14 10l7-7M3 21l7-7M20 10h-6V4M4 14h6v6"/>',
+    }
+    const svg = (name: string) =>
+      `<svg viewBox="0 0 24 24" aria-hidden="true">${ICON[name]}</svg>`
+
+    const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    const dur = (ms: number) => (reduceMotion() ? 0 : ms)
+    const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
+
+    let ui: UI | null = null
+    let items: Item[] = []
+    let index = 0
+    let opener: HTMLElement | null = null
+    let isOpen = false
+    let closing = false
+    let pushed = false
+    let hintShown = false
+    let hintTimer = 0
+    let loadToken = 0
+
+    // View state. `scale` is relative to the "fit" size; tx/ty position the image's
+    // top-left corner in viewport pixels (transform-origin is 0 0).
+    let scale = 1
+    let tx = 0
+    let ty = 0
+    let aspect = 1
+    let fullNat = 0
+    let base = { w: 0, h: 0 }
+    let stage: Box = { x: 0, y: 0, w: 0, h: 0 }
+
+    const ptrs = new Map<number, { x: number; y: number }>()
+    let pan: Pan | null = null
+    let pinch: Pinch | null = null
+    let lastTap = { t: 0, x: 0, y: 0 }
+
+    function readItem(el: HTMLElement): Item {
+      const img = el instanceof HTMLImageElement ? el : el.querySelector("img")
+      const thumb = img?.currentSrc || img?.src || ""
+      const figCaption = el.closest("figure")?.querySelector("figcaption")?.textContent?.trim()
+      return {
+        el,
+        img,
+        thumb,
+        src: el.dataset.src || thumb,
+        title: el.dataset.title || "",
+        caption: el.dataset.caption ?? figCaption ?? "",
+      }
+    }
+
+    /* ---------- viewport geometry ---------- */
+
+    const viewW = () => ui!.root.clientWidth
+    const viewH = () => ui!.root.clientHeight
+
+    function maxScale() {
+      const nat = fullNat || base.w * 2
+      return clamp((3 * nat) / Math.max(1, base.w), 3, 10)
+    }
+
+    function layout() {
+      const u = ui!
+      const vw = viewW()
+      const vh = viewH()
+      const padT = u.top.offsetHeight + 4
+      const padB = u.bottom.offsetHeight + 4
+      const padS = getComputedStyle(u.prev).display !== "none" ? 92 : 12
+      stage = {
+        x: padS,
+        y: padT,
+        w: Math.max(80, vw - padS * 2),
+        h: Math.max(80, vh - padT - padB),
+      }
+      const h = Math.min(stage.h, stage.w / aspect)
+      base = { w: h * aspect, h }
+      u.img.style.width = `${base.w}px`
+      u.img.style.height = `${base.h}px`
+    }
+
+    // Valid translate range per axis at a given scale. When the image is smaller than
+    // the viewport it is pinned to the stage centre; otherwise it may pan edge to edge.
+    function clampPos(s: number, x: number, y: number): [number, number] {
+      const iw = base.w * s
+      const ih = base.h * s
+      const cx = stage.x + (stage.w - iw) / 2
+      const cy = stage.y + (stage.h - ih) / 2
+      return [
+        clamp(x, Math.min(viewW() - iw, cx), Math.max(0, cx)),
+        clamp(y, Math.min(viewH() - ih, cy), Math.max(0, cy)),
+      ]
+    }
+
+    const centerPos = (s: number) => clampPos(s, 0, 0)
+
+    function apply(ms = 0, easing = EASE) {
+      const u = ui!
+      u.img.style.transition = ms ? `transform ${ms}ms ${easing}` : "none"
+      u.img.style.transform = `translate3d(${tx}px, ${ty}px, 0) scale(${scale})`
+      const shown = Math.max(1, scale)
+      u.level.textContent = `${shown >= 10 || Math.abs(shown - Math.round(shown)) < 0.05 ? shown.toFixed(0) : shown.toFixed(1)}×`
+      u.root.classList.toggle("lb-zoomed", scale > 1.02)
+      u.out.disabled = scale <= 1.02
+      u.inn.disabled = scale >= maxScale() - 0.01
+    }
+
+    function zoomAt(next: number, cx: number, cy: number, ms = 0) {
+      const s = clamp(next, 1, maxScale())
+      const snapped = s < 1.02 ? 1 : s
+      const k = snapped / scale
+      const [nx, ny] = clampPos(snapped, cx - (cx - tx) * k, cy - (cy - ty) * k)
+      scale = snapped
+      tx = nx
+      ty = ny
+      apply(ms)
+    }
+
+    const stageCentre = () => [stage.x + stage.w / 2, stage.y + stage.h / 2] as const
+
+    function zoomBy(factor: number) {
+      const [cx, cy] = stageCentre()
+      zoomAt(scale * factor, cx, cy, dur(240))
+    }
+
+    function resetZoom(ms = dur(320)) {
+      scale = 1
+      ;[tx, ty] = centerPos(1)
+      apply(ms)
+    }
+
+    // After a pinch (which may overshoot) glide back into the legal range.
+    function settle() {
+      const s = clamp(scale, 1, maxScale())
+      const [nx, ny] = clampPos(s, tx, ty)
+      scale = s
+      tx = nx
+      ty = ny
+      apply(dur(260))
+    }
+
+    function springBack() {
+      ui!.root.style.setProperty("--lb-fade", "1")
+      if (scale <= 1.02) {
+        scale = 1
+        ;[tx, ty] = centerPos(1)
+      } else {
+        ;[tx, ty] = clampPos(scale, tx, ty)
+      }
+      apply(dur(280))
+    }
+
+    /* ---------- DOM ---------- */
+
+    function build() {
+      const root = document.createElement("div")
+      root.className = "lb"
+      root.hidden = true
+      root.tabIndex = -1
+      root.setAttribute("role", "dialog")
+      root.setAttribute("aria-modal", "true")
+      root.setAttribute("aria-label", "Image viewer")
+      root.innerHTML = `
+        <div class="lb-backdrop"></div>
+        <div class="lb-stage">
+          <div class="lb-frame"><img class="lb-img" alt="" draggable="false" /></div>
+          <span class="lb-spin"></span>
+        </div>
+        <div class="lb-top lb-chrome">
+          <div class="lb-meta">
+            <span class="lb-count" aria-live="polite"></span>
+            <span class="lb-title"></span>
+          </div>
+          <div class="lb-tools" role="toolbar" aria-label="Zoom controls">
+            <button type="button" class="lb-btn" data-act="out" aria-label="Zoom out" title="Zoom out (−)">${svg("minus")}</button>
+            <button type="button" class="lb-btn lb-level" data-act="reset" aria-label="Reset zoom" title="Reset zoom (0)">1×</button>
+            <button type="button" class="lb-btn" data-act="in" aria-label="Zoom in" title="Zoom in (+)">${svg("plus")}</button>
+            <button type="button" class="lb-btn lb-full" data-act="full" aria-label="Toggle fullscreen" title="Fullscreen">${svg("expand")}</button>
+            <button type="button" class="lb-btn lb-close" data-act="close" aria-label="Close viewer" title="Close (Esc)">${svg("close")}</button>
+          </div>
+        </div>
+        <button type="button" class="lb-nav lb-prev lb-chrome" data-act="prev" aria-label="Previous image">${svg("prev")}</button>
+        <button type="button" class="lb-nav lb-next lb-chrome" data-act="next" aria-label="Next image">${svg("next")}</button>
+        <div class="lb-bottom lb-chrome">
+          <p class="lb-caption"></p>
+          <div class="lb-strip"></div>
+        </div>
+        <p class="lb-hint" aria-hidden="true"></p>`
+      document.body.appendChild(root)
+
+      const q = <T extends HTMLElement>(sel: string) => root.querySelector<T>(sel)!
+      const refs = {
+        root,
+        stage: q(".lb-stage"),
+        frame: q(".lb-frame"),
+        img: q<HTMLImageElement>(".lb-img"),
+        top: q(".lb-top"),
+        bottom: q(".lb-bottom"),
+        count: q(".lb-count"),
+        title: q(".lb-title"),
+        caption: q(".lb-caption"),
+        strip: q(".lb-strip"),
+        level: q<HTMLButtonElement>(".lb-level"),
+        out: q<HTMLButtonElement>('[data-act="out"]'),
+        inn: q<HTMLButtonElement>('[data-act="in"]'),
+        prev: q<HTMLButtonElement>(".lb-prev"),
+        next: q<HTMLButtonElement>(".lb-next"),
+        full: q<HTMLButtonElement>(".lb-full"),
+        hint: q(".lb-hint"),
+      }
+      if (!document.fullscreenEnabled) refs.full.hidden = true
+      return refs
+    }
+
+    function renderStrip() {
+      const u = ui!
+      u.strip.innerHTML = ""
+      u.root.classList.toggle("lb-multi", items.length > 1)
+      if (items.length < 2) return
+      items.forEach((it, i) => {
+        const b = document.createElement("button")
+        b.type = "button"
+        b.className = "lb-thumb"
+        b.dataset.i = String(i)
+        b.setAttribute("aria-label", `Show image ${i + 1}${it.title ? `: ${it.title}` : ""}`)
+        const im = document.createElement("img")
+        im.src = it.thumb
+        im.alt = ""
+        im.draggable = false
+        b.appendChild(im)
+        u.strip.appendChild(b)
+      })
+    }
+
+    function renderChrome() {
+      const u = ui!
+      const it = items[index]
+      u.count.textContent = items.length > 1 ? `${index + 1} / ${items.length}` : ""
+      u.title.textContent = it.title
+      u.caption.textContent = it.caption
+      u.img.alt = it.title
+      u.prev.disabled = index === 0
+      u.next.disabled = index === items.length - 1
+      u.strip.querySelectorAll<HTMLElement>(".lb-thumb").forEach((b, i) => {
+        const on = i === index
+        if (on) b.setAttribute("aria-current", "true")
+        else b.removeAttribute("aria-current")
+        if (on) {
+          const left = b.offsetLeft - (u.strip.clientWidth - b.offsetWidth) / 2
+          u.strip.scrollTo({ left, behavior: reduceMotion() ? "auto" : "smooth" })
+        }
+      })
+    }
+
+    function sourceBox(it: Item): Box | null {
+      const el = it.img
+      if (!el) return null
+      const r = el.getBoundingClientRect()
+      if (!r.width || !r.height) return null
+      const wd = el.offsetWidth || r.width
+      const ht = el.offsetHeight || r.height
+      return {
+        x: r.left + r.width / 2 - wd / 2,
+        y: r.top + r.height / 2 - ht / 2,
+        w: wd,
+        h: ht,
+      }
+    }
+
+    const onScreen = (b: Box) =>
+      b.x + b.w > 0 && b.y + b.h > 0 && b.x < window.innerWidth && b.y < window.innerHeight
+
+    const setSourceHidden = (it: Item, hidden: boolean) => {
+      if (it.img) it.img.style.visibility = hidden ? "hidden" : ""
+    }
+
+    /* ---------- showing an image ---------- */
+
+    function showItem(i: number, opts: { flip?: boolean; dir?: number } = {}) {
+      const u = ui!
+      const token = ++loadToken
+      const it = items[i]
+      index = i
+      items.forEach((o, k) => setSourceHidden(o, k === i))
+      renderChrome()
+      fullNat = 0
+
+      const thumbReady = !!it.img && it.img.complete && it.img.naturalWidth > 0
+      const start = () => {
+        if (token !== loadToken) return
+        layout()
+        scale = 1
+        ;[tx, ty] = centerPos(1)
+        if (opts.flip) {
+          const from = sourceBox(it)
+          if (from && !reduceMotion()) {
+            scale = from.w / base.w
+            tx = from.x
+            ty = from.y
+            apply(0)
+            void u.img.offsetWidth
+            scale = 1
+            ;[tx, ty] = centerPos(1)
+            apply(dur(460), "cubic-bezier(0.16, 0.9, 0.2, 1)")
+            return
+          }
+        }
+        apply(0)
+        if (opts.dir) {
+          u.frame.animate(
+            [
+              { opacity: 0, transform: `translateX(${opts.dir * 48}px)` },
+              { opacity: 1, transform: "translateX(0)" },
+            ],
+            { duration: dur(260), easing: EASE },
+          )
+        }
+      }
+
+      // The in-page thumbnail is already decoded: show it at once, then swap in the
+      // sharp full-size file when ready (same aspect, so the swap is seamless).
+      if (thumbReady && it.img) {
+        aspect = it.img.naturalWidth / it.img.naturalHeight
+        u.img.src = it.thumb
+        u.root.classList.remove("lb-loading")
+        start()
+      } else {
+        u.root.classList.add("lb-loading")
+        u.img.removeAttribute("src")
+      }
+
+      const big = new Image()
+      big.src = it.src
+      big
+        .decode()
+        .catch(() => undefined)
+        .then(() => {
+          if (token !== loadToken || !isOpen) return
+          fullNat = big.naturalWidth
+          if (!thumbReady) {
+            aspect = big.naturalWidth && big.naturalHeight ? big.naturalWidth / big.naturalHeight : 1
+            u.img.src = it.src
+            u.root.classList.remove("lb-loading")
+            start()
+          } else if (u.img.src !== big.src && big.naturalWidth) {
+            u.img.src = it.src
+          }
+          apply(0)
+          preload(i + 1)
+          preload(i - 1)
+        })
+    }
+
+    function preload(i: number) {
+      const it = items[i]
+      if (it) new Image().src = it.src
+    }
+
+    let navAnim: Animation | null = null
+
+    function goTo(i: number, dir = i > index ? 1 : -1) {
+      if (!isOpen || closing || i < 0 || i >= items.length || i === index) {
+        springBack()
+        return
+      }
+      const u = ui!
+      navAnim?.cancel()
+      index = i
+      renderChrome()
+      const out = u.frame.animate([{ opacity: 1 }, { opacity: 0 }], {
+        duration: dur(140),
+        easing: "ease-in",
+        fill: "forwards",
+      })
+      navAnim = out
+      const swap = () => {
+        out.cancel()
+        navAnim = null
+        if (!isOpen || closing) return
+        showItem(i, { dir })
+      }
+      if (reduceMotion()) swap()
+      else out.onfinish = swap
+    }
+
+    /* ---------- open / close ---------- */
+
+    function lockScroll() {
+      const root = document.documentElement
+      root.style.setProperty("--lb-sbw", `${window.innerWidth - root.clientWidth}px`)
+      root.classList.add("lb-lock")
+    }
+
+    function openFrom(el: HTMLElement) {
+      if (!ui) {
+        ui = build()
+        bindStage(ui)
+        bindChrome(ui)
+      }
+      const u = ui
+      const group = el.dataset.lightboxGroup
+      const nodes = group
+        ? Array.from(document.querySelectorAll<HTMLElement>("[data-lightbox]")).filter(
+            (n) => n.dataset.lightboxGroup === group,
+          )
+        : [el]
+      items = nodes.map(readItem)
+      index = Math.max(0, nodes.indexOf(el))
+      opener = el
+      isOpen = true
+      closing = false
+      loadToken++
+
+      lockScroll()
+      renderStrip()
+      u.root.style.setProperty("--lb-fade", "1")
+      u.root.classList.remove("lb-closing", "lb-zoomed")
+      u.root.hidden = false
+      u.root.classList.add("lb-open")
+      u.root.focus({ preventScroll: true })
+      showItem(index, { flip: true })
+      showHint()
+
+      history.pushState({ lightbox: true }, "")
+      pushed = true
+    }
+
+    function finishClose() {
+      const u = ui!
+      u.root.hidden = true
+      u.root.classList.remove("lb-open", "lb-closing", "lb-zoomed", "lb-dragging", "lb-loading")
+      u.img.removeAttribute("src")
+      items.forEach((it) => setSourceHidden(it, false))
+      document.documentElement.classList.remove("lb-lock")
+      isOpen = false
+      closing = false
+      loadToken++
+      clearTimeout(hintTimer)
+      u.hint.classList.remove("lb-hint-on")
+      opener?.focus({ preventScroll: true })
+    }
+
+    function close(fromPop = false) {
+      if (!isOpen || closing) return
+      closing = true
+      const u = ui!
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => undefined)
+      if (!fromPop && pushed) {
+        pushed = false
+        history.back()
+      }
+      pushed = false
+      loadToken++
+      navAnim?.cancel()
+      navAnim = null
+      u.root.classList.add("lb-closing")
+      u.root.classList.remove("lb-open")
+
+      const to = sourceBox(items[index])
+      const ms = dur(380)
+      if (to && onScreen(to) && ms) {
+        scale = to.w / base.w
+        tx = to.x
+        ty = to.y
+        apply(ms, "cubic-bezier(0.5, 0, 0.2, 1)")
+      } else if (ms) {
+        u.frame.animate([{ opacity: 1 }, { opacity: 0 }], { duration: ms, fill: "forwards" })
+      }
+      window.setTimeout(() => {
+        u.frame.getAnimations().forEach((a) => a.cancel())
+        finishClose()
+      }, ms ? ms + 30 : 0)
+    }
+
+    function showHint() {
+      if (hintShown) return
+      hintShown = true
+      const u = ui!
+      const touch = window.matchMedia("(pointer: coarse)").matches
+      const multi = items.length > 1
+      u.hint.textContent = touch
+        ? `Pinch or double-tap to zoom · drag to pan${multi ? " · swipe to browse" : ""}`
+        : `Scroll to zoom · drag to pan${multi ? " · ← → to browse" : ""} · Esc to close`
+      hintTimer = window.setTimeout(() => u.hint.classList.add("lb-hint-on"), 700)
+      window.setTimeout(hideHint, 4800)
+    }
+
+    function hideHint() {
+      ui?.hint.classList.remove("lb-hint-on")
+    }
+
+    /* ---------- events ---------- */
+
+    document.addEventListener("click", (e) => {
+      const target = (e.target as Element | null)?.closest<HTMLElement>("[data-lightbox]")
+      if (!target || isOpen) return
+      e.preventDefault()
+      openFrom(target)
+    })
+
+    window.addEventListener("popstate", () => {
+      if (isOpen && !closing) close(true)
+    })
+
+    function pointInImage(x: number, y: number) {
+      return x >= tx && x <= tx + base.w * scale && y >= ty && y <= ty + base.h * scale
+    }
+
+    function onTap(x: number, y: number) {
+      if (!pointInImage(x, y)) {
+        close()
+        return
+      }
+      const now = performance.now()
+      if (now - lastTap.t < 320 && Math.hypot(x - lastTap.x, y - lastTap.y) < 32) {
+        lastTap.t = 0
+        if (scale > 1.05) resetZoom()
+        else zoomAt(DOUBLE_TAP_ZOOM, x, y, dur(320))
+      } else {
+        lastTap = { t: now, x, y }
+      }
+    }
+
+    function bindStage(u: UI) {
+      const st = u.stage
+
+      st.addEventListener("pointerdown", (e) => {
+        if (!isOpen || closing) return
+        st.setPointerCapture(e.pointerId)
+        ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY })
+        hideHint()
+        if (ptrs.size === 2) {
+          const [a, b] = Array.from(ptrs.values())
+          pinch = {
+            d0: Math.hypot(a.x - b.x, a.y - b.y) || 1,
+            s0: scale,
+            mx0: (a.x + b.x) / 2,
+            my0: (a.y + b.y) / 2,
+            tx0: tx,
+            ty0: ty,
+          }
+          pan = null
+        } else if (ptrs.size === 1) {
+          pan = {
+            id: e.pointerId,
+            sx: e.clientX,
+            sy: e.clientY,
+            tx0: tx,
+            ty0: ty,
+            t0: performance.now(),
+            moved: false,
+            axis: "",
+          }
+        }
+      })
+
+      st.addEventListener("pointermove", (e) => {
+        if (!ptrs.has(e.pointerId)) return
+        ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY })
+
+        if (pinch && ptrs.size >= 2) {
+          const [a, b] = Array.from(ptrs.values())
+          const d = Math.hypot(a.x - b.x, a.y - b.y)
+          const mx = (a.x + b.x) / 2
+          const my = (a.y + b.y) / 2
+          const ns = clamp((pinch.s0 * d) / pinch.d0, 0.7, maxScale() * 1.15)
+          const k = ns / pinch.s0
+          scale = ns
+          tx = mx - (pinch.mx0 - pinch.tx0) * k
+          ty = my - (pinch.my0 - pinch.ty0) * k
+          apply(0)
+          return
+        }
+
+        if (!pan || pan.id !== e.pointerId) return
+        const dx = e.clientX - pan.sx
+        const dy = e.clientY - pan.sy
+        if (!pan.moved && Math.hypot(dx, dy) > 6) {
+          pan.moved = true
+          pan.axis = scale > 1.02 ? "free" : Math.abs(dx) > Math.abs(dy) ? "x" : "y"
+          u.root.classList.add("lb-dragging")
+        }
+        if (!pan.moved) return
+        if (pan.axis === "free") {
+          ;[tx, ty] = clampPos(scale, pan.tx0 + dx, pan.ty0 + dy)
+        } else if (pan.axis === "x") {
+          tx = pan.tx0 + dx * (items.length > 1 ? 1 : 0.25)
+        } else {
+          ty = pan.ty0 + dy
+          u.root.style.setProperty("--lb-fade", String(1 - clamp(Math.abs(dy) / (viewH() * 0.55), 0, 0.85)))
+        }
+        apply(0)
+      })
+
+      const end = (e: PointerEvent) => {
+        if (!ptrs.delete(e.pointerId)) return
+        if (pinch) {
+          if (ptrs.size < 2) {
+            pinch = null
+            settle()
+            const rest = Array.from(ptrs.values())[0]
+            pan =
+              rest && scale > 1.02
+                ? { id: Array.from(ptrs.keys())[0], sx: rest.x, sy: rest.y, tx0: tx, ty0: ty, t0: performance.now(), moved: true, axis: "free" }
+                : null
+          }
+          return
+        }
+        if (!pan || pan.id !== e.pointerId) return
+        const p = pan
+        pan = null
+        u.root.classList.remove("lb-dragging")
+        if (e.type === "pointercancel") {
+          springBack()
+          return
+        }
+        const dx = e.clientX - p.sx
+        const dy = e.clientY - p.sy
+        if (!p.moved) {
+          onTap(e.clientX, e.clientY)
+        } else if (p.axis === "x") {
+          const v = Math.abs(dx) / Math.max(1, performance.now() - p.t0)
+          const flick = Math.abs(dx) > 90 || (v > 0.5 && Math.abs(dx) > 30)
+          if (items.length > 1 && flick) goTo(index + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1)
+          else springBack()
+        } else if (p.axis === "y") {
+          if (Math.abs(dy) > 110) close()
+          else springBack()
+        }
+      }
+      st.addEventListener("pointerup", end)
+      st.addEventListener("pointercancel", end)
+
+      st.addEventListener(
+        "wheel",
+        (e) => {
+          if (!isOpen || closing) return
+          e.preventDefault()
+          hideHint()
+          const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1
+          const dxp = e.deltaX * unit
+          const dyp = e.deltaY * unit
+          if (!e.ctrlKey && scale > 1.02 && Math.abs(dxp) > Math.abs(dyp)) {
+            ;[tx, ty] = clampPos(scale, tx - dxp, ty)
+            apply(0)
+            return
+          }
+          const factor = Math.exp(-dyp * (e.ctrlKey ? 0.012 : 0.0018))
+          zoomAt(scale * factor, e.clientX, e.clientY, dur(90))
+        },
+        { passive: false },
+      )
+
+      // Safari desktop reports trackpad pinch as proprietary gesture events.
+      let gesture0 = 1
+      st.addEventListener("gesturestart", (e) => {
+        e.preventDefault()
+        gesture0 = scale
+      })
+      st.addEventListener("gesturechange", (e) => {
+        e.preventDefault()
+        const g = e as unknown as { scale: number; clientX: number; clientY: number }
+        zoomAt(gesture0 * g.scale, g.clientX, g.clientY)
+      })
+    }
+
+    function bindChrome(u: UI) {
+      u.root.addEventListener("click", (e) => {
+        const t = e.target as Element
+        const thumb = t.closest<HTMLElement>(".lb-thumb")
+        if (thumb) {
+          goTo(Number(thumb.dataset.i))
+          return
+        }
+        const act = t.closest<HTMLElement>("[data-act]")?.dataset.act
+        if (act === "close") close()
+        else if (act === "in") zoomBy(1.6)
+        else if (act === "out") zoomBy(1 / 1.6)
+        else if (act === "reset") resetZoom()
+        else if (act === "prev") goTo(index - 1, -1)
+        else if (act === "next") goTo(index + 1, 1)
+        else if (act === "full") {
+          if (document.fullscreenElement) document.exitFullscreen().catch(() => undefined)
+          else u.root.requestFullscreen?.().catch(() => undefined)
+        }
+      })
+
+      document.addEventListener("fullscreenchange", () => {
+        u.full.innerHTML = svg(document.fullscreenElement ? "shrink" : "expand")
+      })
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (!isOpen || closing) return
+      const key = e.key
+      const zoomed = scale > 1.02
+      const step = 90
+      if (key === "Escape") {
+        e.preventDefault()
+        close()
+      } else if (key === "ArrowLeft" || key === "ArrowRight") {
+        e.preventDefault()
+        const dir = key === "ArrowRight" ? 1 : -1
+        if (zoomed) {
+          ;[tx, ty] = clampPos(scale, tx - dir * step, ty)
+          apply(dur(120))
+        } else goTo(index + dir, dir)
+      } else if ((key === "ArrowUp" || key === "ArrowDown") && zoomed) {
+        e.preventDefault()
+        ;[tx, ty] = clampPos(scale, tx, ty + (key === "ArrowDown" ? -step : step))
+        apply(dur(120))
+      } else if (key === "+" || key === "=") {
+        e.preventDefault()
+        zoomBy(1.6)
+      } else if (key === "-" || key === "_") {
+        e.preventDefault()
+        zoomBy(1 / 1.6)
+      } else if (key === "0") {
+        e.preventDefault()
+        resetZoom()
+      } else if (key === "Home" && items.length > 1) {
+        e.preventDefault()
+        goTo(0, -1)
+      } else if (key === "End" && items.length > 1) {
+        e.preventDefault()
+        goTo(items.length - 1, 1)
+      } else if (key === "Tab") {
+        const focusable = Array.from(
+          ui!.root.querySelectorAll<HTMLElement>("button:not([disabled]):not([hidden])"),
+        ).filter((b) => b.offsetParent !== null)
+        if (!focusable.length) return
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        const active = document.activeElement
+        if (e.shiftKey && (active === first || active === ui!.root)) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && active === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
+    })
+
+    window.addEventListener("resize", () => {
+      if (!isOpen || closing || !ui) return
+      layout()
+      scale = 1
+      ;[tx, ty] = centerPos(1)
+      apply(0)
+    })
+  }
+</script>
+
+<style is:global>
+  html.lb-lock {
+    overflow: hidden;
+    padding-right: var(--lb-sbw, 0px);
+  }
+
+  .lb {
+    --lb-gold: #f0c27b;
+    --lb-glass: rgba(24, 24, 28, 0.62);
+    --lb-line: rgba(255, 255, 255, 0.13);
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    overflow: hidden;
+    color: #eceae6;
+    font-family: Lato, system-ui, sans-serif;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .lb[hidden] {
+    display: none;
+  }
+
+  /* Backdrop: deep ink with a faint comic halftone grain. */
+  .lb-backdrop {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    background:
+      radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1.5px) 0 0 / 9px 9px,
+      radial-gradient(120% 100% at 50% 35%, rgba(36, 29, 46, 0.96), rgba(5, 5, 8, 0.985));
+  }
+  .lb-open .lb-backdrop {
+    opacity: var(--lb-fade, 1);
+  }
+  .lb-dragging .lb-backdrop {
+    transition: none;
+  }
+
+  .lb-stage {
+    position: absolute;
+    inset: 0;
+    touch-action: none;
+    overscroll-behavior: contain;
+    cursor: zoom-in;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .lb-zoomed .lb-stage {
+    cursor: grab;
+  }
+  .lb-dragging .lb-stage {
+    cursor: grabbing;
+  }
+  .lb-frame {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  /* Tailwind's preflight caps img at max-width:100%; the viewer sizes it explicitly. */
+  .lb .lb-img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    border-radius: 3px;
+    transform-origin: 0 0;
+    background: #121214;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 28px 90px rgba(0, 0, 0, 0.7);
+    -webkit-user-drag: none;
+  }
+  /* The shadow is off-screen once zoomed; skipping it keeps pan/zoom smooth. */
+  .lb-zoomed .lb-img {
+    box-shadow: none;
+  }
+
+  .lb-spin {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.16);
+    border-top-color: var(--lb-gold);
+    opacity: 0;
+    pointer-events: none;
+    animation: lb-rot 0.8s linear infinite;
+    transition: opacity 0.2s 0.15s;
+  }
+  .lb-loading .lb-spin {
+    opacity: 1;
+  }
+  @keyframes lb-rot {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Chrome (top bar, arrows, filmstrip) fades with the backdrop. */
+  .lb-chrome {
+    opacity: 0;
+    transition: opacity 0.32s ease 0.12s;
+  }
+  .lb-open .lb-chrome {
+    opacity: var(--lb-fade, 1);
+  }
+  .lb-closing .lb-chrome {
+    transition-delay: 0s;
+  }
+  .lb-dragging .lb-chrome {
+    transition: none;
+  }
+
+  .lb-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: max(12px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) 14px
+      max(18px, env(safe-area-inset-left));
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+    pointer-events: none;
+  }
+  .lb-top > * {
+    pointer-events: auto;
+  }
+  .lb-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding-top: 4px;
+  }
+  .lb-count {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--lb-gold);
+    font-variant-numeric: tabular-nums;
+  }
+  .lb-count:empty {
+    display: none;
+  }
+  .lb-title {
+    font-family: "Fraunces Variable", Georgia, serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .lb-tools {
+    display: flex;
+    align-items: center;
+    flex: none;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 999px;
+    background: var(--lb-glass);
+    border: 1px solid var(--lb-line);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  }
+  .lb-btn,
+  .lb-nav {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    background: transparent;
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      transform 0.2s,
+      opacity 0.2s;
+  }
+  .lb-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+  }
+  .lb-btn[hidden] {
+    display: none;
+  }
+  .lb-btn:hover,
+  .lb-nav:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+  .lb-btn:active,
+  .lb-nav:active {
+    transform: scale(0.92);
+  }
+  .lb-btn:focus-visible,
+  .lb-nav:focus-visible,
+  .lb-thumb:focus-visible {
+    outline: 2px solid var(--lb-gold);
+    outline-offset: 2px;
+  }
+  .lb-btn:disabled,
+  .lb-nav:disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  .lb-btn svg,
+  .lb-nav svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .lb-level {
+    width: auto;
+    min-width: 54px;
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .lb-close {
+    margin-left: 2px;
+    background: rgba(255, 111, 181, 0.18);
+  }
+  .lb-close:hover {
+    background: rgba(255, 111, 181, 0.36);
+  }
+
+  .lb-nav {
+    position: absolute;
+    top: 50%;
+    display: none;
+    width: 52px;
+    height: 52px;
+    margin-top: -26px;
+    border-radius: 50%;
+    background: var(--lb-glass);
+    border: 1px solid var(--lb-line);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  }
+  .lb-nav svg {
+    width: 24px;
+    height: 24px;
+  }
+  .lb-prev {
+    left: 22px;
+  }
+  .lb-next {
+    right: 22px;
+  }
+  @media (min-width: 900px) and (hover: hover) {
+    .lb-multi .lb-nav {
+      display: grid;
+    }
+  }
+
+  .lb-bottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 28px 16px max(14px, env(safe-area-inset-bottom));
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0));
+    text-align: center;
+    pointer-events: none;
+    transition:
+      opacity 0.32s ease 0.12s,
+      visibility 0.3s;
+  }
+  .lb-bottom > * {
+    pointer-events: auto;
+  }
+  /* While zoomed in, get the filmstrip and caption out of the way. */
+  .lb-open.lb-zoomed .lb-bottom {
+    opacity: 0;
+    visibility: hidden;
+    transition-delay: 0s;
+  }
+  .lb-caption {
+    margin: 0;
+    max-width: min(720px, 92vw);
+    font-family: "EB Garamond Variable", Georgia, serif;
+    font-size: 1.02rem;
+    font-style: italic;
+    line-height: 1.4;
+    color: rgba(236, 234, 230, 0.82);
+  }
+  .lb-caption:empty {
+    display: none;
+  }
+  .lb-strip {
+    position: relative;
+    display: none;
+    max-width: 100%;
+    gap: 10px;
+    padding: 8px 6px 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .lb-strip::-webkit-scrollbar {
+    display: none;
+  }
+  .lb-multi .lb-strip {
+    display: flex;
+  }
+  .lb-thumb {
+    flex: none;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #121214;
+    opacity: 0.5;
+    cursor: pointer;
+    outline: 2px solid transparent;
+    outline-offset: 1px;
+    transition:
+      opacity 0.25s,
+      transform 0.25s,
+      outline-color 0.25s;
+  }
+  .lb-thumb img {
+    display: block;
+    width: auto;
+    height: 58px;
+    max-width: none;
+  }
+  .lb-thumb:hover {
+    opacity: 0.85;
+  }
+  .lb-thumb[aria-current="true"] {
+    opacity: 1;
+    outline-color: var(--lb-gold);
+    transform: translateY(-3px);
+  }
+
+  .lb-hint {
+    position: absolute;
+    left: 50%;
+    top: 84px;
+    margin: 0;
+    padding: 7px 16px;
+    max-width: 92vw;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+    text-align: center;
+    color: rgba(236, 234, 230, 0.9);
+    background: var(--lb-glass);
+    border: 1px solid var(--lb-line);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    opacity: 0;
+    transform: translate(-50%, -6px);
+    transition:
+      opacity 0.5s ease,
+      transform 0.5s ease;
+    pointer-events: none;
+  }
+  .lb-hint.lb-hint-on {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  @media (max-width: 520px) {
+    .lb-title {
+      font-size: 0.98rem;
+    }
+    .lb-btn {
+      width: 36px;
+      height: 36px;
+    }
+    .lb-level {
+      min-width: 46px;
+    }
+    .lb-full {
+      display: none;
+    }
+    .lb-thumb img {
+      height: 48px;
+    }
+  }
+</style>

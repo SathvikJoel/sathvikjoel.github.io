@@ -66,6 +66,12 @@ node scripts/optimize-images.mjs public/posts/my-trip/harbour.jpg   # one file
 `node scripts/optimize-images.mjs`, eyeball the results, then commit. Re-running it is
 safe — already-small files are skipped.
 
+> **Pictures readers can zoom into** (`<ZoomImage>` / `<ComicShelf>` — see the
+> [components toolkit](./components.md)) work best with **two WebP files each**: a small
+> *thumb* (~560 px wide) shown in the page and a *full-size* one opened in the viewer. The
+> script above leaves `.webp` alone, so make these yourself (a `sharp` one-liner is in the
+> toolkit) and keep the full one at the original resolution so zooming stays sharp.
+
 ## `cover` — make a post stand out on the homepage
 
 Adding a **cover** turns the post's tile into a card with a wide image across the top,

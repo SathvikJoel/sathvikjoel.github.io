@@ -1,0 +1,327 @@
+---
+// A "comic shelf": a row of comic pages styled like printed issues (cream paper
+// border, hard offset shadow, a number badge, a yellow caption box). Clicking a page
+// opens the shared fullscreen viewer (Lightbox) with zoom, pan and ← → browsing.
+// With room (container ≥ 800px) the pages sit in one row; otherwise a swipeable carousel.
+import Lightbox from "../Lightbox.astro"
+
+interface Page {
+  src: string
+  thumb?: string
+  title: string
+  alt?: string
+  caption?: string
+}
+interface Props {
+  pages: Page[]
+  title?: string
+  hint?: string
+  ratio?: string
+}
+const {
+  pages,
+  title = "Read it as a comic",
+  hint,
+  ratio = "1199 / 1312",
+} = Astro.props
+
+const accents = ["#F0C27B", "#FF6FB5", "#3DD6ED", "#FF9A8A", "#A98CE6"]
+const tilts = [-1.6, 1.2, -0.8, 1.5, -1.2]
+const group = `comic-${pages[0]?.src ?? "shelf"}`
+---
+
+<section class="shelf not-prose" aria-label={title}>
+  <div class="head">
+    <span class="kicker">{title}</span>
+    {hint ? (
+      <span class="hint">{hint}</span>
+    ) : (
+      <span class="hint">
+        <span class="hint-mouse">Click a page to open it full screen — scroll to zoom</span>
+        <span class="hint-touch">Tap a page to open it full screen — pinch to zoom</span>
+      </span>
+    )}
+  </div>
+  <ol class="row">
+    {pages.map((p, i) => (
+      <li class="issue" style={`--accent:${accents[i % accents.length]};--tilt:${tilts[i % tilts.length]}deg`}>
+        <button
+          type="button"
+          class="page"
+          data-lightbox
+          data-lightbox-group={group}
+          data-src={p.src}
+          data-title={p.title}
+          data-caption={p.caption}
+          aria-label={`Open comic page ${i + 1}: ${p.title}`}
+        >
+          <span class="paper">
+            <img
+              src={p.thumb ?? p.src}
+              alt={p.alt ?? p.title}
+              loading="lazy"
+              decoding="async"
+              style={`aspect-ratio:${ratio}`}
+            />
+          </span>
+          <span class="badge" aria-hidden="true">{i + 1}</span>
+          <span class="label">{p.title}</span>
+          <span class="lens" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5M11 8.5v5M8.5 11h5" /></svg>
+          </span>
+        </button>
+      </li>
+    ))}
+  </ol>
+</section>
+<Lightbox />
+
+<style>
+  /* Breaks out of the text column like <WideImage>, but on wide screens stays clear of
+     the pinned table of contents in the left margin (12rem/13rem wide + gutters). */
+  .shelf {
+    --shelf-w: min(94vw, 1080px);
+    width: var(--shelf-w);
+    margin: 2.75rem 0 3rem;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    container-type: inline-size;
+  }
+  @media (min-width: 1280px) {
+    .shelf {
+      --shelf-w: min(1080px, calc(100vw - 2 * 252px));
+    }
+  }
+  @media (min-width: 1536px) {
+    .shelf {
+      --shelf-w: min(1080px, calc(100vw - 2 * 268px));
+    }
+  }
+
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem 1rem;
+    padding: 0 10px;
+  }
+  /* Styled like a comic narration box. */
+  .kicker {
+    display: inline-block;
+    padding: 6px 13px 5px;
+    background: #fbe9a8;
+    color: #121212;
+    border: 2px solid #0b0b0d;
+    box-shadow: 4px 4px 0 #f0c27b;
+    font-family: Lato, system-ui, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transform: rotate(-1deg);
+  }
+  .hint {
+    font-family: Lato, system-ui, sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: rgb(201 198 194 / 0.6);
+  }
+  .hint-touch {
+    display: none;
+  }
+  @media (hover: none) {
+    .hint-mouse {
+      display: none;
+    }
+    .hint-touch {
+      display: inline;
+    }
+  }
+
+  /* Mobile / tablet: a swipeable carousel with edge fades. */
+  .row {
+    list-style: none;
+    margin: 0;
+    padding: 22px 12px 26px;
+    display: flex;
+    gap: 1.2rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 24px), transparent);
+    mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 24px), transparent);
+  }
+  .row::-webkit-scrollbar {
+    display: none;
+  }
+  .shelf .row > .issue {
+    flex: 0 0 min(58vw, 250px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    scroll-snap-align: center;
+  }
+
+  /* Wide enough for five pages across: switch from carousel to a single row. */
+  @container (min-width: 800px) {
+    .row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1.3rem;
+      padding: 26px 12px 30px;
+      overflow: visible;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .shelf .row > .issue:nth-child(even) {
+      margin-top: 16px;
+    }
+  }
+
+  .page {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: zoom-in;
+    transform: rotate(var(--tilt));
+    transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.25, 1.2);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .paper {
+    position: relative;
+    display: block;
+    padding: 6px;
+    background: #f3ebd5;
+    border-radius: 4px;
+    box-shadow:
+      0 0 0 1.5px #0b0b0d,
+      7px 7px 0 var(--accent);
+    transition: box-shadow 0.35s ease;
+  }
+  .paper img {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    border: 2px solid #0b0b0d;
+    border-radius: 1px;
+    background: #1b1b1d;
+  }
+  /* A touch of printed halftone in the lower corner. */
+  .paper::after {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    pointer-events: none;
+    background: radial-gradient(#0b0b0d 1px, transparent 1.7px) 0 0 / 6px 6px;
+    -webkit-mask-image: linear-gradient(135deg, transparent 60%, #000);
+    mask-image: linear-gradient(135deg, transparent 60%, #000);
+    opacity: 0.2;
+  }
+
+  .badge {
+    position: absolute;
+    top: -12px;
+    left: -12px;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #0b0b0d;
+    border: 2.5px solid #0b0b0d;
+    box-shadow: 2px 2px 0 #0b0b0d;
+    font-family: "Fraunces Variable", Georgia, serif;
+    font-size: 1.05rem;
+    font-weight: 900;
+    line-height: 1;
+    transform: rotate(-9deg);
+  }
+  .label {
+    position: absolute;
+    left: -9px;
+    bottom: 16px;
+    z-index: 1;
+    max-width: 88%;
+    padding: 5px 9px 4px;
+    background: #fbe9a8;
+    color: #121212;
+    border: 2px solid #0b0b0d;
+    box-shadow: 3px 3px 0 #0b0b0d;
+    font-family: Lato, system-ui, sans-serif;
+    font-size: 0.68rem;
+    font-weight: 900;
+    line-height: 1.2;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    transform: rotate(-1.5deg);
+    transition: transform 0.35s ease;
+  }
+  .lens {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgb(11 11 13 / 0.78);
+    color: #fff;
+    border: 1.5px solid rgb(255 255 255 / 0.5);
+    opacity: 0;
+    transform: scale(0.8);
+    transition:
+      opacity 0.25s,
+      transform 0.25s;
+  }
+  .lens svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+
+  .page:hover,
+  .page:focus-visible {
+    transform: translateY(-9px) rotate(0deg) scale(1.035);
+  }
+  .page:hover .paper,
+  .page:focus-visible .paper {
+    box-shadow:
+      0 0 0 1.5px #0b0b0d,
+      12px 12px 0 var(--accent);
+  }
+  .page:hover .label,
+  .page:focus-visible .label {
+    transform: rotate(0deg) translateX(3px);
+  }
+  .page:hover .lens,
+  .page:focus-visible .lens {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .page:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 10px;
+  }
+  /* No hover on touch: keep the zoom hint visible. */
+  @media (hover: none) {
+    .lens {
+      opacity: 0.9;
+      transform: scale(1);
+    }
+  }
+</style>

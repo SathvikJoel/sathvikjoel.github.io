@@ -433,6 +433,94 @@ optional caption.
 <WideImage src="/collage.png" alt="" caption="A wide breakout image." />
 ```
 
+### Zoom image
+
+A single picture that **opens in a fullscreen viewer when clicked** — pinch / scroll /
+double-click to zoom, drag to pan, `Esc` to close. Use it for anything the reader might
+want to inspect closely (a map, a dense diagram, a comic page, a screenshot).
+
+```mdx
+<ZoomImage
+  src="/posts/my-post/map-full.webp"
+  thumb="/posts/my-post/map-thumb.webp"
+  alt="Map of the route"
+  title="The route"
+  wide
+>
+  Optional caption — shown under the image and again inside the viewer.
+</ZoomImage>
+```
+
+| Prop | What it does |
+| --- | --- |
+| `src` | The **full-size** image that opens in the viewer (required) |
+| `thumb` | A smaller file for the in-page image. Optional — falls back to `src` |
+| `alt` | Alt text (describe the picture) |
+| `title` | A heading shown at the top-left of the viewer |
+| `group` | Give several `ZoomImage`s the same `group` string and the viewer lets readers browse them with ← → / swipe, with a filmstrip |
+| `wide` | Break out wider than the text column |
+
+The caption is the content between the tags. A hover lens (🔍) hints that the image is
+clickable; on touch screens it is always visible.
+
+### Comic shelf
+
+A row of **comic pages styled like printed issues** (cream paper border, hard coloured
+shadow, number badge, yellow caption box, a slight tilt). Clicking any page opens the
+fullscreen viewer, and readers can flip through every page with ← → / swipe / the
+filmstrip. It was built for the five myth comics at the top of the Greek myths post, but
+works for any set of tall pages.
+
+```mdx
+<ComicShelf
+  title="Read the myths as comics"
+  pages={[
+    {
+      src: "/posts/my-post/comics/01-first.webp",
+      thumb: "/posts/my-post/comics/01-first-thumb.webp",
+      title: "Apollo & Daphne",
+      alt: "Comic page: Apollo chases Daphne",
+      caption: "Story 1 · Eros's two arrows, a god's pursuit, and the first laurel tree",
+    },
+    { src: "/posts/my-post/comics/02-second.webp", title: "Dionysos & Ikarios" },
+  ]}
+/>
+```
+
+| Prop | What it does |
+| --- | --- |
+| `pages` | The list of pages (required). Each page has `src` (full-size, opened in the viewer), `title`, and optionally `thumb` (small in-page file), `alt`, `caption` |
+| `title` | The yellow label above the shelf (default "Read it as a comic") |
+| `hint` | Overrides the small line next to the label. By default it says "Click…/Tap…" depending on the device |
+| `ratio` | The pages' aspect ratio as `"w / h"` (default `"1199 / 1312"`). Set it so the layout doesn't jump while images load |
+
+On a wide column the pages sit side by side in one row (up to five fit comfortably); on
+narrower screens they become a **swipeable carousel**. Place the shelf wherever you like in
+the post — the Greek myths post puts it at the very top, but between sections works well
+too. There can be several shelves in one post; each is its own browsable set.
+
+**Prepare two files per page** so the page loads fast but zooming stays sharp — a small
+*thumb* (~560 px wide) for the shelf and a *full* one (the original width, WebP) for the
+viewer. With `sharp`:
+
+```bash
+node -e "
+const sharp = require('sharp');
+sharp('page.png').webp({ quality: 90 }).toFile('01-first.webp');
+sharp('page.png').resize({ width: 560 }).webp({ quality: 70 }).toFile('01-first-thumb.webp');
+"
+```
+
+Put both in `public/posts/<slug>/…` and reference them with slash-prefixed `/posts/…`
+paths. (`scripts/optimize-images.mjs` only touches PNG/JPG, so WebP files are left alone.)
+The viewer shows the thumb instantly and swaps in the full image once it has decoded.
+
+> **Viewer controls** (the same everywhere): click/tap to open · wheel, pinch or double-click
+> to zoom · drag to pan · ← → or swipe to browse · swipe down or `Esc` to close · `+` `−`
+> `0` to zoom / reset · the corner button for true fullscreen · `Home`/`End` jump to the first / last page. The browser's back
+> button also closes it. Images can't zoom past their real resolution by much, so use
+> source images that are at least as large as the detail you want readers to see.
+
 ### Paper texture image
 
 `PaperTextureImage` applies the [Paper Design paper texture shader](https://shaders.paper.design/paper-texture)
@@ -647,6 +735,8 @@ all four are answered. It takes no props and carries its own data.
 | `ImageGrid` | Images side by side, each captioned |
 | `Gallery` | An image group with one shared caption |
 | `WideImage` | An image wider than the text column |
+| `ZoomImage` | One image that opens in a fullscreen viewer with zoom and pan when clicked |
+| `ComicShelf` | A row of comic-style pages (tilted "printed issue" cards) that open in the fullscreen zoom viewer |
 | `PaperTextureImage` | A 16:9 image rendered with Paper Design's paper texture shader |
 | `HalftoneImage` | A 16:9 image rendered with Paper Design's CMYK halftone shader |
 | `InlineSVG` | A centered vector illustration |

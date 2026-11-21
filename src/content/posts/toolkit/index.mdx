@@ -37,6 +37,55 @@ A headline image can break out wider than the text column for impact. Make a col
 <WideImage src="/collage.png" alt="" caption="..." />
 ```
 
+## Zoom image
+
+Click the picture to open it fullscreen — scroll, pinch or double-click to zoom, drag to pan, `Esc` to close.
+
+<ZoomImage
+  src="/posts/29052026_greek/comics/03-scylla.webp"
+  thumb="/posts/29052026_greek/comics/03-scylla-thumb.webp"
+  alt="A comic page telling the myth of Scylla"
+  title="Scylla's Curse"
+>
+  Click to open. Reading the speech bubbles is easier zoomed in.
+</ZoomImage>
+
+```mdx
+<ZoomImage src="/full.webp" thumb="/thumb.webp" alt="" title="Optional viewer title">
+  Optional caption.
+</ZoomImage>
+```
+
+## Comic shelf
+
+A row of comic pages styled like printed issues. Click one to open the viewer, then browse the rest with ← → or swipe. Becomes a swipeable carousel on narrow screens.
+
+<ComicShelf
+  title="Comic pages"
+  pages={[
+    {
+      src: "/posts/29052026_greek/comics/01-apollo-daphne.webp",
+      thumb: "/posts/29052026_greek/comics/01-apollo-daphne-thumb.webp",
+      title: "Apollo & Daphne",
+      caption: "Story 1 · Eros's two arrows, a god's pursuit, and the first laurel tree",
+    },
+    {
+      src: "/posts/29052026_greek/comics/02-dionysos-ikarios.webp",
+      thumb: "/posts/29052026_greek/comics/02-dionysos-ikarios-thumb.webp",
+      title: "Dionysos & Ikarios",
+    },
+    {
+      src: "/posts/29052026_greek/comics/04-narcissus.webp",
+      thumb: "/posts/29052026_greek/comics/04-narcissus-thumb.webp",
+      title: "Narcissus",
+    },
+  ]}
+/>
+
+```mdx
+<ComicShelf title="Read it as a comic" pages={[{ src: "/full.webp", thumb: "/thumb.webp", title: "Page one", caption: "Optional" }]} />
+```
+
 ## Paper texture image
 
 Apply Paper Design's paper texture shader to an image with a one-line component. The original image remains as a fallback when JavaScript or WebGL is unavailable.

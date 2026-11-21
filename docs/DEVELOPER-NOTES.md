@@ -162,6 +162,51 @@ The build fails loudly (rather than shipping broken output) on these:
   process JSX). This is enforced by convention, not the build — a component tag in a `.md`
   file silently renders as text.
 
+## Lightbox: the shared fullscreen image viewer
+
+`ZoomImage` and `ComicShelf` (both in `src/components/mdx/`) are thin wrappers around one
+shared viewer, **`src/components/Lightbox.astro`**. It's a plain Astro component — one
+`<script>` plus `<style is:global>` — with no framework runtime.
+
+- **Trigger contract.** Any element with the `data-lightbox` attribute opens the viewer.
+  It reads `data-src` (full-size URL), `data-title`, `data-caption` (falls back to the
+  enclosing `<figure>`'s figcaption text) and `data-lightbox-group` (triggers sharing a
+  value form one browsable set, in DOM order). The **first `<img>` inside the trigger** is
+  the thumbnail: it supplies the placeholder, aspect ratio and the open/close FLIP
+  animation. A single delegated `document` click handler does the work, guarded by
+  `window.__lightbox` so the script is safe if it is bundled more than once. Anything can
+  become zoomable by adding those attributes and rendering `<Lightbox />` once.
+- **Rendered once, built lazily.** Each wrapper renders `<Lightbox />`; Astro dedupes the
+  script per page, and the overlay DOM is created on the first open. Its CSS is
+  `is:global` (the DOM is created at runtime, so scoped styles wouldn't match) and every
+  class is prefixed `lb-`.
+- **View model.** `scale` is relative to "fit"; `tx`/`ty` are the image's top-left in
+  viewport pixels (`transform-origin: 0 0`). Wheel/pinch zoom is anchored at the cursor /
+  pinch centre; `clampPos` centres the image when smaller than the stage and allows
+  edge-to-edge panning otherwise. The max zoom is derived from the image's natural size
+  (≈3× native, clamped to 3–10×). The image box is sized in explicit px because Tailwind's
+  preflight sets `img { max-width: 100% }` (overridden for `.lb .lb-img`).
+- **Thumb → full swap.** If the in-page thumbnail is already decoded the viewer shows it
+  immediately, then swaps `src` to the full file after `decode()` (same aspect ratio, so
+  the swap is seamless). Neighbours are preloaded. Hence the two-file (thumb + full)
+  recommendation in `components.md`.
+- **Browsing & gestures.** ← → / swipe, `Home`/`End`, filmstrip, swipe-down-to-dismiss (live
+  drag-follow), double-tap/click toggles 2.6×. The tab key is trapped inside the overlay.
+  Opening pushes a history entry so the browser/Android back button closes it; the
+  page's scroll is locked with scrollbar-width compensation (`--lb-sbw`). `z-index` is
+  10000 (the site header is `z-50`). Motion honours `prefers-reduced-motion`.
+- **Performance gotcha.** The overlay is deliberately free of full-viewport
+  `backdrop-filter` (it dropped frame rate to ~30 fps over the heavy page) and the image's
+  large drop shadow is removed while zoomed. Small blurred chrome (toolbar, arrows, pill)
+  is fine; keep it that way when restyling.
+- **`ComicShelf` layout.** It's a *breakout* wider than the text column, so it must clear
+  the pinned TOC rail that lives in the left margin at ≥1280px (12rem, 13rem at ≥1536px).
+  It therefore sets a TOC-aware width via the `--shelf-w` CSS variable at those
+  breakpoints, and uses a **container query** (`@container (min-width: 800px)`) to switch
+  from a swipeable carousel to a 5-column grid. Reuse that pattern for any new wide
+  component. The shelf contains no direct `<p>`, so the article drop-cap
+  (`article > p:first-of-type`) is unaffected when it is the first thing in a post.
+
 ## Interactive data-viz islands (ECharts + SolidJS)
 
 The *Overpopulation* essay (`posts/overpopulation`) introduced four interactive
@@ -238,6 +283,9 @@ charts. The pattern is reusable for any future data-driven post.
   apple-touch-icon, all generated from `favicon.svg` via `sharp`) so that implicit request
   doesn't 404 and fall back to a stale cached icon. If you change the brand mark, regenerate
   **all** of those files, not just the SVG.
+- **Zoomable images** (`ZoomImage`, `ComicShelf`) want *two* files per picture: a small
+  `thumb` for the page and the full-size `src` for the viewer. Both are WebP under
+  `public/posts/<slug>/…`; `optimize-images.mjs` ignores WebP. See the Lightbox section.
 
 ## Open Graph / social share cards
 
